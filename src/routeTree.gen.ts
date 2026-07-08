@@ -9,61 +9,362 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
+import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated.index'
+import { Route as AuthenticatedLeadsRouteImport } from './routes/_authenticated.leads'
+import { Route as AuthenticatedPropostasIndexRouteImport } from './routes/_authenticated.propostas.index'
+import { Route as AuthenticatedOsIndexRouteImport } from './routes/_authenticated.os.index'
+import { Route as AuthenticatedClientesIndexRouteImport } from './routes/_authenticated.clientes.index'
+import { Route as AuthenticatedPropostasIdRouteImport } from './routes/_authenticated.propostas.$id'
+import { Route as AuthenticatedOsIdRouteImport } from './routes/_authenticated.os.$id'
+import { Route as AuthenticatedDiagnosticosNovoRouteImport } from './routes/_authenticated.diagnosticos.novo'
+import { Route as AuthenticatedClientesIdRouteImport } from './routes/_authenticated.clientes.$id'
+import { Route as AuthenticatedCadastrosServicosRouteImport } from './routes/_authenticated.cadastros.servicos'
+import { Route as AuthenticatedCadastrosProdutosRouteImport } from './routes/_authenticated.cadastros.produtos'
+import { Route as AuthenticatedCadastrosEquipesRouteImport } from './routes/_authenticated.cadastros.equipes'
+import { Route as AuthenticatedCadastrosEpisRouteImport } from './routes/_authenticated.cadastros.epis'
 
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedRoute = AuthenticatedRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedLeadsRoute = AuthenticatedLeadsRouteImport.update({
+  id: '/leads',
+  path: '/leads',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedPropostasIndexRoute =
+  AuthenticatedPropostasIndexRouteImport.update({
+    id: '/propostas/',
+    path: '/propostas/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedOsIndexRoute = AuthenticatedOsIndexRouteImport.update({
+  id: '/os/',
+  path: '/os/',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedClientesIndexRoute =
+  AuthenticatedClientesIndexRouteImport.update({
+    id: '/clientes/',
+    path: '/clientes/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedPropostasIdRoute =
+  AuthenticatedPropostasIdRouteImport.update({
+    id: '/propostas/$id',
+    path: '/propostas/$id',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedOsIdRoute = AuthenticatedOsIdRouteImport.update({
+  id: '/os/$id',
+  path: '/os/$id',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedDiagnosticosNovoRoute =
+  AuthenticatedDiagnosticosNovoRouteImport.update({
+    id: '/diagnosticos/novo',
+    path: '/diagnosticos/novo',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedClientesIdRoute = AuthenticatedClientesIdRouteImport.update({
+  id: '/clientes/$id',
+  path: '/clientes/$id',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedCadastrosServicosRoute =
+  AuthenticatedCadastrosServicosRouteImport.update({
+    id: '/cadastros/servicos',
+    path: '/cadastros/servicos',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedCadastrosProdutosRoute =
+  AuthenticatedCadastrosProdutosRouteImport.update({
+    id: '/cadastros/produtos',
+    path: '/cadastros/produtos',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedCadastrosEquipesRoute =
+  AuthenticatedCadastrosEquipesRouteImport.update({
+    id: '/cadastros/equipes',
+    path: '/cadastros/equipes',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedCadastrosEpisRoute =
+  AuthenticatedCadastrosEpisRouteImport.update({
+    id: '/cadastros/epis',
+    path: '/cadastros/epis',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
+  '/': typeof AuthenticatedIndexRoute
+  '/auth': typeof AuthRoute
+  '/leads': typeof AuthenticatedLeadsRoute
+  '/cadastros/epis': typeof AuthenticatedCadastrosEpisRoute
+  '/cadastros/equipes': typeof AuthenticatedCadastrosEquipesRoute
+  '/cadastros/produtos': typeof AuthenticatedCadastrosProdutosRoute
+  '/cadastros/servicos': typeof AuthenticatedCadastrosServicosRoute
+  '/clientes/$id': typeof AuthenticatedClientesIdRoute
+  '/diagnosticos/novo': typeof AuthenticatedDiagnosticosNovoRoute
+  '/os/$id': typeof AuthenticatedOsIdRoute
+  '/propostas/$id': typeof AuthenticatedPropostasIdRoute
+  '/clientes/': typeof AuthenticatedClientesIndexRoute
+  '/os/': typeof AuthenticatedOsIndexRoute
+  '/propostas/': typeof AuthenticatedPropostasIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/leads': typeof AuthenticatedLeadsRoute
+  '/': typeof AuthenticatedIndexRoute
+  '/cadastros/epis': typeof AuthenticatedCadastrosEpisRoute
+  '/cadastros/equipes': typeof AuthenticatedCadastrosEquipesRoute
+  '/cadastros/produtos': typeof AuthenticatedCadastrosProdutosRoute
+  '/cadastros/servicos': typeof AuthenticatedCadastrosServicosRoute
+  '/clientes/$id': typeof AuthenticatedClientesIdRoute
+  '/diagnosticos/novo': typeof AuthenticatedDiagnosticosNovoRoute
+  '/os/$id': typeof AuthenticatedOsIdRoute
+  '/propostas/$id': typeof AuthenticatedPropostasIdRoute
+  '/clientes': typeof AuthenticatedClientesIndexRoute
+  '/os': typeof AuthenticatedOsIndexRoute
+  '/propostas': typeof AuthenticatedPropostasIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/_authenticated/leads': typeof AuthenticatedLeadsRoute
+  '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_authenticated/cadastros/epis': typeof AuthenticatedCadastrosEpisRoute
+  '/_authenticated/cadastros/equipes': typeof AuthenticatedCadastrosEquipesRoute
+  '/_authenticated/cadastros/produtos': typeof AuthenticatedCadastrosProdutosRoute
+  '/_authenticated/cadastros/servicos': typeof AuthenticatedCadastrosServicosRoute
+  '/_authenticated/clientes/$id': typeof AuthenticatedClientesIdRoute
+  '/_authenticated/diagnosticos/novo': typeof AuthenticatedDiagnosticosNovoRoute
+  '/_authenticated/os/$id': typeof AuthenticatedOsIdRoute
+  '/_authenticated/propostas/$id': typeof AuthenticatedPropostasIdRoute
+  '/_authenticated/clientes/': typeof AuthenticatedClientesIndexRoute
+  '/_authenticated/os/': typeof AuthenticatedOsIndexRoute
+  '/_authenticated/propostas/': typeof AuthenticatedPropostasIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/leads'
+    | '/cadastros/epis'
+    | '/cadastros/equipes'
+    | '/cadastros/produtos'
+    | '/cadastros/servicos'
+    | '/clientes/$id'
+    | '/diagnosticos/novo'
+    | '/os/$id'
+    | '/propostas/$id'
+    | '/clientes/'
+    | '/os/'
+    | '/propostas/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/auth'
+    | '/leads'
+    | '/'
+    | '/cadastros/epis'
+    | '/cadastros/equipes'
+    | '/cadastros/produtos'
+    | '/cadastros/servicos'
+    | '/clientes/$id'
+    | '/diagnosticos/novo'
+    | '/os/$id'
+    | '/propostas/$id'
+    | '/clientes'
+    | '/os'
+    | '/propostas'
+  id:
+    | '__root__'
+    | '/_authenticated'
+    | '/auth'
+    | '/_authenticated/leads'
+    | '/_authenticated/'
+    | '/_authenticated/cadastros/epis'
+    | '/_authenticated/cadastros/equipes'
+    | '/_authenticated/cadastros/produtos'
+    | '/_authenticated/cadastros/servicos'
+    | '/_authenticated/clientes/$id'
+    | '/_authenticated/diagnosticos/novo'
+    | '/_authenticated/os/$id'
+    | '/_authenticated/propostas/$id'
+    | '/_authenticated/clientes/'
+    | '/_authenticated/os/'
+    | '/_authenticated/propostas/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
+  AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
+  AuthRoute: typeof AuthRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/': {
+      id: '/_authenticated/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/leads': {
+      id: '/_authenticated/leads'
+      path: '/leads'
+      fullPath: '/leads'
+      preLoaderRoute: typeof AuthenticatedLeadsRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/propostas/': {
+      id: '/_authenticated/propostas/'
+      path: '/propostas'
+      fullPath: '/propostas/'
+      preLoaderRoute: typeof AuthenticatedPropostasIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/os/': {
+      id: '/_authenticated/os/'
+      path: '/os'
+      fullPath: '/os/'
+      preLoaderRoute: typeof AuthenticatedOsIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/clientes/': {
+      id: '/_authenticated/clientes/'
+      path: '/clientes'
+      fullPath: '/clientes/'
+      preLoaderRoute: typeof AuthenticatedClientesIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/propostas/$id': {
+      id: '/_authenticated/propostas/$id'
+      path: '/propostas/$id'
+      fullPath: '/propostas/$id'
+      preLoaderRoute: typeof AuthenticatedPropostasIdRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/os/$id': {
+      id: '/_authenticated/os/$id'
+      path: '/os/$id'
+      fullPath: '/os/$id'
+      preLoaderRoute: typeof AuthenticatedOsIdRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/diagnosticos/novo': {
+      id: '/_authenticated/diagnosticos/novo'
+      path: '/diagnosticos/novo'
+      fullPath: '/diagnosticos/novo'
+      preLoaderRoute: typeof AuthenticatedDiagnosticosNovoRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/clientes/$id': {
+      id: '/_authenticated/clientes/$id'
+      path: '/clientes/$id'
+      fullPath: '/clientes/$id'
+      preLoaderRoute: typeof AuthenticatedClientesIdRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/cadastros/servicos': {
+      id: '/_authenticated/cadastros/servicos'
+      path: '/cadastros/servicos'
+      fullPath: '/cadastros/servicos'
+      preLoaderRoute: typeof AuthenticatedCadastrosServicosRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/cadastros/produtos': {
+      id: '/_authenticated/cadastros/produtos'
+      path: '/cadastros/produtos'
+      fullPath: '/cadastros/produtos'
+      preLoaderRoute: typeof AuthenticatedCadastrosProdutosRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/cadastros/equipes': {
+      id: '/_authenticated/cadastros/equipes'
+      path: '/cadastros/equipes'
+      fullPath: '/cadastros/equipes'
+      preLoaderRoute: typeof AuthenticatedCadastrosEquipesRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/cadastros/epis': {
+      id: '/_authenticated/cadastros/epis'
+      path: '/cadastros/epis'
+      fullPath: '/cadastros/epis'
+      preLoaderRoute: typeof AuthenticatedCadastrosEpisRouteImport
+      parentRoute: typeof AuthenticatedRoute
     }
   }
 }
 
+interface AuthenticatedRouteChildren {
+  AuthenticatedLeadsRoute: typeof AuthenticatedLeadsRoute
+  AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+  AuthenticatedCadastrosEpisRoute: typeof AuthenticatedCadastrosEpisRoute
+  AuthenticatedCadastrosEquipesRoute: typeof AuthenticatedCadastrosEquipesRoute
+  AuthenticatedCadastrosProdutosRoute: typeof AuthenticatedCadastrosProdutosRoute
+  AuthenticatedCadastrosServicosRoute: typeof AuthenticatedCadastrosServicosRoute
+  AuthenticatedClientesIdRoute: typeof AuthenticatedClientesIdRoute
+  AuthenticatedDiagnosticosNovoRoute: typeof AuthenticatedDiagnosticosNovoRoute
+  AuthenticatedOsIdRoute: typeof AuthenticatedOsIdRoute
+  AuthenticatedPropostasIdRoute: typeof AuthenticatedPropostasIdRoute
+  AuthenticatedClientesIndexRoute: typeof AuthenticatedClientesIndexRoute
+  AuthenticatedOsIndexRoute: typeof AuthenticatedOsIndexRoute
+  AuthenticatedPropostasIndexRoute: typeof AuthenticatedPropostasIndexRoute
+}
+
+const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedLeadsRoute: AuthenticatedLeadsRoute,
+  AuthenticatedIndexRoute: AuthenticatedIndexRoute,
+  AuthenticatedCadastrosEpisRoute: AuthenticatedCadastrosEpisRoute,
+  AuthenticatedCadastrosEquipesRoute: AuthenticatedCadastrosEquipesRoute,
+  AuthenticatedCadastrosProdutosRoute: AuthenticatedCadastrosProdutosRoute,
+  AuthenticatedCadastrosServicosRoute: AuthenticatedCadastrosServicosRoute,
+  AuthenticatedClientesIdRoute: AuthenticatedClientesIdRoute,
+  AuthenticatedDiagnosticosNovoRoute: AuthenticatedDiagnosticosNovoRoute,
+  AuthenticatedOsIdRoute: AuthenticatedOsIdRoute,
+  AuthenticatedPropostasIdRoute: AuthenticatedPropostasIdRoute,
+  AuthenticatedClientesIndexRoute: AuthenticatedClientesIndexRoute,
+  AuthenticatedOsIndexRoute: AuthenticatedOsIndexRoute,
+  AuthenticatedPropostasIndexRoute: AuthenticatedPropostasIndexRoute,
+}
+
+const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
+  AuthenticatedRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
+  AuthenticatedRoute: AuthenticatedRouteWithChildren,
+  AuthRoute: AuthRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
