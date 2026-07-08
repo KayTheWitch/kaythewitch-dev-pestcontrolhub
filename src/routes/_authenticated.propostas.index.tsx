@@ -24,7 +24,7 @@ import { ArrowRight } from "lucide-react";
 import { formatCurrency, formatDate } from "@/lib/format";
 import { ProposalStatusBadge } from "@/components/StatusBadge";
 
-export const Route = createFileRoute("/_authenticated/propostas")({
+export const Route = createFileRoute("/_authenticated/propostas/")({
   component: PropostasList,
 });
 

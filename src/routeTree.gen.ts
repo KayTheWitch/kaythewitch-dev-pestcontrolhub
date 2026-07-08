@@ -12,10 +12,10 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated.index'
-import { Route as AuthenticatedPropostasRouteImport } from './routes/_authenticated.propostas'
-import { Route as AuthenticatedOsRouteImport } from './routes/_authenticated.os'
 import { Route as AuthenticatedLeadsRouteImport } from './routes/_authenticated.leads'
-import { Route as AuthenticatedClientesRouteImport } from './routes/_authenticated.clientes'
+import { Route as AuthenticatedPropostasIndexRouteImport } from './routes/_authenticated.propostas.index'
+import { Route as AuthenticatedOsIndexRouteImport } from './routes/_authenticated.os.index'
+import { Route as AuthenticatedClientesIndexRouteImport } from './routes/_authenticated.clientes.index'
 import { Route as AuthenticatedPropostasIdRouteImport } from './routes/_authenticated.propostas.$id'
 import { Route as AuthenticatedOsIdRouteImport } from './routes/_authenticated.os.$id'
 import { Route as AuthenticatedDiagnosticosNovoRouteImport } from './routes/_authenticated.diagnosticos.novo'
@@ -39,36 +39,38 @@ const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
-const AuthenticatedPropostasRoute = AuthenticatedPropostasRouteImport.update({
-  id: '/propostas',
-  path: '/propostas',
-  getParentRoute: () => AuthenticatedRoute,
-} as any)
-const AuthenticatedOsRoute = AuthenticatedOsRouteImport.update({
-  id: '/os',
-  path: '/os',
-  getParentRoute: () => AuthenticatedRoute,
-} as any)
 const AuthenticatedLeadsRoute = AuthenticatedLeadsRouteImport.update({
   id: '/leads',
   path: '/leads',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
-const AuthenticatedClientesRoute = AuthenticatedClientesRouteImport.update({
-  id: '/clientes',
-  path: '/clientes',
+const AuthenticatedPropostasIndexRoute =
+  AuthenticatedPropostasIndexRouteImport.update({
+    id: '/propostas/',
+    path: '/propostas/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedOsIndexRoute = AuthenticatedOsIndexRouteImport.update({
+  id: '/os/',
+  path: '/os/',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedClientesIndexRoute =
+  AuthenticatedClientesIndexRouteImport.update({
+    id: '/clientes/',
+    path: '/clientes/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedPropostasIdRoute =
   AuthenticatedPropostasIdRouteImport.update({
-    id: '/$id',
-    path: '/$id',
-    getParentRoute: () => AuthenticatedPropostasRoute,
+    id: '/propostas/$id',
+    path: '/propostas/$id',
+    getParentRoute: () => AuthenticatedRoute,
   } as any)
 const AuthenticatedOsIdRoute = AuthenticatedOsIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => AuthenticatedOsRoute,
+  id: '/os/$id',
+  path: '/os/$id',
+  getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedDiagnosticosNovoRoute =
   AuthenticatedDiagnosticosNovoRouteImport.update({
@@ -77,9 +79,9 @@ const AuthenticatedDiagnosticosNovoRoute =
     getParentRoute: () => AuthenticatedRoute,
   } as any)
 const AuthenticatedClientesIdRoute = AuthenticatedClientesIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => AuthenticatedClientesRoute,
+  id: '/clientes/$id',
+  path: '/clientes/$id',
+  getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedCadastrosServicosRoute =
   AuthenticatedCadastrosServicosRouteImport.update({
@@ -109,10 +111,7 @@ const AuthenticatedCadastrosEpisRoute =
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
   '/auth': typeof AuthRoute
-  '/clientes': typeof AuthenticatedClientesRouteWithChildren
   '/leads': typeof AuthenticatedLeadsRoute
-  '/os': typeof AuthenticatedOsRouteWithChildren
-  '/propostas': typeof AuthenticatedPropostasRouteWithChildren
   '/cadastros/epis': typeof AuthenticatedCadastrosEpisRoute
   '/cadastros/equipes': typeof AuthenticatedCadastrosEquipesRoute
   '/cadastros/produtos': typeof AuthenticatedCadastrosProdutosRoute
@@ -121,13 +120,13 @@ export interface FileRoutesByFullPath {
   '/diagnosticos/novo': typeof AuthenticatedDiagnosticosNovoRoute
   '/os/$id': typeof AuthenticatedOsIdRoute
   '/propostas/$id': typeof AuthenticatedPropostasIdRoute
+  '/clientes/': typeof AuthenticatedClientesIndexRoute
+  '/os/': typeof AuthenticatedOsIndexRoute
+  '/propostas/': typeof AuthenticatedPropostasIndexRoute
 }
 export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
-  '/clientes': typeof AuthenticatedClientesRouteWithChildren
   '/leads': typeof AuthenticatedLeadsRoute
-  '/os': typeof AuthenticatedOsRouteWithChildren
-  '/propostas': typeof AuthenticatedPropostasRouteWithChildren
   '/': typeof AuthenticatedIndexRoute
   '/cadastros/epis': typeof AuthenticatedCadastrosEpisRoute
   '/cadastros/equipes': typeof AuthenticatedCadastrosEquipesRoute
@@ -137,15 +136,15 @@ export interface FileRoutesByTo {
   '/diagnosticos/novo': typeof AuthenticatedDiagnosticosNovoRoute
   '/os/$id': typeof AuthenticatedOsIdRoute
   '/propostas/$id': typeof AuthenticatedPropostasIdRoute
+  '/clientes': typeof AuthenticatedClientesIndexRoute
+  '/os': typeof AuthenticatedOsIndexRoute
+  '/propostas': typeof AuthenticatedPropostasIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/auth': typeof AuthRoute
-  '/_authenticated/clientes': typeof AuthenticatedClientesRouteWithChildren
   '/_authenticated/leads': typeof AuthenticatedLeadsRoute
-  '/_authenticated/os': typeof AuthenticatedOsRouteWithChildren
-  '/_authenticated/propostas': typeof AuthenticatedPropostasRouteWithChildren
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/cadastros/epis': typeof AuthenticatedCadastrosEpisRoute
   '/_authenticated/cadastros/equipes': typeof AuthenticatedCadastrosEquipesRoute
@@ -155,16 +154,16 @@ export interface FileRoutesById {
   '/_authenticated/diagnosticos/novo': typeof AuthenticatedDiagnosticosNovoRoute
   '/_authenticated/os/$id': typeof AuthenticatedOsIdRoute
   '/_authenticated/propostas/$id': typeof AuthenticatedPropostasIdRoute
+  '/_authenticated/clientes/': typeof AuthenticatedClientesIndexRoute
+  '/_authenticated/os/': typeof AuthenticatedOsIndexRoute
+  '/_authenticated/propostas/': typeof AuthenticatedPropostasIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/auth'
-    | '/clientes'
     | '/leads'
-    | '/os'
-    | '/propostas'
     | '/cadastros/epis'
     | '/cadastros/equipes'
     | '/cadastros/produtos'
@@ -173,13 +172,13 @@ export interface FileRouteTypes {
     | '/diagnosticos/novo'
     | '/os/$id'
     | '/propostas/$id'
+    | '/clientes/'
+    | '/os/'
+    | '/propostas/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/auth'
-    | '/clientes'
     | '/leads'
-    | '/os'
-    | '/propostas'
     | '/'
     | '/cadastros/epis'
     | '/cadastros/equipes'
@@ -189,14 +188,14 @@ export interface FileRouteTypes {
     | '/diagnosticos/novo'
     | '/os/$id'
     | '/propostas/$id'
+    | '/clientes'
+    | '/os'
+    | '/propostas'
   id:
     | '__root__'
     | '/_authenticated'
     | '/auth'
-    | '/_authenticated/clientes'
     | '/_authenticated/leads'
-    | '/_authenticated/os'
-    | '/_authenticated/propostas'
     | '/_authenticated/'
     | '/_authenticated/cadastros/epis'
     | '/_authenticated/cadastros/equipes'
@@ -206,6 +205,9 @@ export interface FileRouteTypes {
     | '/_authenticated/diagnosticos/novo'
     | '/_authenticated/os/$id'
     | '/_authenticated/propostas/$id'
+    | '/_authenticated/clientes/'
+    | '/_authenticated/os/'
+    | '/_authenticated/propostas/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -236,20 +238,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
-    '/_authenticated/propostas': {
-      id: '/_authenticated/propostas'
-      path: '/propostas'
-      fullPath: '/propostas'
-      preLoaderRoute: typeof AuthenticatedPropostasRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
-    '/_authenticated/os': {
-      id: '/_authenticated/os'
-      path: '/os'
-      fullPath: '/os'
-      preLoaderRoute: typeof AuthenticatedOsRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
     '/_authenticated/leads': {
       id: '/_authenticated/leads'
       path: '/leads'
@@ -257,26 +245,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedLeadsRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
-    '/_authenticated/clientes': {
-      id: '/_authenticated/clientes'
+    '/_authenticated/propostas/': {
+      id: '/_authenticated/propostas/'
+      path: '/propostas'
+      fullPath: '/propostas/'
+      preLoaderRoute: typeof AuthenticatedPropostasIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/os/': {
+      id: '/_authenticated/os/'
+      path: '/os'
+      fullPath: '/os/'
+      preLoaderRoute: typeof AuthenticatedOsIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/clientes/': {
+      id: '/_authenticated/clientes/'
       path: '/clientes'
-      fullPath: '/clientes'
-      preLoaderRoute: typeof AuthenticatedClientesRouteImport
+      fullPath: '/clientes/'
+      preLoaderRoute: typeof AuthenticatedClientesIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/propostas/$id': {
       id: '/_authenticated/propostas/$id'
-      path: '/$id'
+      path: '/propostas/$id'
       fullPath: '/propostas/$id'
       preLoaderRoute: typeof AuthenticatedPropostasIdRouteImport
-      parentRoute: typeof AuthenticatedPropostasRoute
+      parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/os/$id': {
       id: '/_authenticated/os/$id'
-      path: '/$id'
+      path: '/os/$id'
       fullPath: '/os/$id'
       preLoaderRoute: typeof AuthenticatedOsIdRouteImport
-      parentRoute: typeof AuthenticatedOsRoute
+      parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/diagnosticos/novo': {
       id: '/_authenticated/diagnosticos/novo'
@@ -287,10 +289,10 @@ declare module '@tanstack/react-router' {
     }
     '/_authenticated/clientes/$id': {
       id: '/_authenticated/clientes/$id'
-      path: '/$id'
+      path: '/clientes/$id'
       fullPath: '/clientes/$id'
       preLoaderRoute: typeof AuthenticatedClientesIdRouteImport
-      parentRoute: typeof AuthenticatedClientesRoute
+      parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/cadastros/servicos': {
       id: '/_authenticated/cadastros/servicos'
@@ -323,69 +325,36 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface AuthenticatedClientesRouteChildren {
-  AuthenticatedClientesIdRoute: typeof AuthenticatedClientesIdRoute
-}
-
-const AuthenticatedClientesRouteChildren: AuthenticatedClientesRouteChildren = {
-  AuthenticatedClientesIdRoute: AuthenticatedClientesIdRoute,
-}
-
-const AuthenticatedClientesRouteWithChildren =
-  AuthenticatedClientesRoute._addFileChildren(
-    AuthenticatedClientesRouteChildren,
-  )
-
-interface AuthenticatedOsRouteChildren {
-  AuthenticatedOsIdRoute: typeof AuthenticatedOsIdRoute
-}
-
-const AuthenticatedOsRouteChildren: AuthenticatedOsRouteChildren = {
-  AuthenticatedOsIdRoute: AuthenticatedOsIdRoute,
-}
-
-const AuthenticatedOsRouteWithChildren = AuthenticatedOsRoute._addFileChildren(
-  AuthenticatedOsRouteChildren,
-)
-
-interface AuthenticatedPropostasRouteChildren {
-  AuthenticatedPropostasIdRoute: typeof AuthenticatedPropostasIdRoute
-}
-
-const AuthenticatedPropostasRouteChildren: AuthenticatedPropostasRouteChildren =
-  {
-    AuthenticatedPropostasIdRoute: AuthenticatedPropostasIdRoute,
-  }
-
-const AuthenticatedPropostasRouteWithChildren =
-  AuthenticatedPropostasRoute._addFileChildren(
-    AuthenticatedPropostasRouteChildren,
-  )
-
 interface AuthenticatedRouteChildren {
-  AuthenticatedClientesRoute: typeof AuthenticatedClientesRouteWithChildren
   AuthenticatedLeadsRoute: typeof AuthenticatedLeadsRoute
-  AuthenticatedOsRoute: typeof AuthenticatedOsRouteWithChildren
-  AuthenticatedPropostasRoute: typeof AuthenticatedPropostasRouteWithChildren
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedCadastrosEpisRoute: typeof AuthenticatedCadastrosEpisRoute
   AuthenticatedCadastrosEquipesRoute: typeof AuthenticatedCadastrosEquipesRoute
   AuthenticatedCadastrosProdutosRoute: typeof AuthenticatedCadastrosProdutosRoute
   AuthenticatedCadastrosServicosRoute: typeof AuthenticatedCadastrosServicosRoute
+  AuthenticatedClientesIdRoute: typeof AuthenticatedClientesIdRoute
   AuthenticatedDiagnosticosNovoRoute: typeof AuthenticatedDiagnosticosNovoRoute
+  AuthenticatedOsIdRoute: typeof AuthenticatedOsIdRoute
+  AuthenticatedPropostasIdRoute: typeof AuthenticatedPropostasIdRoute
+  AuthenticatedClientesIndexRoute: typeof AuthenticatedClientesIndexRoute
+  AuthenticatedOsIndexRoute: typeof AuthenticatedOsIndexRoute
+  AuthenticatedPropostasIndexRoute: typeof AuthenticatedPropostasIndexRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
-  AuthenticatedClientesRoute: AuthenticatedClientesRouteWithChildren,
   AuthenticatedLeadsRoute: AuthenticatedLeadsRoute,
-  AuthenticatedOsRoute: AuthenticatedOsRouteWithChildren,
-  AuthenticatedPropostasRoute: AuthenticatedPropostasRouteWithChildren,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedCadastrosEpisRoute: AuthenticatedCadastrosEpisRoute,
   AuthenticatedCadastrosEquipesRoute: AuthenticatedCadastrosEquipesRoute,
   AuthenticatedCadastrosProdutosRoute: AuthenticatedCadastrosProdutosRoute,
   AuthenticatedCadastrosServicosRoute: AuthenticatedCadastrosServicosRoute,
+  AuthenticatedClientesIdRoute: AuthenticatedClientesIdRoute,
   AuthenticatedDiagnosticosNovoRoute: AuthenticatedDiagnosticosNovoRoute,
+  AuthenticatedOsIdRoute: AuthenticatedOsIdRoute,
+  AuthenticatedPropostasIdRoute: AuthenticatedPropostasIdRoute,
+  AuthenticatedClientesIndexRoute: AuthenticatedClientesIndexRoute,
+  AuthenticatedOsIndexRoute: AuthenticatedOsIndexRoute,
+  AuthenticatedPropostasIndexRoute: AuthenticatedPropostasIndexRoute,
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(

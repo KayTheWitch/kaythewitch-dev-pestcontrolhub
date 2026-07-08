@@ -24,7 +24,7 @@ import { ArrowRight } from "lucide-react";
 import { formatDate } from "@/lib/format";
 import { OsStatusBadge } from "@/components/StatusBadge";
 
-export const Route = createFileRoute("/_authenticated/os")({
+export const Route = createFileRoute("/_authenticated/os/")({
   component: OsList,
 });
 

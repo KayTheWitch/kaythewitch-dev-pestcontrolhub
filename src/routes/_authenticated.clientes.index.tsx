@@ -36,7 +36,7 @@ import { Plus, ArrowRight } from "lucide-react";
 import { formatDate, CATEGORY_LABEL } from "@/lib/format";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/_authenticated/clientes")({
+export const Route = createFileRoute("/_authenticated/clientes/")({
   component: ClientsPage,
 });
 
