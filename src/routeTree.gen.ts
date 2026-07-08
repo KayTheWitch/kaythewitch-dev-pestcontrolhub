@@ -20,6 +20,10 @@ import { Route as AuthenticatedPropostasIdRouteImport } from './routes/_authenti
 import { Route as AuthenticatedOsIdRouteImport } from './routes/_authenticated.os.$id'
 import { Route as AuthenticatedDiagnosticosNovoRouteImport } from './routes/_authenticated.diagnosticos.novo'
 import { Route as AuthenticatedClientesIdRouteImport } from './routes/_authenticated.clientes.$id'
+import { Route as AuthenticatedCadastrosServicosRouteImport } from './routes/_authenticated.cadastros.servicos'
+import { Route as AuthenticatedCadastrosProdutosRouteImport } from './routes/_authenticated.cadastros.produtos'
+import { Route as AuthenticatedCadastrosEquipesRouteImport } from './routes/_authenticated.cadastros.equipes'
+import { Route as AuthenticatedCadastrosEpisRouteImport } from './routes/_authenticated.cadastros.epis'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
@@ -77,6 +81,30 @@ const AuthenticatedClientesIdRoute = AuthenticatedClientesIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => AuthenticatedClientesRoute,
 } as any)
+const AuthenticatedCadastrosServicosRoute =
+  AuthenticatedCadastrosServicosRouteImport.update({
+    id: '/cadastros/servicos',
+    path: '/cadastros/servicos',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedCadastrosProdutosRoute =
+  AuthenticatedCadastrosProdutosRouteImport.update({
+    id: '/cadastros/produtos',
+    path: '/cadastros/produtos',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedCadastrosEquipesRoute =
+  AuthenticatedCadastrosEquipesRouteImport.update({
+    id: '/cadastros/equipes',
+    path: '/cadastros/equipes',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedCadastrosEpisRoute =
+  AuthenticatedCadastrosEpisRouteImport.update({
+    id: '/cadastros/epis',
+    path: '/cadastros/epis',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
@@ -85,6 +113,10 @@ export interface FileRoutesByFullPath {
   '/leads': typeof AuthenticatedLeadsRoute
   '/os': typeof AuthenticatedOsRouteWithChildren
   '/propostas': typeof AuthenticatedPropostasRouteWithChildren
+  '/cadastros/epis': typeof AuthenticatedCadastrosEpisRoute
+  '/cadastros/equipes': typeof AuthenticatedCadastrosEquipesRoute
+  '/cadastros/produtos': typeof AuthenticatedCadastrosProdutosRoute
+  '/cadastros/servicos': typeof AuthenticatedCadastrosServicosRoute
   '/clientes/$id': typeof AuthenticatedClientesIdRoute
   '/diagnosticos/novo': typeof AuthenticatedDiagnosticosNovoRoute
   '/os/$id': typeof AuthenticatedOsIdRoute
@@ -97,6 +129,10 @@ export interface FileRoutesByTo {
   '/os': typeof AuthenticatedOsRouteWithChildren
   '/propostas': typeof AuthenticatedPropostasRouteWithChildren
   '/': typeof AuthenticatedIndexRoute
+  '/cadastros/epis': typeof AuthenticatedCadastrosEpisRoute
+  '/cadastros/equipes': typeof AuthenticatedCadastrosEquipesRoute
+  '/cadastros/produtos': typeof AuthenticatedCadastrosProdutosRoute
+  '/cadastros/servicos': typeof AuthenticatedCadastrosServicosRoute
   '/clientes/$id': typeof AuthenticatedClientesIdRoute
   '/diagnosticos/novo': typeof AuthenticatedDiagnosticosNovoRoute
   '/os/$id': typeof AuthenticatedOsIdRoute
@@ -111,6 +147,10 @@ export interface FileRoutesById {
   '/_authenticated/os': typeof AuthenticatedOsRouteWithChildren
   '/_authenticated/propostas': typeof AuthenticatedPropostasRouteWithChildren
   '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_authenticated/cadastros/epis': typeof AuthenticatedCadastrosEpisRoute
+  '/_authenticated/cadastros/equipes': typeof AuthenticatedCadastrosEquipesRoute
+  '/_authenticated/cadastros/produtos': typeof AuthenticatedCadastrosProdutosRoute
+  '/_authenticated/cadastros/servicos': typeof AuthenticatedCadastrosServicosRoute
   '/_authenticated/clientes/$id': typeof AuthenticatedClientesIdRoute
   '/_authenticated/diagnosticos/novo': typeof AuthenticatedDiagnosticosNovoRoute
   '/_authenticated/os/$id': typeof AuthenticatedOsIdRoute
@@ -125,6 +165,10 @@ export interface FileRouteTypes {
     | '/leads'
     | '/os'
     | '/propostas'
+    | '/cadastros/epis'
+    | '/cadastros/equipes'
+    | '/cadastros/produtos'
+    | '/cadastros/servicos'
     | '/clientes/$id'
     | '/diagnosticos/novo'
     | '/os/$id'
@@ -137,6 +181,10 @@ export interface FileRouteTypes {
     | '/os'
     | '/propostas'
     | '/'
+    | '/cadastros/epis'
+    | '/cadastros/equipes'
+    | '/cadastros/produtos'
+    | '/cadastros/servicos'
     | '/clientes/$id'
     | '/diagnosticos/novo'
     | '/os/$id'
@@ -150,6 +198,10 @@ export interface FileRouteTypes {
     | '/_authenticated/os'
     | '/_authenticated/propostas'
     | '/_authenticated/'
+    | '/_authenticated/cadastros/epis'
+    | '/_authenticated/cadastros/equipes'
+    | '/_authenticated/cadastros/produtos'
+    | '/_authenticated/cadastros/servicos'
     | '/_authenticated/clientes/$id'
     | '/_authenticated/diagnosticos/novo'
     | '/_authenticated/os/$id'
@@ -240,6 +292,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedClientesIdRouteImport
       parentRoute: typeof AuthenticatedClientesRoute
     }
+    '/_authenticated/cadastros/servicos': {
+      id: '/_authenticated/cadastros/servicos'
+      path: '/cadastros/servicos'
+      fullPath: '/cadastros/servicos'
+      preLoaderRoute: typeof AuthenticatedCadastrosServicosRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/cadastros/produtos': {
+      id: '/_authenticated/cadastros/produtos'
+      path: '/cadastros/produtos'
+      fullPath: '/cadastros/produtos'
+      preLoaderRoute: typeof AuthenticatedCadastrosProdutosRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/cadastros/equipes': {
+      id: '/_authenticated/cadastros/equipes'
+      path: '/cadastros/equipes'
+      fullPath: '/cadastros/equipes'
+      preLoaderRoute: typeof AuthenticatedCadastrosEquipesRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/cadastros/epis': {
+      id: '/_authenticated/cadastros/epis'
+      path: '/cadastros/epis'
+      fullPath: '/cadastros/epis'
+      preLoaderRoute: typeof AuthenticatedCadastrosEpisRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
   }
 }
 
@@ -288,6 +368,10 @@ interface AuthenticatedRouteChildren {
   AuthenticatedOsRoute: typeof AuthenticatedOsRouteWithChildren
   AuthenticatedPropostasRoute: typeof AuthenticatedPropostasRouteWithChildren
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+  AuthenticatedCadastrosEpisRoute: typeof AuthenticatedCadastrosEpisRoute
+  AuthenticatedCadastrosEquipesRoute: typeof AuthenticatedCadastrosEquipesRoute
+  AuthenticatedCadastrosProdutosRoute: typeof AuthenticatedCadastrosProdutosRoute
+  AuthenticatedCadastrosServicosRoute: typeof AuthenticatedCadastrosServicosRoute
   AuthenticatedDiagnosticosNovoRoute: typeof AuthenticatedDiagnosticosNovoRoute
 }
 
@@ -297,6 +381,10 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedOsRoute: AuthenticatedOsRouteWithChildren,
   AuthenticatedPropostasRoute: AuthenticatedPropostasRouteWithChildren,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
+  AuthenticatedCadastrosEpisRoute: AuthenticatedCadastrosEpisRoute,
+  AuthenticatedCadastrosEquipesRoute: AuthenticatedCadastrosEquipesRoute,
+  AuthenticatedCadastrosProdutosRoute: AuthenticatedCadastrosProdutosRoute,
+  AuthenticatedCadastrosServicosRoute: AuthenticatedCadastrosServicosRoute,
   AuthenticatedDiagnosticosNovoRoute: AuthenticatedDiagnosticosNovoRoute,
 }
 
