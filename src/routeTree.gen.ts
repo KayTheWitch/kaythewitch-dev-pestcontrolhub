@@ -12,6 +12,14 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated.index'
+import { Route as AuthenticatedPropostasRouteImport } from './routes/_authenticated.propostas'
+import { Route as AuthenticatedOsRouteImport } from './routes/_authenticated.os'
+import { Route as AuthenticatedLeadsRouteImport } from './routes/_authenticated.leads'
+import { Route as AuthenticatedClientesRouteImport } from './routes/_authenticated.clientes'
+import { Route as AuthenticatedPropostasIdRouteImport } from './routes/_authenticated.propostas.$id'
+import { Route as AuthenticatedOsIdRouteImport } from './routes/_authenticated.os.$id'
+import { Route as AuthenticatedDiagnosticosNovoRouteImport } from './routes/_authenticated.diagnosticos.novo'
+import { Route as AuthenticatedClientesIdRouteImport } from './routes/_authenticated.clientes.$id'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
@@ -27,27 +35,125 @@ const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedPropostasRoute = AuthenticatedPropostasRouteImport.update({
+  id: '/propostas',
+  path: '/propostas',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedOsRoute = AuthenticatedOsRouteImport.update({
+  id: '/os',
+  path: '/os',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedLeadsRoute = AuthenticatedLeadsRouteImport.update({
+  id: '/leads',
+  path: '/leads',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedClientesRoute = AuthenticatedClientesRouteImport.update({
+  id: '/clientes',
+  path: '/clientes',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedPropostasIdRoute =
+  AuthenticatedPropostasIdRouteImport.update({
+    id: '/$id',
+    path: '/$id',
+    getParentRoute: () => AuthenticatedPropostasRoute,
+  } as any)
+const AuthenticatedOsIdRoute = AuthenticatedOsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AuthenticatedOsRoute,
+} as any)
+const AuthenticatedDiagnosticosNovoRoute =
+  AuthenticatedDiagnosticosNovoRouteImport.update({
+    id: '/diagnosticos/novo',
+    path: '/diagnosticos/novo',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedClientesIdRoute = AuthenticatedClientesIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AuthenticatedClientesRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
   '/auth': typeof AuthRoute
+  '/clientes': typeof AuthenticatedClientesRouteWithChildren
+  '/leads': typeof AuthenticatedLeadsRoute
+  '/os': typeof AuthenticatedOsRouteWithChildren
+  '/propostas': typeof AuthenticatedPropostasRouteWithChildren
+  '/clientes/$id': typeof AuthenticatedClientesIdRoute
+  '/diagnosticos/novo': typeof AuthenticatedDiagnosticosNovoRoute
+  '/os/$id': typeof AuthenticatedOsIdRoute
+  '/propostas/$id': typeof AuthenticatedPropostasIdRoute
 }
 export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
+  '/clientes': typeof AuthenticatedClientesRouteWithChildren
+  '/leads': typeof AuthenticatedLeadsRoute
+  '/os': typeof AuthenticatedOsRouteWithChildren
+  '/propostas': typeof AuthenticatedPropostasRouteWithChildren
   '/': typeof AuthenticatedIndexRoute
+  '/clientes/$id': typeof AuthenticatedClientesIdRoute
+  '/diagnosticos/novo': typeof AuthenticatedDiagnosticosNovoRoute
+  '/os/$id': typeof AuthenticatedOsIdRoute
+  '/propostas/$id': typeof AuthenticatedPropostasIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/auth': typeof AuthRoute
+  '/_authenticated/clientes': typeof AuthenticatedClientesRouteWithChildren
+  '/_authenticated/leads': typeof AuthenticatedLeadsRoute
+  '/_authenticated/os': typeof AuthenticatedOsRouteWithChildren
+  '/_authenticated/propostas': typeof AuthenticatedPropostasRouteWithChildren
   '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_authenticated/clientes/$id': typeof AuthenticatedClientesIdRoute
+  '/_authenticated/diagnosticos/novo': typeof AuthenticatedDiagnosticosNovoRoute
+  '/_authenticated/os/$id': typeof AuthenticatedOsIdRoute
+  '/_authenticated/propostas/$id': typeof AuthenticatedPropostasIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/clientes'
+    | '/leads'
+    | '/os'
+    | '/propostas'
+    | '/clientes/$id'
+    | '/diagnosticos/novo'
+    | '/os/$id'
+    | '/propostas/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/auth' | '/'
-  id: '__root__' | '/_authenticated' | '/auth' | '/_authenticated/'
+  to:
+    | '/auth'
+    | '/clientes'
+    | '/leads'
+    | '/os'
+    | '/propostas'
+    | '/'
+    | '/clientes/$id'
+    | '/diagnosticos/novo'
+    | '/os/$id'
+    | '/propostas/$id'
+  id:
+    | '__root__'
+    | '/_authenticated'
+    | '/auth'
+    | '/_authenticated/clientes'
+    | '/_authenticated/leads'
+    | '/_authenticated/os'
+    | '/_authenticated/propostas'
+    | '/_authenticated/'
+    | '/_authenticated/clientes/$id'
+    | '/_authenticated/diagnosticos/novo'
+    | '/_authenticated/os/$id'
+    | '/_authenticated/propostas/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -78,15 +184,120 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/propostas': {
+      id: '/_authenticated/propostas'
+      path: '/propostas'
+      fullPath: '/propostas'
+      preLoaderRoute: typeof AuthenticatedPropostasRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/os': {
+      id: '/_authenticated/os'
+      path: '/os'
+      fullPath: '/os'
+      preLoaderRoute: typeof AuthenticatedOsRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/leads': {
+      id: '/_authenticated/leads'
+      path: '/leads'
+      fullPath: '/leads'
+      preLoaderRoute: typeof AuthenticatedLeadsRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/clientes': {
+      id: '/_authenticated/clientes'
+      path: '/clientes'
+      fullPath: '/clientes'
+      preLoaderRoute: typeof AuthenticatedClientesRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/propostas/$id': {
+      id: '/_authenticated/propostas/$id'
+      path: '/$id'
+      fullPath: '/propostas/$id'
+      preLoaderRoute: typeof AuthenticatedPropostasIdRouteImport
+      parentRoute: typeof AuthenticatedPropostasRoute
+    }
+    '/_authenticated/os/$id': {
+      id: '/_authenticated/os/$id'
+      path: '/$id'
+      fullPath: '/os/$id'
+      preLoaderRoute: typeof AuthenticatedOsIdRouteImport
+      parentRoute: typeof AuthenticatedOsRoute
+    }
+    '/_authenticated/diagnosticos/novo': {
+      id: '/_authenticated/diagnosticos/novo'
+      path: '/diagnosticos/novo'
+      fullPath: '/diagnosticos/novo'
+      preLoaderRoute: typeof AuthenticatedDiagnosticosNovoRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/clientes/$id': {
+      id: '/_authenticated/clientes/$id'
+      path: '/$id'
+      fullPath: '/clientes/$id'
+      preLoaderRoute: typeof AuthenticatedClientesIdRouteImport
+      parentRoute: typeof AuthenticatedClientesRoute
+    }
   }
 }
 
+interface AuthenticatedClientesRouteChildren {
+  AuthenticatedClientesIdRoute: typeof AuthenticatedClientesIdRoute
+}
+
+const AuthenticatedClientesRouteChildren: AuthenticatedClientesRouteChildren = {
+  AuthenticatedClientesIdRoute: AuthenticatedClientesIdRoute,
+}
+
+const AuthenticatedClientesRouteWithChildren =
+  AuthenticatedClientesRoute._addFileChildren(
+    AuthenticatedClientesRouteChildren,
+  )
+
+interface AuthenticatedOsRouteChildren {
+  AuthenticatedOsIdRoute: typeof AuthenticatedOsIdRoute
+}
+
+const AuthenticatedOsRouteChildren: AuthenticatedOsRouteChildren = {
+  AuthenticatedOsIdRoute: AuthenticatedOsIdRoute,
+}
+
+const AuthenticatedOsRouteWithChildren = AuthenticatedOsRoute._addFileChildren(
+  AuthenticatedOsRouteChildren,
+)
+
+interface AuthenticatedPropostasRouteChildren {
+  AuthenticatedPropostasIdRoute: typeof AuthenticatedPropostasIdRoute
+}
+
+const AuthenticatedPropostasRouteChildren: AuthenticatedPropostasRouteChildren =
+  {
+    AuthenticatedPropostasIdRoute: AuthenticatedPropostasIdRoute,
+  }
+
+const AuthenticatedPropostasRouteWithChildren =
+  AuthenticatedPropostasRoute._addFileChildren(
+    AuthenticatedPropostasRouteChildren,
+  )
+
 interface AuthenticatedRouteChildren {
+  AuthenticatedClientesRoute: typeof AuthenticatedClientesRouteWithChildren
+  AuthenticatedLeadsRoute: typeof AuthenticatedLeadsRoute
+  AuthenticatedOsRoute: typeof AuthenticatedOsRouteWithChildren
+  AuthenticatedPropostasRoute: typeof AuthenticatedPropostasRouteWithChildren
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+  AuthenticatedDiagnosticosNovoRoute: typeof AuthenticatedDiagnosticosNovoRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedClientesRoute: AuthenticatedClientesRouteWithChildren,
+  AuthenticatedLeadsRoute: AuthenticatedLeadsRoute,
+  AuthenticatedOsRoute: AuthenticatedOsRouteWithChildren,
+  AuthenticatedPropostasRoute: AuthenticatedPropostasRouteWithChildren,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
+  AuthenticatedDiagnosticosNovoRoute: AuthenticatedDiagnosticosNovoRoute,
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
