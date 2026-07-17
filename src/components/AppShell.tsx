@@ -13,6 +13,10 @@ import {
   Bug,
   LogOut,
   Settings,
+  Wallet,
+  ArrowDownCircle,
+  ArrowUpCircle,
+  Tags,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -33,12 +37,21 @@ const nav: { section: string; items: NavItem[] }[] = [
     ],
   },
   {
+    section: "Financeiro",
+    items: [
+      { to: "/financeiro", label: "Painel financeiro", icon: Wallet },
+      { to: "/financeiro/receber", label: "Contas a receber", icon: ArrowDownCircle },
+      { to: "/financeiro/pagar", label: "Contas a pagar", icon: ArrowUpCircle },
+    ],
+  },
+  {
     section: "Cadastros",
     items: [
       { to: "/cadastros/servicos", label: "Serviços", icon: Settings },
       { to: "/cadastros/equipes", label: "Equipes", icon: UsersRound },
       { to: "/cadastros/produtos", label: "Produtos", icon: Package },
       { to: "/cadastros/epis", label: "EPIs", icon: ShieldCheck },
+      { to: "/cadastros/categorias-financeiras", label: "Categorias financeiras", icon: Tags },
     ],
   },
 ];
