@@ -51,12 +51,6 @@ export function LeadStatusBadge({ status }: { status: string }) {
       {LEAD_STATUS_LABEL[status] ?? status}
     </Badge>
   );
-export function LeadStatusBadge({ status }: { status: string }) {
-  return (
-    <Badge variant="outline" className={cn("font-medium", leadColors[status])}>
-      {LEAD_STATUS_LABEL[status] ?? status}
-    </Badge>
-  );
 }
 
 const financialColors: Record<string, string> = {
