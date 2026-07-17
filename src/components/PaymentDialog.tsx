@@ -51,7 +51,7 @@ export function PaymentDialog({
         _valor: Number(valor),
         _data_pagamento: data,
         _forma: forma as any,
-        _obs: obs || null,
+        _obs: obs || undefined,
       });
       if (error) throw error;
     },
