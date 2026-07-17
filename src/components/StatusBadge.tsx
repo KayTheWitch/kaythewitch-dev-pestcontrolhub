@@ -4,6 +4,7 @@ import {
   PROPOSAL_STATUS_LABEL,
   OS_STATUS_LABEL,
   LEAD_STATUS_LABEL,
+  FINANCIAL_STATUS_LABEL,
 } from "@/lib/format";
 
 const proposalColors: Record<string, string> = {
