@@ -4,6 +4,7 @@ import {
   PROPOSAL_STATUS_LABEL,
   OS_STATUS_LABEL,
   LEAD_STATUS_LABEL,
+  FINANCIAL_STATUS_LABEL,
 } from "@/lib/format";
 
 const proposalColors: Record<string, string> = {
@@ -48,6 +49,22 @@ export function LeadStatusBadge({ status }: { status: string }) {
   return (
     <Badge variant="outline" className={cn("font-medium", leadColors[status])}>
       {LEAD_STATUS_LABEL[status] ?? status}
+    </Badge>
+  );
+}
+
+const financialColors: Record<string, string> = {
+  aberto: "bg-chart-2/15 text-chart-2 border-chart-2/30",
+  parcialmente_pago: "bg-warning/15 text-warning-foreground border-warning/30",
+  pago: "bg-success/15 text-success border-success/30",
+  vencido: "bg-destructive/15 text-destructive border-destructive/30",
+  cancelado: "bg-muted text-muted-foreground",
+};
+
+export function FinancialStatusBadge({ status }: { status: string }) {
+  return (
+    <Badge variant="outline" className={cn("font-medium", financialColors[status])}>
+      {FINANCIAL_STATUS_LABEL[status] ?? status}
     </Badge>
   );
 }

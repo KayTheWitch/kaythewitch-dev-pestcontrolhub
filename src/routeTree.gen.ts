@@ -15,15 +15,22 @@ import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated.
 import { Route as AuthenticatedLeadsRouteImport } from './routes/_authenticated.leads'
 import { Route as AuthenticatedPropostasIndexRouteImport } from './routes/_authenticated.propostas.index'
 import { Route as AuthenticatedOsIndexRouteImport } from './routes/_authenticated.os.index'
+import { Route as AuthenticatedFinanceiroIndexRouteImport } from './routes/_authenticated.financeiro.index'
 import { Route as AuthenticatedClientesIndexRouteImport } from './routes/_authenticated.clientes.index'
 import { Route as AuthenticatedPropostasIdRouteImport } from './routes/_authenticated.propostas.$id'
 import { Route as AuthenticatedOsIdRouteImport } from './routes/_authenticated.os.$id'
+import { Route as AuthenticatedFinanceiroReceberRouteImport } from './routes/_authenticated.financeiro.receber'
+import { Route as AuthenticatedFinanceiroPagarRouteImport } from './routes/_authenticated.financeiro.pagar'
 import { Route as AuthenticatedDiagnosticosNovoRouteImport } from './routes/_authenticated.diagnosticos.novo'
 import { Route as AuthenticatedClientesIdRouteImport } from './routes/_authenticated.clientes.$id'
 import { Route as AuthenticatedCadastrosServicosRouteImport } from './routes/_authenticated.cadastros.servicos'
 import { Route as AuthenticatedCadastrosProdutosRouteImport } from './routes/_authenticated.cadastros.produtos'
 import { Route as AuthenticatedCadastrosEquipesRouteImport } from './routes/_authenticated.cadastros.equipes'
 import { Route as AuthenticatedCadastrosEpisRouteImport } from './routes/_authenticated.cadastros.epis'
+import { Route as AuthenticatedCadastrosCategoriasFinanceirasRouteImport } from './routes/_authenticated.cadastros.categorias-financeiras'
+import { Route as AuthenticatedFinanceiroReceberIdRouteImport } from './routes/_authenticated.financeiro.receber.$id'
+import { Route as AuthenticatedFinanceiroPagarIdRouteImport } from './routes/_authenticated.financeiro.pagar.$id'
+import { Route as AuthenticatedFinanceiroLancamentoNovoRouteImport } from './routes/_authenticated.financeiro.lancamento.novo'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
@@ -55,6 +62,12 @@ const AuthenticatedOsIndexRoute = AuthenticatedOsIndexRouteImport.update({
   path: '/os/',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedFinanceiroIndexRoute =
+  AuthenticatedFinanceiroIndexRouteImport.update({
+    id: '/financeiro/',
+    path: '/financeiro/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedClientesIndexRoute =
   AuthenticatedClientesIndexRouteImport.update({
     id: '/clientes/',
@@ -72,6 +85,18 @@ const AuthenticatedOsIdRoute = AuthenticatedOsIdRouteImport.update({
   path: '/os/$id',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedFinanceiroReceberRoute =
+  AuthenticatedFinanceiroReceberRouteImport.update({
+    id: '/financeiro/receber',
+    path: '/financeiro/receber',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedFinanceiroPagarRoute =
+  AuthenticatedFinanceiroPagarRouteImport.update({
+    id: '/financeiro/pagar',
+    path: '/financeiro/pagar',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedDiagnosticosNovoRoute =
   AuthenticatedDiagnosticosNovoRouteImport.update({
     id: '/diagnosticos/novo',
@@ -107,38 +132,76 @@ const AuthenticatedCadastrosEpisRoute =
     path: '/cadastros/epis',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthenticatedCadastrosCategoriasFinanceirasRoute =
+  AuthenticatedCadastrosCategoriasFinanceirasRouteImport.update({
+    id: '/cadastros/categorias-financeiras',
+    path: '/cadastros/categorias-financeiras',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedFinanceiroReceberIdRoute =
+  AuthenticatedFinanceiroReceberIdRouteImport.update({
+    id: '/$id',
+    path: '/$id',
+    getParentRoute: () => AuthenticatedFinanceiroReceberRoute,
+  } as any)
+const AuthenticatedFinanceiroPagarIdRoute =
+  AuthenticatedFinanceiroPagarIdRouteImport.update({
+    id: '/$id',
+    path: '/$id',
+    getParentRoute: () => AuthenticatedFinanceiroPagarRoute,
+  } as any)
+const AuthenticatedFinanceiroLancamentoNovoRoute =
+  AuthenticatedFinanceiroLancamentoNovoRouteImport.update({
+    id: '/financeiro/lancamento/novo',
+    path: '/financeiro/lancamento/novo',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
   '/auth': typeof AuthRoute
   '/leads': typeof AuthenticatedLeadsRoute
+  '/cadastros/categorias-financeiras': typeof AuthenticatedCadastrosCategoriasFinanceirasRoute
   '/cadastros/epis': typeof AuthenticatedCadastrosEpisRoute
   '/cadastros/equipes': typeof AuthenticatedCadastrosEquipesRoute
   '/cadastros/produtos': typeof AuthenticatedCadastrosProdutosRoute
   '/cadastros/servicos': typeof AuthenticatedCadastrosServicosRoute
   '/clientes/$id': typeof AuthenticatedClientesIdRoute
   '/diagnosticos/novo': typeof AuthenticatedDiagnosticosNovoRoute
+  '/financeiro/pagar': typeof AuthenticatedFinanceiroPagarRouteWithChildren
+  '/financeiro/receber': typeof AuthenticatedFinanceiroReceberRouteWithChildren
   '/os/$id': typeof AuthenticatedOsIdRoute
   '/propostas/$id': typeof AuthenticatedPropostasIdRoute
   '/clientes/': typeof AuthenticatedClientesIndexRoute
+  '/financeiro/': typeof AuthenticatedFinanceiroIndexRoute
   '/os/': typeof AuthenticatedOsIndexRoute
   '/propostas/': typeof AuthenticatedPropostasIndexRoute
+  '/financeiro/lancamento/novo': typeof AuthenticatedFinanceiroLancamentoNovoRoute
+  '/financeiro/pagar/$id': typeof AuthenticatedFinanceiroPagarIdRoute
+  '/financeiro/receber/$id': typeof AuthenticatedFinanceiroReceberIdRoute
 }
 export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/leads': typeof AuthenticatedLeadsRoute
   '/': typeof AuthenticatedIndexRoute
+  '/cadastros/categorias-financeiras': typeof AuthenticatedCadastrosCategoriasFinanceirasRoute
   '/cadastros/epis': typeof AuthenticatedCadastrosEpisRoute
   '/cadastros/equipes': typeof AuthenticatedCadastrosEquipesRoute
   '/cadastros/produtos': typeof AuthenticatedCadastrosProdutosRoute
   '/cadastros/servicos': typeof AuthenticatedCadastrosServicosRoute
   '/clientes/$id': typeof AuthenticatedClientesIdRoute
   '/diagnosticos/novo': typeof AuthenticatedDiagnosticosNovoRoute
+  '/financeiro/pagar': typeof AuthenticatedFinanceiroPagarRouteWithChildren
+  '/financeiro/receber': typeof AuthenticatedFinanceiroReceberRouteWithChildren
   '/os/$id': typeof AuthenticatedOsIdRoute
   '/propostas/$id': typeof AuthenticatedPropostasIdRoute
   '/clientes': typeof AuthenticatedClientesIndexRoute
+  '/financeiro': typeof AuthenticatedFinanceiroIndexRoute
   '/os': typeof AuthenticatedOsIndexRoute
   '/propostas': typeof AuthenticatedPropostasIndexRoute
+  '/financeiro/lancamento/novo': typeof AuthenticatedFinanceiroLancamentoNovoRoute
+  '/financeiro/pagar/$id': typeof AuthenticatedFinanceiroPagarIdRoute
+  '/financeiro/receber/$id': typeof AuthenticatedFinanceiroReceberIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -146,17 +209,24 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/_authenticated/leads': typeof AuthenticatedLeadsRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_authenticated/cadastros/categorias-financeiras': typeof AuthenticatedCadastrosCategoriasFinanceirasRoute
   '/_authenticated/cadastros/epis': typeof AuthenticatedCadastrosEpisRoute
   '/_authenticated/cadastros/equipes': typeof AuthenticatedCadastrosEquipesRoute
   '/_authenticated/cadastros/produtos': typeof AuthenticatedCadastrosProdutosRoute
   '/_authenticated/cadastros/servicos': typeof AuthenticatedCadastrosServicosRoute
   '/_authenticated/clientes/$id': typeof AuthenticatedClientesIdRoute
   '/_authenticated/diagnosticos/novo': typeof AuthenticatedDiagnosticosNovoRoute
+  '/_authenticated/financeiro/pagar': typeof AuthenticatedFinanceiroPagarRouteWithChildren
+  '/_authenticated/financeiro/receber': typeof AuthenticatedFinanceiroReceberRouteWithChildren
   '/_authenticated/os/$id': typeof AuthenticatedOsIdRoute
   '/_authenticated/propostas/$id': typeof AuthenticatedPropostasIdRoute
   '/_authenticated/clientes/': typeof AuthenticatedClientesIndexRoute
+  '/_authenticated/financeiro/': typeof AuthenticatedFinanceiroIndexRoute
   '/_authenticated/os/': typeof AuthenticatedOsIndexRoute
   '/_authenticated/propostas/': typeof AuthenticatedPropostasIndexRoute
+  '/_authenticated/financeiro/lancamento/novo': typeof AuthenticatedFinanceiroLancamentoNovoRoute
+  '/_authenticated/financeiro/pagar/$id': typeof AuthenticatedFinanceiroPagarIdRoute
+  '/_authenticated/financeiro/receber/$id': typeof AuthenticatedFinanceiroReceberIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -164,50 +234,71 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/leads'
+    | '/cadastros/categorias-financeiras'
     | '/cadastros/epis'
     | '/cadastros/equipes'
     | '/cadastros/produtos'
     | '/cadastros/servicos'
     | '/clientes/$id'
     | '/diagnosticos/novo'
+    | '/financeiro/pagar'
+    | '/financeiro/receber'
     | '/os/$id'
     | '/propostas/$id'
     | '/clientes/'
+    | '/financeiro/'
     | '/os/'
     | '/propostas/'
+    | '/financeiro/lancamento/novo'
+    | '/financeiro/pagar/$id'
+    | '/financeiro/receber/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/auth'
     | '/leads'
     | '/'
+    | '/cadastros/categorias-financeiras'
     | '/cadastros/epis'
     | '/cadastros/equipes'
     | '/cadastros/produtos'
     | '/cadastros/servicos'
     | '/clientes/$id'
     | '/diagnosticos/novo'
+    | '/financeiro/pagar'
+    | '/financeiro/receber'
     | '/os/$id'
     | '/propostas/$id'
     | '/clientes'
+    | '/financeiro'
     | '/os'
     | '/propostas'
+    | '/financeiro/lancamento/novo'
+    | '/financeiro/pagar/$id'
+    | '/financeiro/receber/$id'
   id:
     | '__root__'
     | '/_authenticated'
     | '/auth'
     | '/_authenticated/leads'
     | '/_authenticated/'
+    | '/_authenticated/cadastros/categorias-financeiras'
     | '/_authenticated/cadastros/epis'
     | '/_authenticated/cadastros/equipes'
     | '/_authenticated/cadastros/produtos'
     | '/_authenticated/cadastros/servicos'
     | '/_authenticated/clientes/$id'
     | '/_authenticated/diagnosticos/novo'
+    | '/_authenticated/financeiro/pagar'
+    | '/_authenticated/financeiro/receber'
     | '/_authenticated/os/$id'
     | '/_authenticated/propostas/$id'
     | '/_authenticated/clientes/'
+    | '/_authenticated/financeiro/'
     | '/_authenticated/os/'
     | '/_authenticated/propostas/'
+    | '/_authenticated/financeiro/lancamento/novo'
+    | '/_authenticated/financeiro/pagar/$id'
+    | '/_authenticated/financeiro/receber/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -259,6 +350,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedOsIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/financeiro/': {
+      id: '/_authenticated/financeiro/'
+      path: '/financeiro'
+      fullPath: '/financeiro/'
+      preLoaderRoute: typeof AuthenticatedFinanceiroIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/clientes/': {
       id: '/_authenticated/clientes/'
       path: '/clientes'
@@ -278,6 +376,20 @@ declare module '@tanstack/react-router' {
       path: '/os/$id'
       fullPath: '/os/$id'
       preLoaderRoute: typeof AuthenticatedOsIdRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/financeiro/receber': {
+      id: '/_authenticated/financeiro/receber'
+      path: '/financeiro/receber'
+      fullPath: '/financeiro/receber'
+      preLoaderRoute: typeof AuthenticatedFinanceiroReceberRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/financeiro/pagar': {
+      id: '/_authenticated/financeiro/pagar'
+      path: '/financeiro/pagar'
+      fullPath: '/financeiro/pagar'
+      preLoaderRoute: typeof AuthenticatedFinanceiroPagarRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/diagnosticos/novo': {
@@ -322,39 +434,110 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCadastrosEpisRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/cadastros/categorias-financeiras': {
+      id: '/_authenticated/cadastros/categorias-financeiras'
+      path: '/cadastros/categorias-financeiras'
+      fullPath: '/cadastros/categorias-financeiras'
+      preLoaderRoute: typeof AuthenticatedCadastrosCategoriasFinanceirasRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/financeiro/receber/$id': {
+      id: '/_authenticated/financeiro/receber/$id'
+      path: '/$id'
+      fullPath: '/financeiro/receber/$id'
+      preLoaderRoute: typeof AuthenticatedFinanceiroReceberIdRouteImport
+      parentRoute: typeof AuthenticatedFinanceiroReceberRoute
+    }
+    '/_authenticated/financeiro/pagar/$id': {
+      id: '/_authenticated/financeiro/pagar/$id'
+      path: '/$id'
+      fullPath: '/financeiro/pagar/$id'
+      preLoaderRoute: typeof AuthenticatedFinanceiroPagarIdRouteImport
+      parentRoute: typeof AuthenticatedFinanceiroPagarRoute
+    }
+    '/_authenticated/financeiro/lancamento/novo': {
+      id: '/_authenticated/financeiro/lancamento/novo'
+      path: '/financeiro/lancamento/novo'
+      fullPath: '/financeiro/lancamento/novo'
+      preLoaderRoute: typeof AuthenticatedFinanceiroLancamentoNovoRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
   }
 }
+
+interface AuthenticatedFinanceiroPagarRouteChildren {
+  AuthenticatedFinanceiroPagarIdRoute: typeof AuthenticatedFinanceiroPagarIdRoute
+}
+
+const AuthenticatedFinanceiroPagarRouteChildren: AuthenticatedFinanceiroPagarRouteChildren =
+  {
+    AuthenticatedFinanceiroPagarIdRoute: AuthenticatedFinanceiroPagarIdRoute,
+  }
+
+const AuthenticatedFinanceiroPagarRouteWithChildren =
+  AuthenticatedFinanceiroPagarRoute._addFileChildren(
+    AuthenticatedFinanceiroPagarRouteChildren,
+  )
+
+interface AuthenticatedFinanceiroReceberRouteChildren {
+  AuthenticatedFinanceiroReceberIdRoute: typeof AuthenticatedFinanceiroReceberIdRoute
+}
+
+const AuthenticatedFinanceiroReceberRouteChildren: AuthenticatedFinanceiroReceberRouteChildren =
+  {
+    AuthenticatedFinanceiroReceberIdRoute:
+      AuthenticatedFinanceiroReceberIdRoute,
+  }
+
+const AuthenticatedFinanceiroReceberRouteWithChildren =
+  AuthenticatedFinanceiroReceberRoute._addFileChildren(
+    AuthenticatedFinanceiroReceberRouteChildren,
+  )
 
 interface AuthenticatedRouteChildren {
   AuthenticatedLeadsRoute: typeof AuthenticatedLeadsRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+  AuthenticatedCadastrosCategoriasFinanceirasRoute: typeof AuthenticatedCadastrosCategoriasFinanceirasRoute
   AuthenticatedCadastrosEpisRoute: typeof AuthenticatedCadastrosEpisRoute
   AuthenticatedCadastrosEquipesRoute: typeof AuthenticatedCadastrosEquipesRoute
   AuthenticatedCadastrosProdutosRoute: typeof AuthenticatedCadastrosProdutosRoute
   AuthenticatedCadastrosServicosRoute: typeof AuthenticatedCadastrosServicosRoute
   AuthenticatedClientesIdRoute: typeof AuthenticatedClientesIdRoute
   AuthenticatedDiagnosticosNovoRoute: typeof AuthenticatedDiagnosticosNovoRoute
+  AuthenticatedFinanceiroPagarRoute: typeof AuthenticatedFinanceiroPagarRouteWithChildren
+  AuthenticatedFinanceiroReceberRoute: typeof AuthenticatedFinanceiroReceberRouteWithChildren
   AuthenticatedOsIdRoute: typeof AuthenticatedOsIdRoute
   AuthenticatedPropostasIdRoute: typeof AuthenticatedPropostasIdRoute
   AuthenticatedClientesIndexRoute: typeof AuthenticatedClientesIndexRoute
+  AuthenticatedFinanceiroIndexRoute: typeof AuthenticatedFinanceiroIndexRoute
   AuthenticatedOsIndexRoute: typeof AuthenticatedOsIndexRoute
   AuthenticatedPropostasIndexRoute: typeof AuthenticatedPropostasIndexRoute
+  AuthenticatedFinanceiroLancamentoNovoRoute: typeof AuthenticatedFinanceiroLancamentoNovoRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedLeadsRoute: AuthenticatedLeadsRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
+  AuthenticatedCadastrosCategoriasFinanceirasRoute:
+    AuthenticatedCadastrosCategoriasFinanceirasRoute,
   AuthenticatedCadastrosEpisRoute: AuthenticatedCadastrosEpisRoute,
   AuthenticatedCadastrosEquipesRoute: AuthenticatedCadastrosEquipesRoute,
   AuthenticatedCadastrosProdutosRoute: AuthenticatedCadastrosProdutosRoute,
   AuthenticatedCadastrosServicosRoute: AuthenticatedCadastrosServicosRoute,
   AuthenticatedClientesIdRoute: AuthenticatedClientesIdRoute,
   AuthenticatedDiagnosticosNovoRoute: AuthenticatedDiagnosticosNovoRoute,
+  AuthenticatedFinanceiroPagarRoute:
+    AuthenticatedFinanceiroPagarRouteWithChildren,
+  AuthenticatedFinanceiroReceberRoute:
+    AuthenticatedFinanceiroReceberRouteWithChildren,
   AuthenticatedOsIdRoute: AuthenticatedOsIdRoute,
   AuthenticatedPropostasIdRoute: AuthenticatedPropostasIdRoute,
   AuthenticatedClientesIndexRoute: AuthenticatedClientesIndexRoute,
+  AuthenticatedFinanceiroIndexRoute: AuthenticatedFinanceiroIndexRoute,
   AuthenticatedOsIndexRoute: AuthenticatedOsIndexRoute,
   AuthenticatedPropostasIndexRoute: AuthenticatedPropostasIndexRoute,
+  AuthenticatedFinanceiroLancamentoNovoRoute:
+    AuthenticatedFinanceiroLancamentoNovoRoute,
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
@@ -368,13 +551,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
