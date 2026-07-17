@@ -19,6 +19,7 @@ import { Route as AuthenticatedFinanceiroIndexRouteImport } from './routes/_auth
 import { Route as AuthenticatedClientesIndexRouteImport } from './routes/_authenticated.clientes.index'
 import { Route as AuthenticatedPropostasIdRouteImport } from './routes/_authenticated.propostas.$id'
 import { Route as AuthenticatedOsIdRouteImport } from './routes/_authenticated.os.$id'
+import { Route as AuthenticatedFinanceiroReceberRouteImport } from './routes/_authenticated.financeiro.receber'
 import { Route as AuthenticatedDiagnosticosNovoRouteImport } from './routes/_authenticated.diagnosticos.novo'
 import { Route as AuthenticatedClientesIdRouteImport } from './routes/_authenticated.clientes.$id'
 import { Route as AuthenticatedCadastrosServicosRouteImport } from './routes/_authenticated.cadastros.servicos'
@@ -79,6 +80,12 @@ const AuthenticatedOsIdRoute = AuthenticatedOsIdRouteImport.update({
   path: '/os/$id',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedFinanceiroReceberRoute =
+  AuthenticatedFinanceiroReceberRouteImport.update({
+    id: '/financeiro/receber',
+    path: '/financeiro/receber',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedDiagnosticosNovoRoute =
   AuthenticatedDiagnosticosNovoRouteImport.update({
     id: '/diagnosticos/novo',
@@ -125,6 +132,7 @@ export interface FileRoutesByFullPath {
   '/cadastros/servicos': typeof AuthenticatedCadastrosServicosRoute
   '/clientes/$id': typeof AuthenticatedClientesIdRoute
   '/diagnosticos/novo': typeof AuthenticatedDiagnosticosNovoRoute
+  '/financeiro/receber': typeof AuthenticatedFinanceiroReceberRoute
   '/os/$id': typeof AuthenticatedOsIdRoute
   '/propostas/$id': typeof AuthenticatedPropostasIdRoute
   '/clientes/': typeof AuthenticatedClientesIndexRoute
@@ -142,6 +150,7 @@ export interface FileRoutesByTo {
   '/cadastros/servicos': typeof AuthenticatedCadastrosServicosRoute
   '/clientes/$id': typeof AuthenticatedClientesIdRoute
   '/diagnosticos/novo': typeof AuthenticatedDiagnosticosNovoRoute
+  '/financeiro/receber': typeof AuthenticatedFinanceiroReceberRoute
   '/os/$id': typeof AuthenticatedOsIdRoute
   '/propostas/$id': typeof AuthenticatedPropostasIdRoute
   '/clientes': typeof AuthenticatedClientesIndexRoute
@@ -161,6 +170,7 @@ export interface FileRoutesById {
   '/_authenticated/cadastros/servicos': typeof AuthenticatedCadastrosServicosRoute
   '/_authenticated/clientes/$id': typeof AuthenticatedClientesIdRoute
   '/_authenticated/diagnosticos/novo': typeof AuthenticatedDiagnosticosNovoRoute
+  '/_authenticated/financeiro/receber': typeof AuthenticatedFinanceiroReceberRoute
   '/_authenticated/os/$id': typeof AuthenticatedOsIdRoute
   '/_authenticated/propostas/$id': typeof AuthenticatedPropostasIdRoute
   '/_authenticated/clientes/': typeof AuthenticatedClientesIndexRoute
@@ -180,6 +190,7 @@ export interface FileRouteTypes {
     | '/cadastros/servicos'
     | '/clientes/$id'
     | '/diagnosticos/novo'
+    | '/financeiro/receber'
     | '/os/$id'
     | '/propostas/$id'
     | '/clientes/'
@@ -197,6 +208,7 @@ export interface FileRouteTypes {
     | '/cadastros/servicos'
     | '/clientes/$id'
     | '/diagnosticos/novo'
+    | '/financeiro/receber'
     | '/os/$id'
     | '/propostas/$id'
     | '/clientes'
@@ -215,6 +227,7 @@ export interface FileRouteTypes {
     | '/_authenticated/cadastros/servicos'
     | '/_authenticated/clientes/$id'
     | '/_authenticated/diagnosticos/novo'
+    | '/_authenticated/financeiro/receber'
     | '/_authenticated/os/$id'
     | '/_authenticated/propostas/$id'
     | '/_authenticated/clientes/'
@@ -300,6 +313,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedOsIdRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/financeiro/receber': {
+      id: '/_authenticated/financeiro/receber'
+      path: '/financeiro/receber'
+      fullPath: '/financeiro/receber'
+      preLoaderRoute: typeof AuthenticatedFinanceiroReceberRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/diagnosticos/novo': {
       id: '/_authenticated/diagnosticos/novo'
       path: '/diagnosticos/novo'
@@ -354,6 +374,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedCadastrosServicosRoute: typeof AuthenticatedCadastrosServicosRoute
   AuthenticatedClientesIdRoute: typeof AuthenticatedClientesIdRoute
   AuthenticatedDiagnosticosNovoRoute: typeof AuthenticatedDiagnosticosNovoRoute
+  AuthenticatedFinanceiroReceberRoute: typeof AuthenticatedFinanceiroReceberRoute
   AuthenticatedOsIdRoute: typeof AuthenticatedOsIdRoute
   AuthenticatedPropostasIdRoute: typeof AuthenticatedPropostasIdRoute
   AuthenticatedClientesIndexRoute: typeof AuthenticatedClientesIndexRoute
@@ -371,6 +392,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedCadastrosServicosRoute: AuthenticatedCadastrosServicosRoute,
   AuthenticatedClientesIdRoute: AuthenticatedClientesIdRoute,
   AuthenticatedDiagnosticosNovoRoute: AuthenticatedDiagnosticosNovoRoute,
+  AuthenticatedFinanceiroReceberRoute: AuthenticatedFinanceiroReceberRoute,
   AuthenticatedOsIdRoute: AuthenticatedOsIdRoute,
   AuthenticatedPropostasIdRoute: AuthenticatedPropostasIdRoute,
   AuthenticatedClientesIndexRoute: AuthenticatedClientesIndexRoute,
