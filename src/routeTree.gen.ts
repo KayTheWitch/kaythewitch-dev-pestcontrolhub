@@ -15,6 +15,7 @@ import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated.
 import { Route as AuthenticatedLeadsRouteImport } from './routes/_authenticated.leads'
 import { Route as AuthenticatedPropostasIndexRouteImport } from './routes/_authenticated.propostas.index'
 import { Route as AuthenticatedOsIndexRouteImport } from './routes/_authenticated.os.index'
+import { Route as AuthenticatedFinanceiroIndexRouteImport } from './routes/_authenticated.financeiro.index'
 import { Route as AuthenticatedClientesIndexRouteImport } from './routes/_authenticated.clientes.index'
 import { Route as AuthenticatedPropostasIdRouteImport } from './routes/_authenticated.propostas.$id'
 import { Route as AuthenticatedOsIdRouteImport } from './routes/_authenticated.os.$id'
@@ -55,6 +56,12 @@ const AuthenticatedOsIndexRoute = AuthenticatedOsIndexRouteImport.update({
   path: '/os/',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedFinanceiroIndexRoute =
+  AuthenticatedFinanceiroIndexRouteImport.update({
+    id: '/financeiro/',
+    path: '/financeiro/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedClientesIndexRoute =
   AuthenticatedClientesIndexRouteImport.update({
     id: '/clientes/',
@@ -121,6 +128,7 @@ export interface FileRoutesByFullPath {
   '/os/$id': typeof AuthenticatedOsIdRoute
   '/propostas/$id': typeof AuthenticatedPropostasIdRoute
   '/clientes/': typeof AuthenticatedClientesIndexRoute
+  '/financeiro/': typeof AuthenticatedFinanceiroIndexRoute
   '/os/': typeof AuthenticatedOsIndexRoute
   '/propostas/': typeof AuthenticatedPropostasIndexRoute
 }
@@ -137,6 +145,7 @@ export interface FileRoutesByTo {
   '/os/$id': typeof AuthenticatedOsIdRoute
   '/propostas/$id': typeof AuthenticatedPropostasIdRoute
   '/clientes': typeof AuthenticatedClientesIndexRoute
+  '/financeiro': typeof AuthenticatedFinanceiroIndexRoute
   '/os': typeof AuthenticatedOsIndexRoute
   '/propostas': typeof AuthenticatedPropostasIndexRoute
 }
@@ -155,6 +164,7 @@ export interface FileRoutesById {
   '/_authenticated/os/$id': typeof AuthenticatedOsIdRoute
   '/_authenticated/propostas/$id': typeof AuthenticatedPropostasIdRoute
   '/_authenticated/clientes/': typeof AuthenticatedClientesIndexRoute
+  '/_authenticated/financeiro/': typeof AuthenticatedFinanceiroIndexRoute
   '/_authenticated/os/': typeof AuthenticatedOsIndexRoute
   '/_authenticated/propostas/': typeof AuthenticatedPropostasIndexRoute
 }
@@ -173,6 +183,7 @@ export interface FileRouteTypes {
     | '/os/$id'
     | '/propostas/$id'
     | '/clientes/'
+    | '/financeiro/'
     | '/os/'
     | '/propostas/'
   fileRoutesByTo: FileRoutesByTo
@@ -189,6 +200,7 @@ export interface FileRouteTypes {
     | '/os/$id'
     | '/propostas/$id'
     | '/clientes'
+    | '/financeiro'
     | '/os'
     | '/propostas'
   id:
@@ -206,6 +218,7 @@ export interface FileRouteTypes {
     | '/_authenticated/os/$id'
     | '/_authenticated/propostas/$id'
     | '/_authenticated/clientes/'
+    | '/_authenticated/financeiro/'
     | '/_authenticated/os/'
     | '/_authenticated/propostas/'
   fileRoutesById: FileRoutesById
@@ -257,6 +270,13 @@ declare module '@tanstack/react-router' {
       path: '/os'
       fullPath: '/os/'
       preLoaderRoute: typeof AuthenticatedOsIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/financeiro/': {
+      id: '/_authenticated/financeiro/'
+      path: '/financeiro'
+      fullPath: '/financeiro/'
+      preLoaderRoute: typeof AuthenticatedFinanceiroIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/clientes/': {
@@ -337,6 +357,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedOsIdRoute: typeof AuthenticatedOsIdRoute
   AuthenticatedPropostasIdRoute: typeof AuthenticatedPropostasIdRoute
   AuthenticatedClientesIndexRoute: typeof AuthenticatedClientesIndexRoute
+  AuthenticatedFinanceiroIndexRoute: typeof AuthenticatedFinanceiroIndexRoute
   AuthenticatedOsIndexRoute: typeof AuthenticatedOsIndexRoute
   AuthenticatedPropostasIndexRoute: typeof AuthenticatedPropostasIndexRoute
 }
@@ -353,6 +374,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedOsIdRoute: AuthenticatedOsIdRoute,
   AuthenticatedPropostasIdRoute: AuthenticatedPropostasIdRoute,
   AuthenticatedClientesIndexRoute: AuthenticatedClientesIndexRoute,
+  AuthenticatedFinanceiroIndexRoute: AuthenticatedFinanceiroIndexRoute,
   AuthenticatedOsIndexRoute: AuthenticatedOsIndexRoute,
   AuthenticatedPropostasIndexRoute: AuthenticatedPropostasIndexRoute,
 }
