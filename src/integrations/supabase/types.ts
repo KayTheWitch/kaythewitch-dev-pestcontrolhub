@@ -14,6 +14,180 @@ export type Database = {
   }
   public: {
     Tables: {
+      accounts_payable: {
+        Row: {
+          categoria_id: string | null
+          created_at: string
+          created_by: string | null
+          data_emissao: string
+          data_pagamento: string | null
+          data_vencimento: string
+          descricao: string
+          forma_pagamento: Database["public"]["Enums"]["payment_method"] | null
+          id: string
+          numero: string
+          observacoes: string | null
+          purchase_order_id: string | null
+          status: Database["public"]["Enums"]["financial_account_status"]
+          supplier_id: string | null
+          updated_at: string
+          valor_original: number
+          valor_pago: number
+        }
+        Insert: {
+          categoria_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          data_emissao?: string
+          data_pagamento?: string | null
+          data_vencimento: string
+          descricao: string
+          forma_pagamento?: Database["public"]["Enums"]["payment_method"] | null
+          id?: string
+          numero: string
+          observacoes?: string | null
+          purchase_order_id?: string | null
+          status?: Database["public"]["Enums"]["financial_account_status"]
+          supplier_id?: string | null
+          updated_at?: string
+          valor_original: number
+          valor_pago?: number
+        }
+        Update: {
+          categoria_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          data_emissao?: string
+          data_pagamento?: string | null
+          data_vencimento?: string
+          descricao?: string
+          forma_pagamento?: Database["public"]["Enums"]["payment_method"] | null
+          id?: string
+          numero?: string
+          observacoes?: string | null
+          purchase_order_id?: string | null
+          status?: Database["public"]["Enums"]["financial_account_status"]
+          supplier_id?: string | null
+          updated_at?: string
+          valor_original?: number
+          valor_pago?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "accounts_payable_categoria_id_fkey"
+            columns: ["categoria_id"]
+            isOneToOne: false
+            referencedRelation: "financial_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "accounts_payable_purchase_order_id_fkey"
+            columns: ["purchase_order_id"]
+            isOneToOne: false
+            referencedRelation: "purchase_orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "accounts_payable_supplier_id_fkey"
+            columns: ["supplier_id"]
+            isOneToOne: false
+            referencedRelation: "suppliers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      accounts_receivable: {
+        Row: {
+          categoria_id: string | null
+          client_id: string | null
+          created_at: string
+          created_by: string | null
+          data_emissao: string
+          data_pagamento: string | null
+          data_vencimento: string
+          descricao: string
+          forma_pagamento: Database["public"]["Enums"]["payment_method"] | null
+          id: string
+          numero: string
+          observacoes: string | null
+          proposal_id: string | null
+          service_order_id: string | null
+          status: Database["public"]["Enums"]["financial_account_status"]
+          updated_at: string
+          valor_original: number
+          valor_pago: number
+        }
+        Insert: {
+          categoria_id?: string | null
+          client_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          data_emissao?: string
+          data_pagamento?: string | null
+          data_vencimento: string
+          descricao: string
+          forma_pagamento?: Database["public"]["Enums"]["payment_method"] | null
+          id?: string
+          numero: string
+          observacoes?: string | null
+          proposal_id?: string | null
+          service_order_id?: string | null
+          status?: Database["public"]["Enums"]["financial_account_status"]
+          updated_at?: string
+          valor_original: number
+          valor_pago?: number
+        }
+        Update: {
+          categoria_id?: string | null
+          client_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          data_emissao?: string
+          data_pagamento?: string | null
+          data_vencimento?: string
+          descricao?: string
+          forma_pagamento?: Database["public"]["Enums"]["payment_method"] | null
+          id?: string
+          numero?: string
+          observacoes?: string | null
+          proposal_id?: string | null
+          service_order_id?: string | null
+          status?: Database["public"]["Enums"]["financial_account_status"]
+          updated_at?: string
+          valor_original?: number
+          valor_pago?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "accounts_receivable_categoria_id_fkey"
+            columns: ["categoria_id"]
+            isOneToOne: false
+            referencedRelation: "financial_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "accounts_receivable_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "accounts_receivable_proposal_id_fkey"
+            columns: ["proposal_id"]
+            isOneToOne: false
+            referencedRelation: "proposals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "accounts_receivable_service_order_id_fkey"
+            columns: ["service_order_id"]
+            isOneToOne: true
+            referencedRelation: "service_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       audit_log: {
         Row: {
           action: string
@@ -237,6 +411,90 @@ export type Database = {
           nome?: string
         }
         Relationships: []
+      }
+      financial_categories: {
+        Row: {
+          ativo: boolean
+          created_at: string
+          id: string
+          nome: string
+          slug: string
+          tipo: Database["public"]["Enums"]["financial_category_type"]
+          updated_at: string
+        }
+        Insert: {
+          ativo?: boolean
+          created_at?: string
+          id?: string
+          nome: string
+          slug: string
+          tipo: Database["public"]["Enums"]["financial_category_type"]
+          updated_at?: string
+        }
+        Update: {
+          ativo?: boolean
+          created_at?: string
+          id?: string
+          nome?: string
+          slug?: string
+          tipo?: Database["public"]["Enums"]["financial_category_type"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      financial_payments: {
+        Row: {
+          created_at: string
+          data_pagamento: string
+          forma_pagamento: Database["public"]["Enums"]["payment_method"]
+          id: string
+          observacoes: string | null
+          payable_id: string | null
+          receivable_id: string | null
+          tipo: Database["public"]["Enums"]["financial_account_kind"]
+          user_id: string | null
+          valor: number
+        }
+        Insert: {
+          created_at?: string
+          data_pagamento?: string
+          forma_pagamento: Database["public"]["Enums"]["payment_method"]
+          id?: string
+          observacoes?: string | null
+          payable_id?: string | null
+          receivable_id?: string | null
+          tipo: Database["public"]["Enums"]["financial_account_kind"]
+          user_id?: string | null
+          valor: number
+        }
+        Update: {
+          created_at?: string
+          data_pagamento?: string
+          forma_pagamento?: Database["public"]["Enums"]["payment_method"]
+          id?: string
+          observacoes?: string | null
+          payable_id?: string | null
+          receivable_id?: string | null
+          tipo?: Database["public"]["Enums"]["financial_account_kind"]
+          user_id?: string | null
+          valor?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "financial_payments_payable_id_fkey"
+            columns: ["payable_id"]
+            isOneToOne: false
+            referencedRelation: "accounts_payable"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "financial_payments_receivable_id_fkey"
+            columns: ["receivable_id"]
+            isOneToOne: false
+            referencedRelation: "accounts_receivable"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       leads: {
         Row: {
@@ -1195,6 +1453,11 @@ export type Database = {
     }
     Functions: {
       apply_os_stock_deduction: { Args: { _os_id: string }; Returns: undefined }
+      cancel_receivable_from_os: {
+        Args: { _os_id: string }
+        Returns: undefined
+      }
+      create_receivable_from_os: { Args: { _os_id: string }; Returns: string }
       has_any_role: { Args: { _user_id: string }; Returns: boolean }
       has_role: {
         Args: {
@@ -1214,15 +1477,36 @@ export type Database = {
         }
         Returns: string
       }
+      refresh_overdue_accounts: { Args: never; Returns: undefined }
+      register_financial_payment: {
+        Args: {
+          _account_id: string
+          _data_pagamento: string
+          _forma: Database["public"]["Enums"]["payment_method"]
+          _obs?: string
+          _tipo: Database["public"]["Enums"]["financial_account_kind"]
+          _valor: number
+        }
+        Returns: string
+      }
       reverse_os_stock_deduction: {
         Args: { _os_id: string }
         Returns: undefined
       }
+      upsert_payable_from_po: { Args: { _po_id: string }; Returns: string }
     }
     Enums: {
       app_role: "admin" | "comercial"
       client_category: "residencial" | "comercial" | "industrial" | "condominio"
       client_type: "PF" | "PJ"
+      financial_account_kind: "receber" | "pagar"
+      financial_account_status:
+        | "aberto"
+        | "parcialmente_pago"
+        | "pago"
+        | "vencido"
+        | "cancelado"
+      financial_category_type: "receita" | "despesa"
       lead_origin:
         | "telefone"
         | "whatsapp"
@@ -1242,6 +1526,13 @@ export type Database = {
         | "em_execucao"
         | "concluida"
         | "cancelada"
+      payment_method:
+        | "pix"
+        | "boleto"
+        | "dinheiro"
+        | "cartao"
+        | "transferencia"
+        | "outro"
       proposal_status:
         | "rascunho"
         | "enviada"
@@ -1389,6 +1680,15 @@ export const Constants = {
       app_role: ["admin", "comercial"],
       client_category: ["residencial", "comercial", "industrial", "condominio"],
       client_type: ["PF", "PJ"],
+      financial_account_kind: ["receber", "pagar"],
+      financial_account_status: [
+        "aberto",
+        "parcialmente_pago",
+        "pago",
+        "vencido",
+        "cancelado",
+      ],
+      financial_category_type: ["receita", "despesa"],
       lead_origin: [
         "telefone",
         "whatsapp",
@@ -1410,6 +1710,14 @@ export const Constants = {
         "em_execucao",
         "concluida",
         "cancelada",
+      ],
+      payment_method: [
+        "pix",
+        "boleto",
+        "dinheiro",
+        "cartao",
+        "transferencia",
+        "outro",
       ],
       proposal_status: [
         "rascunho",
