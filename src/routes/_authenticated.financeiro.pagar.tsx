@@ -42,7 +42,7 @@ function PagarPage() {
       let query = supabase
         .from("accounts_payable")
         .select(
-          "id, numero, descricao, valor_original, valor_pago, data_emissao, data_vencimento, status, purchase_order_id, suppliers(nome)",
+          "id, numero, descricao, valor_original, valor_pago, data_emissao, data_vencimento, status, purchase_order_id, suppliers(razao_social)",
         )
         .order("data_vencimento", { ascending: true });
       if (status !== "all") query = query.eq("status", status as any);
@@ -57,7 +57,7 @@ function PagarPage() {
     return (
       r.numero?.toLowerCase().includes(s) ||
       r.descricao?.toLowerCase().includes(s) ||
-      r.suppliers?.nome?.toLowerCase().includes(s)
+      r.suppliers?.razao_social?.toLowerCase().includes(s)
     );
   });
 
@@ -130,7 +130,7 @@ function PagarPage() {
                     </Link>
                   </TableCell>
                   <TableCell>
-                    <div className="text-sm font-medium">{r.suppliers?.nome ?? "—"}</div>
+                    <div className="text-sm font-medium">{r.suppliers?.razao_social ?? "—"}</div>
                     <div className="text-xs text-muted-foreground">{r.descricao}</div>
                   </TableCell>
                   <TableCell className="text-sm">{formatDate(r.data_emissao)}</TableCell>

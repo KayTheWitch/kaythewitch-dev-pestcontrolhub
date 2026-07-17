@@ -124,7 +124,7 @@ function PagarDetail() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
         <Card className="p-5 space-y-2 text-sm">
           <Row k="Status" v={<FinancialStatusBadge status={ap.status} />} />
-          <Row k="Fornecedor" v={ap.suppliers?.nome ?? "—"} />
+          <Row k="Fornecedor" v={ap.suppliers?.razao_social ?? "—"} />
           <Row k="Categoria" v={ap.financial_categories?.nome ?? "—"} />
           <Row k="Emissão" v={formatDate(ap.data_emissao)} />
           <Row k="Vencimento" v={formatDate(ap.data_vencimento)} />

@@ -58,7 +58,7 @@ function NovoLancamento() {
   const { data: clientes = [] } = useQuery({
     queryKey: ["clientes-lite"],
     queryFn: async () => {
-      const { data } = await supabase.from("clients").select("id, nome").order("nome");
+      const { data } = await supabase.from("clients").select("id, razao_social").order("razao_social");
       return data ?? [];
     },
     enabled: tipo === "receber",
@@ -67,7 +67,7 @@ function NovoLancamento() {
   const { data: fornecedores = [] } = useQuery({
     queryKey: ["fornecedores-lite"],
     queryFn: async () => {
-      const { data } = await supabase.from("suppliers").select("id, nome").order("nome");
+      const { data } = await supabase.from("suppliers").select("id, razao_social").order("razao_social");
       return data ?? [];
     },
     enabled: tipo === "pagar",
@@ -182,7 +182,7 @@ function NovoLancamento() {
                 <SelectContent>
                   {categorias.map((c: any) => (
                     <SelectItem key={c.id} value={c.id}>
-                      {c.nome}
+                      {c.razao_social ?? c.nome}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -224,7 +224,7 @@ function NovoLancamento() {
                 <SelectContent>
                   {clientes.map((c: any) => (
                     <SelectItem key={c.id} value={c.id}>
-                      {c.nome}
+                      {c.razao_social ?? c.nome}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -243,7 +243,7 @@ function NovoLancamento() {
                 <SelectContent>
                   {fornecedores.map((c: any) => (
                     <SelectItem key={c.id} value={c.id}>
-                      {c.nome}
+                      {c.razao_social ?? c.nome}
                     </SelectItem>
                   ))}
                 </SelectContent>

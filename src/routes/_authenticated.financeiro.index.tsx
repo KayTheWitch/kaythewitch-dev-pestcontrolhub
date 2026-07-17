@@ -34,7 +34,7 @@ function FinanceiroDashboard() {
           .order("data_vencimento", { ascending: true }),
         supabase
           .from("accounts_payable")
-          .select("id, numero, descricao, valor_original, valor_pago, data_vencimento, status, suppliers(nome)")
+          .select("id, numero, descricao, valor_original, valor_pago, data_vencimento, status, suppliers(razao_social)")
           .order("data_vencimento", { ascending: true }),
         supabase
           .from("financial_payments")
@@ -196,7 +196,7 @@ function FinanceiroDashboard() {
               >
                 <div className="min-w-0">
                   <div className="text-sm font-medium truncate">
-                    {r.suppliers?.nome ?? r.descricao}
+                    {r.suppliers?.razao_social ?? r.descricao}
                   </div>
                   <div className="text-xs text-muted-foreground">
                     {r.numero} · vence {formatDate(r.data_vencimento)}
