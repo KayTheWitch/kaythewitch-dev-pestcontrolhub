@@ -1,109 +1,125 @@
 
-# MVP Ventura — Núcleo Comercial + OS
+# Fase 5 — Financeiro
 
-Sistema interno navegável cobrindo do lead até a geração da Ordem de Serviço, usado pela equipe comercial/atendimento. Integração real com provedor de assinatura eletrônica; demais módulos (campo, estoque, financeiro, BI) ficam preparados na base de dados mas fora do escopo desta entrega.
+Fechar o ciclo econômico do MVP: toda OS concluída vira **conta a receber**, todo Pedido de Compra recebido vira **conta a pagar**. Lançamentos manuais também são suportados (despesas fixas, taxas, reembolsos). O módulo entrega baixa de pagamento, conciliação simples, fluxo de caixa e KPIs financeiros — sem emissão fiscal e sem integração bancária (fica para fase futura).
 
 ## Escopo funcional
 
-**1. Captação e pré-cadastro**
-- Cadastro de lead com origem (telefone, WhatsApp, site, e-mail, indicação, retorno)
-- Cadastro de cliente: PF/PJ, contatos, endereço, unidade, responsável
-- Histórico de atendimentos do cliente numa timeline
+**1. Plano de contas simplificado**
+- Categorias financeiras (`receita_servico`, `despesa_produto`, `despesa_operacional`, `imposto`, `outros`) configuráveis em cadastros.
+- Cada lançamento pertence a uma categoria — base para relatórios por DRE gerencial.
 
-**2. Diagnóstico comercial/técnico**
-- Formulário por tipo de serviço: controle de pragas OU higienização de reservatórios
-- Campos: praga/necessidade, área/metragem, volume do reservatório, periodicidade, urgência
-- Classificação: residencial, comercial, industrial, condomínio
-- Flag "precisa de visita técnica" com agendamento simples
+**2. Contas a receber**
+- Geração automática ao concluir uma OS (1 título por OS, valor = total da proposta vinculada).
+- Vencimento padrão: `data_conclusao + prazo_cliente` (config global, default 15 dias); editável por título.
+- Status: `aberto`, `parcialmente_pago`, `pago`, `vencido`, `cancelado`.
+- Baixa (total ou parcial) registrando forma de pagamento (`pix`, `boleto`, `dinheiro`, `cartao`, `transferencia`) e data.
 
-**3. Proposta, contrato e aprovação**
-- Geração de proposta a partir do diagnóstico (tabela de preços por tipo + margem configurável)
-- Preview em PDF da proposta e da minuta contratual
-- Aceite LGPD e envio por e-mail/link
-- **Assinatura eletrônica real** via ZapSign (custo baixo, API simples) — webhook devolve status
-- Estados: rascunho, enviada, em assinatura, aprovada, recusada, expirada
-- Follow-up: fila de propostas pendentes com lembretes
+**3. Contas a pagar**
+- Geração automática quando um PC muda para `recebido` ou `recebido_parcial` (título = subtotal recebido; recebimentos parciais criam títulos incrementais idempotentes por `purchase_order_id + item recebido`).
+- Lançamento manual para despesas fixas (aluguel, salário, combustível).
+- Mesmo fluxo de status e baixa do contas a receber.
 
-**4. Ordem de Serviço**
-- Geração automática da OS ao aprovar a proposta, reaproveitando dados do cliente/diagnóstico
-- Data prevista, equipe responsável (cadastro simples), checklist do serviço
-- Produtos previstos, equipamentos e EPIs (listas cadastráveis, sem baixa de estoque ainda)
-- Instruções técnicas e observações
-- OS exportável em PDF; status inicial "aguardando execução" (execução em campo fica para fase 2)
+**4. Fluxo de caixa e KPIs**
+- Dashboard `/financeiro` com:
+  - KPIs: a receber (aberto + vencido), a pagar (aberto + vencido), saldo previsto 30 dias, ticket médio recebido.
+  - Gráfico de fluxo de caixa realizado × previsto (mês corrente + 2 meses à frente).
+  - Alertas de títulos vencidos e a vencer nos próximos 7 dias.
+- Filtros por período, categoria, status e cliente/fornecedor.
 
-**Módulos de apoio já nesta fase**
-- Autenticação e perfis (admin, comercial)
-- Dashboard comercial: propostas por status, taxa de conversão, ticket médio, funil
-- Cadastros auxiliares: serviços/preços, equipes, produtos, equipamentos, EPIs
-- Trilha de auditoria básica (quem criou/alterou o quê)
+**5. Integração com módulos existentes**
+- **OS**: ao concluir, chama `create_receivable_from_os` (idempotente por `service_order_id`). Reabertura da OS cancela o título se ainda estiver `aberto` (se já houver baixa, exige estorno manual).
+- **Compras**: `receive_purchase_order_item` passa a acionar `upsert_payable_from_po` no final da transação.
+- **Cliente/Fornecedor**: nova aba "Financeiro" em cada detalhe listando títulos, total em aberto e histórico de baixas.
 
-## Arquitetura
-
-- **Frontend**: TanStack Start (já configurado), shadcn/ui, Tailwind
-- **Backend**: Lovable Cloud (Postgres + Auth + Storage + Server Functions)
-- **PDF**: geração server-side (proposta, contrato, OS)
-- **Assinatura**: ZapSign API — secret `ZAPSIGN_TOKEN`, webhook em `/api/public/zapsign`
-- **Storage**: PDFs de propostas, contratos assinados e OS
-
-### Modelo de dados (principais tabelas)
+## Modelo de dados
 
 ```text
-clients (id, tipo PF/PJ, doc, nome, contatos jsonb, enderecos jsonb, ...)
-client_units (id, client_id, nome, endereco, responsavel)
-leads (id, client_id?, origem, status, notas, created_by)
-service_catalog (id, tipo, nome, preco_base, unidade)
-diagnostics (id, lead_id, tipo_servico, praga, area_m2, volume_l,
-             periodicidade, urgencia, classificacao, precisa_visita)
-proposals (id, diagnostic_id, client_id, itens jsonb, subtotal, margem,
-           total, status, pdf_url, zapsign_doc_id, signed_at)
-contracts (id, proposal_id, pdf_url, signed_pdf_url, lgpd_aceite_at)
-service_orders (id, proposal_id, client_id, data_prevista, equipe_id,
-                checklist jsonb, produtos jsonb, epis jsonb, obs, status)
-teams (id, nome, membros jsonb)
-products, equipment, epis (cadastros simples)
-audit_log (id, actor_id, entity, entity_id, action, diff jsonb, at)
-user_roles (user_id, role)  -- admin | comercial
+financial_categories (id, tipo, nome, ativo)              -- seed inicial via migration
+
+accounts_receivable (
+  id, numero, client_id, service_order_id?, proposal_id?,
+  categoria_id, descricao, valor_original, valor_pago,
+  data_emissao, data_vencimento, data_pagamento?,
+  forma_pagamento?, status, observacoes,
+  created_by, created_at, updated_at
+)
+
+accounts_payable (
+  id, numero, supplier_id?, purchase_order_id?,
+  categoria_id, descricao, valor_original, valor_pago,
+  data_emissao, data_vencimento, data_pagamento?,
+  forma_pagamento?, status, observacoes,
+  created_by, created_at, updated_at
+)
+
+financial_payments (
+  id, tipo (receber|pagar), account_id, valor, data_pagamento,
+  forma_pagamento, observacoes, user_id, created_at
+)
 ```
 
-RLS: acesso restrito a usuários autenticados com role `comercial` ou `admin`; `service_role` para webhook ZapSign.
+Índices em `status`, `data_vencimento`, `client_id`, `supplier_id`. RLS: `admin` full, `comercial` read+write, `tecnico` sem acesso.
 
-### Rotas principais
+## Funções e triggers
+
+- `create_receivable_from_os(_os_id uuid)` — idempotente; chamada dentro do checkout da OS.
+- `upsert_payable_from_po(_po_id uuid)` — chamada no fim de `receive_purchase_order_item`.
+- `register_financial_payment(...)` — insere em `financial_payments`, atualiza `valor_pago`, recalcula status.
+- Trigger diária (job simples via server function agendável) marca `vencido` quando `data_vencimento < now()` e status = `aberto`.
+
+## Rotas
 
 ```text
-/auth
-/                         dashboard comercial
-/leads                    lista + criação
-/clientes                 lista + detalhe (timeline)
-/clientes/:id
-/diagnosticos/novo
-/propostas                lista por status
-/propostas/:id            detalhe + envio para assinatura
-/os                       lista
-/os/:id
-/cadastros/servicos
-/cadastros/equipes
-/cadastros/produtos
-/cadastros/epis
+/financeiro                          dashboard + KPIs
+/financeiro/receber                  lista de contas a receber (filtros + baixa)
+/financeiro/receber/:id              detalhe + histórico de pagamentos
+/financeiro/pagar                    lista de contas a pagar (filtros + baixa)
+/financeiro/pagar/:id                detalhe + histórico de pagamentos
+/financeiro/lancamento/novo          criação manual (a pagar ou a receber)
+/cadastros/categorias-financeiras    manutenção do plano de contas
 ```
 
-## Entregas em ondas
+Novo grupo "Financeiro" no `AppShell` (após "Suprimentos").
 
-1. **Fundação**: Cloud, auth, roles, layout, dashboard vazio, cadastros auxiliares.
-2. **Clientes & Leads**: CRUD completo + timeline + origem do lead.
-3. **Diagnóstico & Proposta**: formulário, cálculo, PDF, listagem por status.
-4. **Assinatura ZapSign**: envio, webhook, status, contrato assinado no storage.
-5. **Ordem de Serviço**: geração a partir da proposta aprovada, PDF, listagem.
-6. **Dashboard & auditoria**: métricas do funil e log.
+## Arquivos técnicos previstos
 
-## Fora do escopo (fases seguintes)
+- `src/lib/finance.functions.ts` — listagens, criação manual, baixa, KPIs, fluxo de caixa.
+- `src/routes/_authenticated.financeiro.index.tsx` — dashboard.
+- `src/routes/_authenticated.financeiro.receber.tsx` / `.pagar.tsx` — listagens.
+- `src/routes/_authenticated.financeiro.receber.$id.tsx` / `.pagar.$id.tsx` — detalhes.
+- `src/routes/_authenticated.financeiro.lancamento.novo.tsx` — form de lançamento manual.
+- `src/routes/_authenticated.cadastros.categorias-financeiras.tsx`.
+- Componente `PaymentDialog` reaproveitado nas duas listagens.
+- Atualização em `os.$id.tsx` (checkout aciona receivable) e `purchases.functions.ts` (receive aciona payable).
+- Atualização em `src/lib/format.ts` (labels de status financeiro, formas de pagamento) e `AppShell.tsx`.
 
-- App/tela de campo (check-in, fotos, assinatura do cliente na OS)
-- Motor de estoque, lotes, validade, compras e fornecedores
-- Faturamento, NF-e, boletos, PIX, contas a receber, comissão
-- CRM avançado, BI, pesquisa de satisfação, recorrência
-- Integrações com WhatsApp e emissor fiscal
+## Entrega
 
-## Decisões que ainda podem ajustar o plano
+1. Migração: tabelas, seed de categorias, funções, RLS, GRANTs.
+2. Server functions `finance.functions.ts`.
+3. Cadastro de categorias financeiras.
+4. Listagens + baixa (receber e pagar).
+5. Lançamento manual.
+6. Dashboard financeiro.
+7. Integração com OS (checkout) e Compras (recebimento).
+8. Aba "Financeiro" em cliente e fornecedor.
 
-- Provedor de assinatura: sugeri **ZapSign** pelo custo e API. Se preferir Clicksign ou D4Sign, troco o conector.
-- Tabela de preços: começo com preço base por serviço + margem manual. Se quiser regras (por m², por volume, por urgência), me diga que já entra no MVP.
+## README
+
+Atualizar `README.md` mantendo a estrutura atual (visão geral, stack, ER, rotas, roadmap):
+- Nova seção **Módulo Financeiro** com escopo, modelo de dados e regras de integração.
+- Atualizar o diagrama ER com as 4 novas tabelas e relacionamentos.
+- Adicionar as novas rotas no mapa de rotas.
+- Marcar Fase 5 como concluída no roadmap; próxima passa a ser Portal do Cliente.
+- Atualizar contagem de tabelas (~22) e de rotas.
+
+## Fora do escopo desta fase
+
+- Emissão de NF-e / boleto / PIX real.
+- Conciliação bancária automática via Open Finance.
+- Comissionamento de vendedor/técnico.
+- Regime de competência × caixa (usaremos apenas caixa).
+- Multi-conta bancária (assumimos caixa único).
+
+Confirma seguir com esse escopo?
