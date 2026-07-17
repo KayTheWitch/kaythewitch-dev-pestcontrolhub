@@ -65,3 +65,25 @@ export const URGENCY_LABEL: Record<string, string> = {
   media: "Média",
   alta: "Alta",
 };
+
+export const FINANCIAL_STATUS_LABEL: Record<string, string> = {
+  aberto: "Em aberto",
+  parcialmente_pago: "Parcial",
+  pago: "Pago",
+  vencido: "Vencido",
+  cancelado: "Cancelado",
+};
+
+export const PAYMENT_METHOD_LABEL: Record<string, string> = {
+  pix: "PIX",
+  boleto: "Boleto",
+  dinheiro: "Dinheiro",
+  cartao: "Cartão",
+  transferencia: "Transferência",
+  outro: "Outro",
+};
+
+export const FINANCIAL_CATEGORY_TYPE_LABEL: Record<string, string> = {
+  receita: "Receita",
+  despesa: "Despesa",
+};
