@@ -49,7 +49,10 @@ export type Database = {
           client_id: string
           created_at: string
           endereco: string | null
+          geocoded_at: string | null
           id: string
+          lat: number | null
+          lng: number | null
           nome: string
           responsavel: string | null
         }
@@ -57,7 +60,10 @@ export type Database = {
           client_id: string
           created_at?: string
           endereco?: string | null
+          geocoded_at?: string | null
           id?: string
+          lat?: number | null
+          lng?: number | null
           nome: string
           responsavel?: string | null
         }
@@ -65,7 +71,10 @@ export type Database = {
           client_id?: string
           created_at?: string
           endereco?: string | null
+          geocoded_at?: string | null
           id?: string
+          lat?: number | null
+          lng?: number | null
           nome?: string
           responsavel?: string | null
         }
@@ -279,11 +288,133 @@ export type Database = {
           },
         ]
       }
+      product_batches: {
+        Row: {
+          active: boolean
+          batch_number: string
+          created_at: string
+          expiry_date: string | null
+          id: string
+          notes: string | null
+          product_id: string
+          purchase_order_id: string | null
+          quantity_on_hand: number
+          supplier_id: string | null
+          supplier_name: string | null
+          unit_cost: number | null
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          batch_number: string
+          created_at?: string
+          expiry_date?: string | null
+          id?: string
+          notes?: string | null
+          product_id: string
+          purchase_order_id?: string | null
+          quantity_on_hand?: number
+          supplier_id?: string | null
+          supplier_name?: string | null
+          unit_cost?: number | null
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          batch_number?: string
+          created_at?: string
+          expiry_date?: string | null
+          id?: string
+          notes?: string | null
+          product_id?: string
+          purchase_order_id?: string | null
+          quantity_on_hand?: number
+          supplier_id?: string | null
+          supplier_name?: string | null
+          unit_cost?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_batches_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_batches_purchase_order_id_fkey"
+            columns: ["purchase_order_id"]
+            isOneToOne: false
+            referencedRelation: "purchase_orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_batches_supplier_id_fkey"
+            columns: ["supplier_id"]
+            isOneToOne: false
+            referencedRelation: "suppliers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      product_suppliers: {
+        Row: {
+          codigo_fornecedor: string | null
+          created_at: string
+          custo_referencia: number | null
+          id: string
+          lead_time_dias: number | null
+          preferencial: boolean
+          product_id: string
+          supplier_id: string
+          updated_at: string
+        }
+        Insert: {
+          codigo_fornecedor?: string | null
+          created_at?: string
+          custo_referencia?: number | null
+          id?: string
+          lead_time_dias?: number | null
+          preferencial?: boolean
+          product_id: string
+          supplier_id: string
+          updated_at?: string
+        }
+        Update: {
+          codigo_fornecedor?: string | null
+          created_at?: string
+          custo_referencia?: number | null
+          id?: string
+          lead_time_dias?: number | null
+          preferencial?: boolean
+          product_id?: string
+          supplier_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_suppliers_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_suppliers_supplier_id_fkey"
+            columns: ["supplier_id"]
+            isOneToOne: false
+            referencedRelation: "suppliers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       products: {
         Row: {
           ativo: boolean
           created_at: string
           id: string
+          min_stock: number
           nome: string
           principio_ativo: string | null
           registro_ms: string | null
@@ -293,6 +424,7 @@ export type Database = {
           ativo?: boolean
           created_at?: string
           id?: string
+          min_stock?: number
           nome: string
           principio_ativo?: string | null
           registro_ms?: string | null
@@ -302,6 +434,7 @@ export type Database = {
           ativo?: boolean
           created_at?: string
           id?: string
+          min_stock?: number
           nome?: string
           principio_ativo?: string | null
           registro_ms?: string | null
@@ -414,6 +547,166 @@ export type Database = {
           },
         ]
       }
+      purchase_order_items: {
+        Row: {
+          created_at: string
+          custo_unitario: number
+          id: string
+          observacoes: string | null
+          product_id: string
+          purchase_order_id: string
+          quantidade: number
+          quantidade_recebida: number
+          subtotal: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          custo_unitario?: number
+          id?: string
+          observacoes?: string | null
+          product_id: string
+          purchase_order_id: string
+          quantidade: number
+          quantidade_recebida?: number
+          subtotal?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          custo_unitario?: number
+          id?: string
+          observacoes?: string | null
+          product_id?: string
+          purchase_order_id?: string
+          quantidade?: number
+          quantidade_recebida?: number
+          subtotal?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "purchase_order_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchase_order_items_purchase_order_id_fkey"
+            columns: ["purchase_order_id"]
+            isOneToOne: false
+            referencedRelation: "purchase_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      purchase_orders: {
+        Row: {
+          condicao_pagamento: string | null
+          created_at: string
+          created_by: string | null
+          data_pedido: string
+          data_prevista: string | null
+          data_recebimento: string | null
+          id: string
+          numero: string
+          observacoes: string | null
+          status: Database["public"]["Enums"]["purchase_order_status"]
+          subtotal: number
+          supplier_id: string
+          total: number
+          updated_at: string
+        }
+        Insert: {
+          condicao_pagamento?: string | null
+          created_at?: string
+          created_by?: string | null
+          data_pedido?: string
+          data_prevista?: string | null
+          data_recebimento?: string | null
+          id?: string
+          numero?: string
+          observacoes?: string | null
+          status?: Database["public"]["Enums"]["purchase_order_status"]
+          subtotal?: number
+          supplier_id: string
+          total?: number
+          updated_at?: string
+        }
+        Update: {
+          condicao_pagamento?: string | null
+          created_at?: string
+          created_by?: string | null
+          data_pedido?: string
+          data_prevista?: string | null
+          data_recebimento?: string | null
+          id?: string
+          numero?: string
+          observacoes?: string | null
+          status?: Database["public"]["Enums"]["purchase_order_status"]
+          subtotal?: number
+          supplier_id?: string
+          total?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "purchase_orders_supplier_id_fkey"
+            columns: ["supplier_id"]
+            isOneToOne: false
+            referencedRelation: "suppliers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      schedule_blocks: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          ends_at: string
+          id: string
+          notes: string | null
+          reason: string
+          starts_at: string
+          team_id: string | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          ends_at: string
+          id?: string
+          notes?: string | null
+          reason: string
+          starts_at: string
+          team_id?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          ends_at?: string
+          id?: string
+          notes?: string | null
+          reason?: string
+          starts_at?: string
+          team_id?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "schedule_blocks_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "teams"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       service_catalog: {
         Row: {
           ativo: boolean
@@ -447,10 +740,153 @@ export type Database = {
         }
         Relationships: []
       }
+      service_order_events: {
+        Row: {
+          actor_id: string | null
+          at: string
+          id: string
+          payload: Json
+          service_order_id: string
+          tipo: string
+        }
+        Insert: {
+          actor_id?: string | null
+          at?: string
+          id?: string
+          payload?: Json
+          service_order_id: string
+          tipo: string
+        }
+        Update: {
+          actor_id?: string | null
+          at?: string
+          id?: string
+          payload?: Json
+          service_order_id?: string
+          tipo?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_order_events_service_order_id_fkey"
+            columns: ["service_order_id"]
+            isOneToOne: false
+            referencedRelation: "service_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      service_order_photos: {
+        Row: {
+          id: string
+          legenda: string | null
+          service_order_id: string
+          storage_path: string
+          uploaded_at: string
+          uploaded_by: string | null
+        }
+        Insert: {
+          id?: string
+          legenda?: string | null
+          service_order_id: string
+          storage_path: string
+          uploaded_at?: string
+          uploaded_by?: string | null
+        }
+        Update: {
+          id?: string
+          legenda?: string | null
+          service_order_id?: string
+          storage_path?: string
+          uploaded_at?: string
+          uploaded_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_order_photos_service_order_id_fkey"
+            columns: ["service_order_id"]
+            isOneToOne: false
+            referencedRelation: "service_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      service_order_products: {
+        Row: {
+          created_at: string
+          id: string
+          is_extra: boolean
+          lote: string | null
+          nome: string
+          observacao: string | null
+          product_id: string | null
+          quantidade_aplicada: number | null
+          quantidade_prevista: number | null
+          service_order_id: string
+          unidade: string | null
+          updated_at: string
+          validade: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_extra?: boolean
+          lote?: string | null
+          nome: string
+          observacao?: string | null
+          product_id?: string | null
+          quantidade_aplicada?: number | null
+          quantidade_prevista?: number | null
+          service_order_id: string
+          unidade?: string | null
+          updated_at?: string
+          validade?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_extra?: boolean
+          lote?: string | null
+          nome?: string
+          observacao?: string | null
+          product_id?: string | null
+          quantidade_aplicada?: number | null
+          quantidade_prevista?: number | null
+          service_order_id?: string
+          unidade?: string | null
+          updated_at?: string
+          validade?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_order_products_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_order_products_service_order_id_fkey"
+            columns: ["service_order_id"]
+            isOneToOne: false
+            referencedRelation: "service_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       service_orders: {
         Row: {
+          assinatura_responsavel: Json | null
+          checkin_at: string | null
+          checkin_by: string | null
+          checkin_lat: number | null
+          checkin_lng: number | null
           checklist: Json
+          checkout_at: string | null
+          checkout_by: string | null
+          client_confirmation_status: string | null
+          client_confirmed_at: string | null
           client_id: string
+          confirmation_token: string | null
           created_at: string
           created_by: string | null
           data_prevista: string | null
@@ -459,18 +895,33 @@ export type Database = {
           equipamentos: Json
           id: string
           instrucoes: string | null
+          motivo_cancelamento: string | null
           numero: number
           observacoes: string | null
+          observacoes_campo: string | null
           produtos_previstos: Json
           proposal_id: string | null
+          public_token: string
+          report_first_sent_at: string | null
+          report_last_sent_at: string | null
           responsavel: string | null
           status: Database["public"]["Enums"]["os_status"]
           team_id: string | null
           updated_at: string
         }
         Insert: {
+          assinatura_responsavel?: Json | null
+          checkin_at?: string | null
+          checkin_by?: string | null
+          checkin_lat?: number | null
+          checkin_lng?: number | null
           checklist?: Json
+          checkout_at?: string | null
+          checkout_by?: string | null
+          client_confirmation_status?: string | null
+          client_confirmed_at?: string | null
           client_id: string
+          confirmation_token?: string | null
           created_at?: string
           created_by?: string | null
           data_prevista?: string | null
@@ -479,18 +930,33 @@ export type Database = {
           equipamentos?: Json
           id?: string
           instrucoes?: string | null
+          motivo_cancelamento?: string | null
           numero?: number
           observacoes?: string | null
+          observacoes_campo?: string | null
           produtos_previstos?: Json
           proposal_id?: string | null
+          public_token?: string
+          report_first_sent_at?: string | null
+          report_last_sent_at?: string | null
           responsavel?: string | null
           status?: Database["public"]["Enums"]["os_status"]
           team_id?: string | null
           updated_at?: string
         }
         Update: {
+          assinatura_responsavel?: Json | null
+          checkin_at?: string | null
+          checkin_by?: string | null
+          checkin_lat?: number | null
+          checkin_lng?: number | null
           checklist?: Json
+          checkout_at?: string | null
+          checkout_by?: string | null
+          client_confirmation_status?: string | null
+          client_confirmed_at?: string | null
           client_id?: string
+          confirmation_token?: string | null
           created_at?: string
           created_by?: string | null
           data_prevista?: string | null
@@ -499,10 +965,15 @@ export type Database = {
           equipamentos?: Json
           id?: string
           instrucoes?: string | null
+          motivo_cancelamento?: string | null
           numero?: number
           observacoes?: string | null
+          observacoes_campo?: string | null
           produtos_previstos?: Json
           proposal_id?: string | null
+          public_token?: string
+          report_first_sent_at?: string | null
+          report_last_sent_at?: string | null
           responsavel?: string | null
           status?: Database["public"]["Enums"]["os_status"]
           team_id?: string | null
@@ -538,6 +1009,137 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      stock_movements: {
+        Row: {
+          batch_id: string | null
+          created_at: string
+          id: string
+          movement_type: Database["public"]["Enums"]["stock_movement_type"]
+          product_id: string
+          purchase_order_id: string | null
+          quantity: number
+          reason: string | null
+          service_order_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          batch_id?: string | null
+          created_at?: string
+          id?: string
+          movement_type: Database["public"]["Enums"]["stock_movement_type"]
+          product_id: string
+          purchase_order_id?: string | null
+          quantity: number
+          reason?: string | null
+          service_order_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          batch_id?: string | null
+          created_at?: string
+          id?: string
+          movement_type?: Database["public"]["Enums"]["stock_movement_type"]
+          product_id?: string
+          purchase_order_id?: string | null
+          quantity?: number
+          reason?: string | null
+          service_order_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stock_movements_batch_id_fkey"
+            columns: ["batch_id"]
+            isOneToOne: false
+            referencedRelation: "product_batches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "stock_movements_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "stock_movements_purchase_order_id_fkey"
+            columns: ["purchase_order_id"]
+            isOneToOne: false
+            referencedRelation: "purchase_orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "stock_movements_service_order_id_fkey"
+            columns: ["service_order_id"]
+            isOneToOne: false
+            referencedRelation: "service_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      suppliers: {
+        Row: {
+          ativo: boolean
+          categorias: string[]
+          cep: string | null
+          cidade: string | null
+          cnpj: string | null
+          contato_nome: string | null
+          created_at: string
+          email: string | null
+          endereco: string | null
+          forma_pagamento: string | null
+          id: string
+          nome_fantasia: string | null
+          observacoes: string | null
+          prazo_pagamento: string | null
+          razao_social: string
+          telefone: string | null
+          uf: string | null
+          updated_at: string
+        }
+        Insert: {
+          ativo?: boolean
+          categorias?: string[]
+          cep?: string | null
+          cidade?: string | null
+          cnpj?: string | null
+          contato_nome?: string | null
+          created_at?: string
+          email?: string | null
+          endereco?: string | null
+          forma_pagamento?: string | null
+          id?: string
+          nome_fantasia?: string | null
+          observacoes?: string | null
+          prazo_pagamento?: string | null
+          razao_social: string
+          telefone?: string | null
+          uf?: string | null
+          updated_at?: string
+        }
+        Update: {
+          ativo?: boolean
+          categorias?: string[]
+          cep?: string | null
+          cidade?: string | null
+          cnpj?: string | null
+          contato_nome?: string | null
+          created_at?: string
+          email?: string | null
+          endereco?: string | null
+          forma_pagamento?: string | null
+          id?: string
+          nome_fantasia?: string | null
+          observacoes?: string | null
+          prazo_pagamento?: string | null
+          razao_social?: string
+          telefone?: string | null
+          uf?: string | null
+          updated_at?: string
+        }
+        Relationships: []
       }
       teams: {
         Row: {
@@ -592,6 +1194,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      apply_os_stock_deduction: { Args: { _os_id: string }; Returns: undefined }
       has_any_role: { Args: { _user_id: string }; Returns: boolean }
       has_role: {
         Args: {
@@ -599,6 +1202,21 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      receive_purchase_order_item: {
+        Args: {
+          _batch_number: string
+          _expiry_date: string
+          _item_id: string
+          _quantity: number
+          _reason?: string
+          _unit_cost: number
+        }
+        Returns: string
+      }
+      reverse_os_stock_deduction: {
+        Args: { _os_id: string }
+        Returns: undefined
       }
     }
     Enums: {
@@ -620,6 +1238,7 @@ export type Database = {
         | "perdido"
       os_status:
         | "aguardando_execucao"
+        | "em_deslocamento"
         | "em_execucao"
         | "concluida"
         | "cancelada"
@@ -630,7 +1249,15 @@ export type Database = {
         | "aprovada"
         | "recusada"
         | "expirada"
+      purchase_order_status:
+        | "rascunho"
+        | "enviado"
+        | "confirmado"
+        | "recebido_parcial"
+        | "recebido"
+        | "cancelado"
       service_type: "controle_pragas" | "higienizacao_reservatorio"
+      stock_movement_type: "entrada" | "saida_os" | "ajuste" | "transferencia"
       urgency: "baixa" | "media" | "alta"
     }
     CompositeTypes: {
@@ -779,6 +1406,7 @@ export const Constants = {
       ],
       os_status: [
         "aguardando_execucao",
+        "em_deslocamento",
         "em_execucao",
         "concluida",
         "cancelada",
@@ -791,7 +1419,16 @@ export const Constants = {
         "recusada",
         "expirada",
       ],
+      purchase_order_status: [
+        "rascunho",
+        "enviado",
+        "confirmado",
+        "recebido_parcial",
+        "recebido",
+        "cancelado",
+      ],
       service_type: ["controle_pragas", "higienizacao_reservatorio"],
+      stock_movement_type: ["entrada", "saida_os", "ajuste", "transferencia"],
       urgency: ["baixa", "media", "alta"],
     },
   },
