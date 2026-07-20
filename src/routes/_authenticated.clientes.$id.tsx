@@ -1,10 +1,20 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { PageHeader } from "@/components/AppShell";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   Table,
   TableHeader,
@@ -13,7 +23,7 @@ import {
   TableBody,
   TableCell,
 } from "@/components/ui/table";
-import { ArrowLeft, FileText, ClipboardList } from "lucide-react";
+import { ArrowLeft, FileText, ClipboardList, Copy, Mail } from "lucide-react";
 import {
   CATEGORY_LABEL,
   formatCurrency,
@@ -21,10 +31,139 @@ import {
   SERVICE_TYPE_LABEL,
 } from "@/lib/format";
 import { ProposalStatusBadge, OsStatusBadge } from "@/components/StatusBadge";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/clientes/$id")({
   component: ClientDetail,
 });
+
+function PortalInviteCard({ clientId, defaultEmail }: { clientId: string; defaultEmail?: string }) {
+  const qc = useQueryClient();
+  const [open, setOpen] = useState(false);
+  const [email, setEmail] = useState(defaultEmail ?? "");
+  const [busy, setBusy] = useState(false);
+
+  const { data: invites = [] } = useQuery({
+    queryKey: ["client-invitations", clientId],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("client_invitations")
+        .select("id, email, token, status, expires_at, created_at, accepted_at")
+        .eq("client_id", clientId)
+        .order("created_at", { ascending: false });
+      return data ?? [];
+    },
+  });
+
+  async function createInvite() {
+    if (!email) return;
+    setBusy(true);
+    const { error } = await supabase
+      .from("client_invitations")
+      .insert({ client_id: clientId, email });
+    setBusy(false);
+    if (error) return toast.error(error.message);
+    toast.success("Convite criado");
+    setOpen(false);
+    setEmail(defaultEmail ?? "");
+    qc.invalidateQueries({ queryKey: ["client-invitations", clientId] });
+  }
+
+  async function revoke(id: string) {
+    const { error } = await supabase
+      .from("client_invitations")
+      .update({ status: "revogado" })
+      .eq("id", id);
+    if (error) return toast.error(error.message);
+    qc.invalidateQueries({ queryKey: ["client-invitations", clientId] });
+  }
+
+  function copyLink(token: string) {
+    const url = `${window.location.origin}/invite/${token}`;
+    navigator.clipboard.writeText(url);
+    toast.success("Link copiado");
+  }
+
+  return (
+    <Card className="mb-6">
+      <div className="flex items-center justify-between p-4 border-b">
+        <h3 className="font-semibold flex items-center gap-2">
+          <Mail className="w-4 h-4" />
+          Portal do cliente
+        </h3>
+        <Button size="sm" onClick={() => setOpen(true)}>
+          Convidar
+        </Button>
+      </div>
+      {invites.length ? (
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>E-mail</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Expira em</TableHead>
+              <TableHead></TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {invites.map((i: any) => (
+              <TableRow key={i.id}>
+                <TableCell className="text-sm">{i.email}</TableCell>
+                <TableCell className="text-sm capitalize">{i.status}</TableCell>
+                <TableCell className="text-sm">{formatDate(i.expires_at)}</TableCell>
+                <TableCell className="text-right space-x-2">
+                  {i.status === "pendente" && (
+                    <>
+                      <Button size="sm" variant="outline" onClick={() => copyLink(i.token)}>
+                        <Copy className="w-3.5 h-3.5 mr-1" />
+                        Link
+                      </Button>
+                      <Button size="sm" variant="ghost" onClick={() => revoke(i.id)}>
+                        Revogar
+                      </Button>
+                    </>
+                  )}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      ) : (
+        <p className="p-4 text-sm text-muted-foreground">
+          Nenhum convite emitido. Envie um convite para dar acesso ao portal.
+        </p>
+      )}
+
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Convidar cliente</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3">
+            <Label>E-mail</Label>
+            <Input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <p className="text-xs text-muted-foreground">
+              O cliente receberá um link para criar sua senha e acessar o portal.
+              Você pode copiá-lo manualmente após criar o convite.
+            </p>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setOpen(false)}>
+              Cancelar
+            </Button>
+            <Button onClick={createInvite} disabled={busy || !email}>
+              Criar convite
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </Card>
+  );
+}
 
 function ClientDetail() {
   const { id } = Route.useParams();
@@ -108,6 +247,8 @@ function ClientDetail() {
           </div>
         </Card>
       </div>
+
+      <PortalInviteCard clientId={c.id} defaultEmail={c.email ?? undefined} />
 
       <Card className="mb-6">
         <div className="flex items-center justify-between p-4 border-b">

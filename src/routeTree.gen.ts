@@ -9,9 +9,16 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as PortalRouteImport } from './routes/portal'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
+import { Route as PortalIndexRouteImport } from './routes/portal.index'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated.index'
+import { Route as PortalPropostasRouteImport } from './routes/portal.propostas'
+import { Route as PortalOsRouteImport } from './routes/portal.os'
+import { Route as PortalFinanceiroRouteImport } from './routes/portal.financeiro'
+import { Route as PortalDocumentosRouteImport } from './routes/portal.documentos'
+import { Route as InviteTokenRouteImport } from './routes/invite.$token'
 import { Route as AuthenticatedLeadsRouteImport } from './routes/_authenticated.leads'
 import { Route as AuthenticatedPropostasIndexRouteImport } from './routes/_authenticated.propostas.index'
 import { Route as AuthenticatedOsIndexRouteImport } from './routes/_authenticated.os.index'
@@ -32,6 +39,11 @@ import { Route as AuthenticatedFinanceiroReceberIdRouteImport } from './routes/_
 import { Route as AuthenticatedFinanceiroPagarIdRouteImport } from './routes/_authenticated.financeiro.pagar.$id'
 import { Route as AuthenticatedFinanceiroLancamentoNovoRouteImport } from './routes/_authenticated.financeiro.lancamento.novo'
 
+const PortalRoute = PortalRouteImport.update({
+  id: '/portal',
+  path: '/portal',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
@@ -41,10 +53,40 @@ const AuthenticatedRoute = AuthenticatedRouteImport.update({
   id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PortalIndexRoute = PortalIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => PortalRoute,
+} as any)
 const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AuthenticatedRoute,
+} as any)
+const PortalPropostasRoute = PortalPropostasRouteImport.update({
+  id: '/propostas',
+  path: '/propostas',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalOsRoute = PortalOsRouteImport.update({
+  id: '/os',
+  path: '/os',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalFinanceiroRoute = PortalFinanceiroRouteImport.update({
+  id: '/financeiro',
+  path: '/financeiro',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalDocumentosRoute = PortalDocumentosRouteImport.update({
+  id: '/documentos',
+  path: '/documentos',
+  getParentRoute: () => PortalRoute,
+} as any)
+const InviteTokenRoute = InviteTokenRouteImport.update({
+  id: '/invite/$token',
+  path: '/invite/$token',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedLeadsRoute = AuthenticatedLeadsRouteImport.update({
   id: '/leads',
@@ -160,7 +202,14 @@ const AuthenticatedFinanceiroLancamentoNovoRoute =
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
   '/auth': typeof AuthRoute
+  '/portal': typeof PortalRouteWithChildren
   '/leads': typeof AuthenticatedLeadsRoute
+  '/invite/$token': typeof InviteTokenRoute
+  '/portal/documentos': typeof PortalDocumentosRoute
+  '/portal/financeiro': typeof PortalFinanceiroRoute
+  '/portal/os': typeof PortalOsRoute
+  '/portal/propostas': typeof PortalPropostasRoute
+  '/portal/': typeof PortalIndexRoute
   '/cadastros/categorias-financeiras': typeof AuthenticatedCadastrosCategoriasFinanceirasRoute
   '/cadastros/epis': typeof AuthenticatedCadastrosEpisRoute
   '/cadastros/equipes': typeof AuthenticatedCadastrosEquipesRoute
@@ -183,7 +232,13 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/leads': typeof AuthenticatedLeadsRoute
+  '/invite/$token': typeof InviteTokenRoute
+  '/portal/documentos': typeof PortalDocumentosRoute
+  '/portal/financeiro': typeof PortalFinanceiroRoute
+  '/portal/os': typeof PortalOsRoute
+  '/portal/propostas': typeof PortalPropostasRoute
   '/': typeof AuthenticatedIndexRoute
+  '/portal': typeof PortalIndexRoute
   '/cadastros/categorias-financeiras': typeof AuthenticatedCadastrosCategoriasFinanceirasRoute
   '/cadastros/epis': typeof AuthenticatedCadastrosEpisRoute
   '/cadastros/equipes': typeof AuthenticatedCadastrosEquipesRoute
@@ -207,8 +262,15 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/auth': typeof AuthRoute
+  '/portal': typeof PortalRouteWithChildren
   '/_authenticated/leads': typeof AuthenticatedLeadsRoute
+  '/invite/$token': typeof InviteTokenRoute
+  '/portal/documentos': typeof PortalDocumentosRoute
+  '/portal/financeiro': typeof PortalFinanceiroRoute
+  '/portal/os': typeof PortalOsRoute
+  '/portal/propostas': typeof PortalPropostasRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/portal/': typeof PortalIndexRoute
   '/_authenticated/cadastros/categorias-financeiras': typeof AuthenticatedCadastrosCategoriasFinanceirasRoute
   '/_authenticated/cadastros/epis': typeof AuthenticatedCadastrosEpisRoute
   '/_authenticated/cadastros/equipes': typeof AuthenticatedCadastrosEquipesRoute
@@ -233,7 +295,14 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/portal'
     | '/leads'
+    | '/invite/$token'
+    | '/portal/documentos'
+    | '/portal/financeiro'
+    | '/portal/os'
+    | '/portal/propostas'
+    | '/portal/'
     | '/cadastros/categorias-financeiras'
     | '/cadastros/epis'
     | '/cadastros/equipes'
@@ -256,7 +325,13 @@ export interface FileRouteTypes {
   to:
     | '/auth'
     | '/leads'
+    | '/invite/$token'
+    | '/portal/documentos'
+    | '/portal/financeiro'
+    | '/portal/os'
+    | '/portal/propostas'
     | '/'
+    | '/portal'
     | '/cadastros/categorias-financeiras'
     | '/cadastros/epis'
     | '/cadastros/equipes'
@@ -279,8 +354,15 @@ export interface FileRouteTypes {
     | '__root__'
     | '/_authenticated'
     | '/auth'
+    | '/portal'
     | '/_authenticated/leads'
+    | '/invite/$token'
+    | '/portal/documentos'
+    | '/portal/financeiro'
+    | '/portal/os'
+    | '/portal/propostas'
     | '/_authenticated/'
+    | '/portal/'
     | '/_authenticated/cadastros/categorias-financeiras'
     | '/_authenticated/cadastros/epis'
     | '/_authenticated/cadastros/equipes'
@@ -304,10 +386,19 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   AuthRoute: typeof AuthRoute
+  PortalRoute: typeof PortalRouteWithChildren
+  InviteTokenRoute: typeof InviteTokenRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/portal': {
+      id: '/portal'
+      path: '/portal'
+      fullPath: '/portal'
+      preLoaderRoute: typeof PortalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth': {
       id: '/auth'
       path: '/auth'
@@ -322,12 +413,54 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/portal/': {
+      id: '/portal/'
+      path: '/'
+      fullPath: '/portal/'
+      preLoaderRoute: typeof PortalIndexRouteImport
+      parentRoute: typeof PortalRoute
+    }
     '/_authenticated/': {
       id: '/_authenticated/'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof AuthenticatedIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
+    }
+    '/portal/propostas': {
+      id: '/portal/propostas'
+      path: '/propostas'
+      fullPath: '/portal/propostas'
+      preLoaderRoute: typeof PortalPropostasRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/portal/os': {
+      id: '/portal/os'
+      path: '/os'
+      fullPath: '/portal/os'
+      preLoaderRoute: typeof PortalOsRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/portal/financeiro': {
+      id: '/portal/financeiro'
+      path: '/financeiro'
+      fullPath: '/portal/financeiro'
+      preLoaderRoute: typeof PortalFinanceiroRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/portal/documentos': {
+      id: '/portal/documentos'
+      path: '/documentos'
+      fullPath: '/portal/documentos'
+      preLoaderRoute: typeof PortalDocumentosRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/invite/$token': {
+      id: '/invite/$token'
+      path: '/invite/$token'
+      fullPath: '/invite/$token'
+      preLoaderRoute: typeof InviteTokenRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_authenticated/leads': {
       id: '/_authenticated/leads'
@@ -544,20 +677,31 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
   AuthenticatedRouteChildren,
 )
 
+interface PortalRouteChildren {
+  PortalDocumentosRoute: typeof PortalDocumentosRoute
+  PortalFinanceiroRoute: typeof PortalFinanceiroRoute
+  PortalOsRoute: typeof PortalOsRoute
+  PortalPropostasRoute: typeof PortalPropostasRoute
+  PortalIndexRoute: typeof PortalIndexRoute
+}
+
+const PortalRouteChildren: PortalRouteChildren = {
+  PortalDocumentosRoute: PortalDocumentosRoute,
+  PortalFinanceiroRoute: PortalFinanceiroRoute,
+  PortalOsRoute: PortalOsRoute,
+  PortalPropostasRoute: PortalPropostasRoute,
+  PortalIndexRoute: PortalIndexRoute,
+}
+
+const PortalRouteWithChildren =
+  PortalRoute._addFileChildren(PortalRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   AuthRoute: AuthRoute,
+  PortalRoute: PortalRouteWithChildren,
+  InviteTokenRoute: InviteTokenRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
