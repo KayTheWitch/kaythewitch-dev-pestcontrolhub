@@ -39,7 +39,7 @@ function PagarDetail() {
       const { data } = await supabase
         .from("accounts_payable")
         .select(
-          "*, suppliers(id,nome), financial_categories(nome), purchase_orders(id,numero)",
+          "*, suppliers(id,razao_social), financial_categories(nome), purchase_orders(id,numero)",
         )
         .eq("id", id)
         .maybeSingle();
