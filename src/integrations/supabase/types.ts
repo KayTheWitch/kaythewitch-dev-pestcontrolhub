@@ -218,6 +218,50 @@ export type Database = {
         }
         Relationships: []
       }
+      client_invitations: {
+        Row: {
+          accepted_at: string | null
+          client_id: string
+          created_at: string
+          email: string
+          expires_at: string
+          id: string
+          invited_by: string | null
+          status: string
+          token: string
+        }
+        Insert: {
+          accepted_at?: string | null
+          client_id: string
+          created_at?: string
+          email: string
+          expires_at?: string
+          id?: string
+          invited_by?: string | null
+          status?: string
+          token?: string
+        }
+        Update: {
+          accepted_at?: string | null
+          client_id?: string
+          created_at?: string
+          email?: string
+          expires_at?: string
+          id?: string
+          invited_by?: string | null
+          status?: string
+          token?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_invitations_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       client_units: {
         Row: {
           client_id: string
@@ -702,24 +746,35 @@ export type Database = {
       }
       profiles: {
         Row: {
+          client_id: string | null
           created_at: string
           email: string | null
           full_name: string | null
           id: string
         }
         Insert: {
+          client_id?: string | null
           created_at?: string
           email?: string | null
           full_name?: string | null
           id: string
         }
         Update: {
+          client_id?: string | null
           created_at?: string
           email?: string | null
           full_name?: string | null
           id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "profiles_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       proposals: {
         Row: {
@@ -1452,12 +1507,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      accept_client_invitation: { Args: { _token: string }; Returns: string }
       apply_os_stock_deduction: { Args: { _os_id: string }; Returns: undefined }
       cancel_receivable_from_os: {
         Args: { _os_id: string }
         Returns: undefined
       }
       create_receivable_from_os: { Args: { _os_id: string }; Returns: string }
+      current_portal_client_id: { Args: never; Returns: string }
       has_any_role: { Args: { _user_id: string }; Returns: boolean }
       has_role: {
         Args: {
@@ -1496,7 +1553,7 @@ export type Database = {
       upsert_payable_from_po: { Args: { _po_id: string }; Returns: string }
     }
     Enums: {
-      app_role: "admin" | "comercial"
+      app_role: "admin" | "comercial" | "cliente"
       client_category: "residencial" | "comercial" | "industrial" | "condominio"
       client_type: "PF" | "PJ"
       financial_account_kind: "receber" | "pagar"
@@ -1677,7 +1734,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "comercial"],
+      app_role: ["admin", "comercial", "cliente"],
       client_category: ["residencial", "comercial", "industrial", "condominio"],
       client_type: ["PF", "PJ"],
       financial_account_kind: ["receber", "pagar"],
