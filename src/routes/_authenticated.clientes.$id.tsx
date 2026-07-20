@@ -248,6 +248,8 @@ function ClientDetail() {
         </Card>
       </div>
 
+      <PortalInviteCard clientId={c.id} defaultEmail={c.email ?? undefined} />
+
       <Card className="mb-6">
         <div className="flex items-center justify-between p-4 border-b">
           <h3 className="font-semibold">Diagnósticos</h3>
