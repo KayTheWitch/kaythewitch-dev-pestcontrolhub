@@ -1,80 +1,78 @@
-## Fase 6 — Portal do Cliente
+Concluída a Fase 6 (Portal do Cliente), a próxima etapa do roadmap é a **Fase 7 — Business Intelligence (BI)**: transformar os dados operacionais e financeiros já capturados em painéis analíticos para apoiar decisão gerencial.
 
-Após fechar o ciclo econômico na Fase 5, a próxima etapa do roadmap é o **Portal do Cliente**: uma área autenticada e leve onde o cliente final acompanha seus serviços, documentos e financeiro sem depender de contato com o comercial.
+## Objetivo
 
-### Escopo funcional
+Consolidar KPIs de comercial, operação, estoque e financeiro em uma área `/bi` dedicada, com filtros por período, equipe e serviço, além de exportação CSV para análises externas.
 
-**1. Autenticação dedicada do cliente**
-- Novo papel `cliente` no enum `app_role` (RLS separada do time interno).
-- Convite por e-mail disparado ao criar/editar cliente (link com magic link Supabase).
-- Vínculo `profiles.client_id` para amarrar login → registro de cliente.
-- Rota `/portal/auth` isolada do `/auth` interno.
+## Escopo funcional
 
-**2. Dashboard do cliente (`/portal`)**
-- Resumo: próximas visitas confirmadas, última OS concluída, títulos em aberto.
-- Atalhos para propostas pendentes de assinatura e relatórios recentes.
+**1. Painel Comercial**
+- Funil de leads (novo → qualificado → proposta → ganho/perdido) com taxa de conversão por etapa.
+- Ticket médio e valor total de propostas aprovadas por período.
+- Ranking de origem de leads e motivos de perda.
 
-**3. Propostas (`/portal/propostas`)**
-- Lista das propostas do cliente logado com status.
-- Visualização read-only e botão "Assinar" reaproveitando o fluxo ZapSign já existente.
+**2. Painel Operacional**
+- OS por status, tempo médio entre criação → execução → conclusão.
+- Produtividade por equipe/técnico (OS concluídas, horas em campo via check-in/out).
+- Taxa de reagendamento e cancelamento.
 
-**4. Ordens de serviço (`/portal/os`)**
-- Histórico com status, técnico responsável, data e link para o relatório técnico (`/r/:token`).
-- Confirmação/reagendamento de visita futura (reaproveita `/c/:token`).
+**3. Painel Estoque & Compras**
+- Giro de produto (consumo mensal x saldo).
+- Itens críticos (abaixo do mínimo, vencendo em 30/60/90 dias).
+- Lead time médio de fornecedores e valor comprado por fornecedor.
 
-**5. Financeiro (`/portal/financeiro`)**
-- Lista de títulos a receber do cliente (aberto, vencido, pago).
-- Download de comprovante simples (HTML imprimível) para títulos quitados.
-- Sem baixa direta pelo cliente (fase futura integra PIX/boleto).
+**4. Painel Financeiro**
+- DRE simplificado (receita realizada, despesa realizada, resultado) por mês.
+- Aging de contas a receber e a pagar (0-30, 31-60, 61-90, 90+).
+- Previsto x realizado por categoria financeira.
 
-**6. Documentos (`/portal/documentos`)**
-- Relatórios técnicos concluídos e propostas assinadas, agrupados por OS/proposta.
+**5. Filtros globais e exportação**
+- Filtros: intervalo de datas, equipe, serviço, categoria financeira.
+- Botão "Exportar CSV" em cada painel.
 
-### Modelo de dados
+## Modelo de dados
 
-Reaproveita tabelas existentes. Adições mínimas:
-
-```text
-app_role                  -- adicionar valor 'cliente'
-profiles                  -- adicionar coluna client_id uuid references clients(id)
-client_invitations (
-  id, client_id, email, token, status (pendente|aceito|expirado),
-  invited_by, expires_at, accepted_at, created_at
-)
-```
-
-RLS: novas policies em `clients`, `proposals`, `service_orders`, `accounts_receivable`, `financial_payments` para permitir SELECT quando `auth.uid()` pertence a um profile com `client_id` correspondente. Time interno mantém acesso via `has_role`.
-
-### Rotas
+Sem novas tabelas. Criar **views SQL** e **funções agregadoras** (`security definer`) para consolidar métricas com desempenho previsível:
 
 ```text
-/portal/auth                        login/magic link do cliente
-/portal                             dashboard
-/portal/propostas                   lista
-/portal/propostas/:id               detalhe + assinatura
-/portal/os                          lista
-/portal/os/:id                      detalhe + relatório
-/portal/financeiro                  títulos
-/portal/documentos                  arquivos
+v_bi_lead_funnel
+v_bi_os_throughput
+v_bi_team_productivity
+v_bi_stock_turnover
+v_bi_supplier_performance
+v_bi_financial_dre
+v_bi_receivables_aging
+v_bi_payables_aging
 ```
 
-Novo layout `src/routes/_portal.tsx` (shell separado do `AppShell` interno, com branding leve e menu próprio). Middleware de rota garante que `client_id` do profile bate com os dados solicitados.
+Todas restritas a `admin` e `comercial` via RLS/`has_role`. Cliente do portal não acessa.
 
-### Arquivos técnicos previstos
+## Rotas
 
-- Migração: enum `cliente`, coluna `profiles.client_id`, tabela `client_invitations`, novas policies.
-- `src/lib/portal.functions.ts` — server functions para dashboard, listagens e comprovantes (usa `requireSupabaseAuth` + checagem do `client_id`).
-- `src/components/PortalShell.tsx` — layout dedicado.
-- Rotas `/portal/*` conforme mapa acima.
-- Atualização em `src/routes/_authenticated.clientes.$id.tsx` — botão "Convidar para o portal" que cria o invitation e dispara e-mail.
-- Atualização em `src/hooks/useAuth.ts` — expor `role` e `clientId` para roteamento condicional.
-- README: nova seção Portal do Cliente, rotas, roadmap (marcar Fase 6 e apontar Fase 7 — BI).
+```text
+/bi                     índice com atalhos aos painéis
+/bi/comercial
+/bi/operacional
+/bi/estoque
+/bi/financeiro
+```
 
-### Fora do escopo desta fase
+Novo item "BI" no `AppShell` (seção "Principal"), visível apenas para `admin` e `comercial`.
 
-- Pagamento online (PIX/boleto real) — fica para fase financeira 2.
-- Chat/tickets de suporte.
-- Notificações push/e-mail transacionais além do convite.
-- App mobile dedicado (o portal é responsivo web).
+## Arquivos técnicos previstos
 
-Confirma seguir com a Fase 6 nesse escopo?
+- Migração: criação das views/funções acima, grants para `authenticated`, checagem de role dentro das funções agregadoras.
+- `src/lib/bi.functions.ts` — server functions que consomem as views com filtros validados por Zod.
+- `src/components/bi/` — `KpiCard`, `ChartLine`, `ChartBar`, `ChartFunnel`, `DateRangeFilter` (usando `recharts`, já disponível no shadcn stack).
+- Rotas `/bi/*` conforme mapa acima.
+- Atualização em `src/components/AppShell.tsx` — nova entrada de menu condicional por role.
+- README: seção BI + marcar Fase 7 concluída, apontar Fase 8 (Compliance ANVISA).
+
+## Fora do escopo desta fase
+
+- Alertas automatizados (e-mail/WhatsApp) baseados em metas.
+- Previsão/forecast estatístico.
+- Cubos OLAP ou data warehouse externo — tudo roda em Postgres.
+- Exportação PDF dos painéis (CSV apenas).
+
+Confirma seguir com a Fase 7 nesse escopo?
