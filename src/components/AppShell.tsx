@@ -17,6 +17,7 @@ import {
   ArrowDownCircle,
   ArrowUpCircle,
   Tags,
+  BarChart3,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -34,6 +35,7 @@ const nav: { section: string; items: NavItem[] }[] = [
       { to: "/clientes", label: "Clientes", icon: Users },
       { to: "/propostas", label: "Propostas", icon: FileText },
       { to: "/os", label: "Ordens de Serviço", icon: ClipboardList },
+      { to: "/bi", label: "BI", icon: BarChart3 },
     ],
   },
   {

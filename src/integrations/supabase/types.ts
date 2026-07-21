@@ -1507,8 +1507,89 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      _bi_assert_role: { Args: never; Returns: undefined }
       accept_client_invitation: { Args: { _token: string }; Returns: string }
       apply_os_stock_deduction: { Args: { _os_id: string }; Returns: undefined }
+      bi_financial_dre: {
+        Args: { _from: string; _to: string }
+        Returns: {
+          despesa: number
+          mes: string
+          receita: number
+          resultado: number
+        }[]
+      }
+      bi_lead_funnel: {
+        Args: { _from: string; _to: string }
+        Returns: {
+          status: string
+          total: number
+        }[]
+      }
+      bi_os_throughput: {
+        Args: { _from: string; _to: string }
+        Returns: {
+          avg_execution_hours: number
+          status: string
+          total: number
+        }[]
+      }
+      bi_payables_aging: {
+        Args: never
+        Returns: {
+          bucket: string
+          total: number
+          valor: number
+        }[]
+      }
+      bi_proposal_metrics: {
+        Args: { _from: string; _to: string }
+        Returns: {
+          status: string
+          ticket_medio: number
+          total: number
+          valor_total: number
+        }[]
+      }
+      bi_receivables_aging: {
+        Args: never
+        Returns: {
+          bucket: string
+          total: number
+          valor: number
+        }[]
+      }
+      bi_stock_critical: {
+        Args: never
+        Returns: {
+          min_stock: number
+          product_id: string
+          produto: string
+          saldo: number
+          vencendo_30: number
+          vencendo_60: number
+          vencendo_90: number
+        }[]
+      }
+      bi_supplier_performance: {
+        Args: { _from: string; _to: string }
+        Returns: {
+          fornecedor: string
+          lead_time_medio_dias: number
+          pedidos: number
+          supplier_id: string
+          total_comprado: number
+        }[]
+      }
+      bi_team_productivity: {
+        Args: { _from: string; _to: string }
+        Returns: {
+          avg_field_hours: number
+          os_concluidas: number
+          team_id: string
+          team_nome: string
+        }[]
+      }
       cancel_receivable_from_os: {
         Args: { _os_id: string }
         Returns: undefined
