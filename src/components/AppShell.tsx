@@ -18,6 +18,7 @@ import {
   ArrowUpCircle,
   Tags,
   BarChart3,
+  FileCheck2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -36,6 +37,7 @@ const nav: { section: string; items: NavItem[] }[] = [
       { to: "/propostas", label: "Propostas", icon: FileText },
       { to: "/os", label: "Ordens de Serviço", icon: ClipboardList },
       { to: "/bi", label: "BI", icon: BarChart3 },
+      { to: "/compliance", label: "Compliance", icon: FileCheck2 },
     ],
   },
   {
