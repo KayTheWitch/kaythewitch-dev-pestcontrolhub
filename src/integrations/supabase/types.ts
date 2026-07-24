@@ -429,6 +429,59 @@ export type Database = {
           },
         ]
       }
+      epi_deliveries: {
+        Row: {
+          ca: string | null
+          created_at: string
+          created_by: string | null
+          entregue_em: string
+          epi_id: string
+          ficha_pdf_path: string | null
+          id: string
+          observacoes: string | null
+          quantidade: number
+          updated_at: string
+          user_id: string
+          validade: string | null
+        }
+        Insert: {
+          ca?: string | null
+          created_at?: string
+          created_by?: string | null
+          entregue_em?: string
+          epi_id: string
+          ficha_pdf_path?: string | null
+          id?: string
+          observacoes?: string | null
+          quantidade?: number
+          updated_at?: string
+          user_id: string
+          validade?: string | null
+        }
+        Update: {
+          ca?: string | null
+          created_at?: string
+          created_by?: string | null
+          entregue_em?: string
+          epi_id?: string
+          ficha_pdf_path?: string | null
+          id?: string
+          observacoes?: string | null
+          quantidade?: number
+          updated_at?: string
+          user_id?: string
+          validade?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "epi_deliveries_epi_id_fkey"
+            columns: ["epi_id"]
+            isOneToOne: false
+            referencedRelation: "epis"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       epis: {
         Row: {
           ativo: boolean
@@ -590,6 +643,108 @@ export type Database = {
           },
         ]
       }
+      os_technical_responsible: {
+        Row: {
+          art_numero: string | null
+          art_validade: string | null
+          created_at: string
+          os_id: string
+          rt_conselho: string
+          rt_id: string
+          rt_nome: string
+          rt_registro: string
+        }
+        Insert: {
+          art_numero?: string | null
+          art_validade?: string | null
+          created_at?: string
+          os_id: string
+          rt_conselho: string
+          rt_id: string
+          rt_nome: string
+          rt_registro: string
+        }
+        Update: {
+          art_numero?: string | null
+          art_validade?: string | null
+          created_at?: string
+          os_id?: string
+          rt_conselho?: string
+          rt_id?: string
+          rt_nome?: string
+          rt_registro?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "os_technical_responsible_os_id_fkey"
+            columns: ["os_id"]
+            isOneToOne: true
+            referencedRelation: "service_orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "os_technical_responsible_rt_id_fkey"
+            columns: ["rt_id"]
+            isOneToOne: false
+            referencedRelation: "technical_responsibles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      packaging_returns: {
+        Row: {
+          comprovante_path: string | null
+          created_at: string
+          created_by: string | null
+          devolvido_em: string
+          id: string
+          observacoes: string | null
+          product_id: string
+          quantidade: number
+          supplier_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          comprovante_path?: string | null
+          created_at?: string
+          created_by?: string | null
+          devolvido_em?: string
+          id?: string
+          observacoes?: string | null
+          product_id: string
+          quantidade: number
+          supplier_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          comprovante_path?: string | null
+          created_at?: string
+          created_by?: string | null
+          devolvido_em?: string
+          id?: string
+          observacoes?: string | null
+          product_id?: string
+          quantidade?: number
+          supplier_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "packaging_returns_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "packaging_returns_supplier_id_fkey"
+            columns: ["supplier_id"]
+            isOneToOne: false
+            referencedRelation: "suppliers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       product_batches: {
         Row: {
           active: boolean
@@ -713,33 +868,45 @@ export type Database = {
       }
       products: {
         Row: {
+          antidoto: string | null
           ativo: boolean
+          classe_toxicologica: string | null
           created_at: string
+          grupo_quimico: string | null
           id: string
           min_stock: number
           nome: string
           principio_ativo: string | null
           registro_ms: string | null
+          telefone_cit: string | null
           unidade: string
         }
         Insert: {
+          antidoto?: string | null
           ativo?: boolean
+          classe_toxicologica?: string | null
           created_at?: string
+          grupo_quimico?: string | null
           id?: string
           min_stock?: number
           nome: string
           principio_ativo?: string | null
           registro_ms?: string | null
+          telefone_cit?: string | null
           unidade?: string
         }
         Update: {
+          antidoto?: string | null
           ativo?: boolean
+          classe_toxicologica?: string | null
           created_at?: string
+          grupo_quimico?: string | null
           id?: string
           min_stock?: number
           nome?: string
           principio_ativo?: string | null
           registro_ms?: string | null
+          telefone_cit?: string | null
           unidade?: string
         }
         Relationships: []
@@ -973,6 +1140,53 @@ export type Database = {
           },
         ]
       }
+      regulatory_documents: {
+        Row: {
+          arquivo_path: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          numero: string | null
+          observacoes: string | null
+          product_id: string
+          tipo: string
+          updated_at: string
+          validade: string | null
+        }
+        Insert: {
+          arquivo_path?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          numero?: string | null
+          observacoes?: string | null
+          product_id: string
+          tipo: string
+          updated_at?: string
+          validade?: string | null
+        }
+        Update: {
+          arquivo_path?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          numero?: string | null
+          observacoes?: string | null
+          product_id?: string
+          tipo?: string
+          updated_at?: string
+          validade?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "regulatory_documents_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       schedule_blocks: {
         Row: {
           created_at: string
@@ -1052,6 +1266,50 @@ export type Database = {
           unidade?: string
         }
         Relationships: []
+      }
+      service_certificates: {
+        Row: {
+          ano: number
+          created_at: string
+          emitido_em: string
+          id: string
+          numero_ces: string
+          seq: number
+          service_order_id: string
+          snapshot_json: Json
+          token_publico: string
+        }
+        Insert: {
+          ano: number
+          created_at?: string
+          emitido_em?: string
+          id?: string
+          numero_ces: string
+          seq: number
+          service_order_id: string
+          snapshot_json?: Json
+          token_publico: string
+        }
+        Update: {
+          ano?: number
+          created_at?: string
+          emitido_em?: string
+          id?: string
+          numero_ces?: string
+          seq?: number
+          service_order_id?: string
+          snapshot_json?: Json
+          token_publico?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_certificates_service_order_id_fkey"
+            columns: ["service_order_id"]
+            isOneToOne: true
+            referencedRelation: "service_orders"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       service_order_events: {
         Row: {
@@ -1481,6 +1739,51 @@ export type Database = {
         }
         Relationships: []
       }
+      technical_responsibles: {
+        Row: {
+          art_numero: string | null
+          art_pdf_path: string | null
+          art_validade: string | null
+          ativo: boolean
+          conselho: string
+          created_at: string
+          id: string
+          nome: string
+          observacoes: string | null
+          registro: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          art_numero?: string | null
+          art_pdf_path?: string | null
+          art_validade?: string | null
+          ativo?: boolean
+          conselho: string
+          created_at?: string
+          id?: string
+          nome: string
+          observacoes?: string | null
+          registro: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          art_numero?: string | null
+          art_pdf_path?: string | null
+          art_validade?: string | null
+          ativo?: boolean
+          conselho?: string
+          created_at?: string
+          id?: string
+          nome?: string
+          observacoes?: string | null
+          registro?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -1596,6 +1899,7 @@ export type Database = {
       }
       create_receivable_from_os: { Args: { _os_id: string }; Returns: string }
       current_portal_client_id: { Args: never; Returns: string }
+      get_certificate_by_token: { Args: { _token: string }; Returns: Json }
       has_any_role: { Args: { _user_id: string }; Returns: boolean }
       has_role: {
         Args: {
@@ -1604,6 +1908,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      issue_service_certificate: { Args: { _os_id: string }; Returns: string }
       receive_purchase_order_item: {
         Args: {
           _batch_number: string
