@@ -19,11 +19,14 @@ import { Route as PortalOsRouteImport } from './routes/portal.os'
 import { Route as PortalFinanceiroRouteImport } from './routes/portal.financeiro'
 import { Route as PortalDocumentosRouteImport } from './routes/portal.documentos'
 import { Route as InviteTokenRouteImport } from './routes/invite.$token'
+import { Route as CesTokenRouteImport } from './routes/ces.$token'
 import { Route as AuthenticatedLeadsRouteImport } from './routes/_authenticated.leads'
+import { Route as AuthenticatedComplianceRouteImport } from './routes/_authenticated.compliance'
 import { Route as AuthenticatedBiRouteImport } from './routes/_authenticated.bi'
 import { Route as AuthenticatedPropostasIndexRouteImport } from './routes/_authenticated.propostas.index'
 import { Route as AuthenticatedOsIndexRouteImport } from './routes/_authenticated.os.index'
 import { Route as AuthenticatedFinanceiroIndexRouteImport } from './routes/_authenticated.financeiro.index'
+import { Route as AuthenticatedComplianceIndexRouteImport } from './routes/_authenticated.compliance.index'
 import { Route as AuthenticatedClientesIndexRouteImport } from './routes/_authenticated.clientes.index'
 import { Route as AuthenticatedBiIndexRouteImport } from './routes/_authenticated.bi.index'
 import { Route as AuthenticatedPropostasIdRouteImport } from './routes/_authenticated.propostas.$id'
@@ -31,6 +34,12 @@ import { Route as AuthenticatedOsIdRouteImport } from './routes/_authenticated.o
 import { Route as AuthenticatedFinanceiroReceberRouteImport } from './routes/_authenticated.financeiro.receber'
 import { Route as AuthenticatedFinanceiroPagarRouteImport } from './routes/_authenticated.financeiro.pagar'
 import { Route as AuthenticatedDiagnosticosNovoRouteImport } from './routes/_authenticated.diagnosticos.novo'
+import { Route as AuthenticatedComplianceRtRouteImport } from './routes/_authenticated.compliance.rt'
+import { Route as AuthenticatedComplianceProdutosRegulatorioRouteImport } from './routes/_authenticated.compliance.produtos-regulatorio'
+import { Route as AuthenticatedComplianceLivroAplicacoesRouteImport } from './routes/_authenticated.compliance.livro-aplicacoes'
+import { Route as AuthenticatedComplianceEpisRouteImport } from './routes/_authenticated.compliance.epis'
+import { Route as AuthenticatedComplianceEmbalagensRouteImport } from './routes/_authenticated.compliance.embalagens'
+import { Route as AuthenticatedComplianceCertificadosRouteImport } from './routes/_authenticated.compliance.certificados'
 import { Route as AuthenticatedClientesIdRouteImport } from './routes/_authenticated.clientes.$id'
 import { Route as AuthenticatedCadastrosServicosRouteImport } from './routes/_authenticated.cadastros.servicos'
 import { Route as AuthenticatedCadastrosProdutosRouteImport } from './routes/_authenticated.cadastros.produtos'
@@ -94,9 +103,19 @@ const InviteTokenRoute = InviteTokenRouteImport.update({
   path: '/invite/$token',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CesTokenRoute = CesTokenRouteImport.update({
+  id: '/ces/$token',
+  path: '/ces/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedLeadsRoute = AuthenticatedLeadsRouteImport.update({
   id: '/leads',
   path: '/leads',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedComplianceRoute = AuthenticatedComplianceRouteImport.update({
+  id: '/compliance',
+  path: '/compliance',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedBiRoute = AuthenticatedBiRouteImport.update({
@@ -120,6 +139,12 @@ const AuthenticatedFinanceiroIndexRoute =
     id: '/financeiro/',
     path: '/financeiro/',
     getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedComplianceIndexRoute =
+  AuthenticatedComplianceIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedComplianceRoute,
   } as any)
 const AuthenticatedClientesIndexRoute =
   AuthenticatedClientesIndexRouteImport.update({
@@ -160,6 +185,42 @@ const AuthenticatedDiagnosticosNovoRoute =
     id: '/diagnosticos/novo',
     path: '/diagnosticos/novo',
     getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedComplianceRtRoute =
+  AuthenticatedComplianceRtRouteImport.update({
+    id: '/rt',
+    path: '/rt',
+    getParentRoute: () => AuthenticatedComplianceRoute,
+  } as any)
+const AuthenticatedComplianceProdutosRegulatorioRoute =
+  AuthenticatedComplianceProdutosRegulatorioRouteImport.update({
+    id: '/produtos-regulatorio',
+    path: '/produtos-regulatorio',
+    getParentRoute: () => AuthenticatedComplianceRoute,
+  } as any)
+const AuthenticatedComplianceLivroAplicacoesRoute =
+  AuthenticatedComplianceLivroAplicacoesRouteImport.update({
+    id: '/livro-aplicacoes',
+    path: '/livro-aplicacoes',
+    getParentRoute: () => AuthenticatedComplianceRoute,
+  } as any)
+const AuthenticatedComplianceEpisRoute =
+  AuthenticatedComplianceEpisRouteImport.update({
+    id: '/epis',
+    path: '/epis',
+    getParentRoute: () => AuthenticatedComplianceRoute,
+  } as any)
+const AuthenticatedComplianceEmbalagensRoute =
+  AuthenticatedComplianceEmbalagensRouteImport.update({
+    id: '/embalagens',
+    path: '/embalagens',
+    getParentRoute: () => AuthenticatedComplianceRoute,
+  } as any)
+const AuthenticatedComplianceCertificadosRoute =
+  AuthenticatedComplianceCertificadosRouteImport.update({
+    id: '/certificados',
+    path: '/certificados',
+    getParentRoute: () => AuthenticatedComplianceRoute,
   } as any)
 const AuthenticatedClientesIdRoute = AuthenticatedClientesIdRouteImport.update({
   id: '/clientes/$id',
@@ -243,7 +304,9 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/portal': typeof PortalRouteWithChildren
   '/bi': typeof AuthenticatedBiRouteWithChildren
+  '/compliance': typeof AuthenticatedComplianceRouteWithChildren
   '/leads': typeof AuthenticatedLeadsRoute
+  '/ces/$token': typeof CesTokenRoute
   '/invite/$token': typeof InviteTokenRoute
   '/portal/documentos': typeof PortalDocumentosRoute
   '/portal/financeiro': typeof PortalFinanceiroRoute
@@ -260,6 +323,12 @@ export interface FileRoutesByFullPath {
   '/cadastros/produtos': typeof AuthenticatedCadastrosProdutosRoute
   '/cadastros/servicos': typeof AuthenticatedCadastrosServicosRoute
   '/clientes/$id': typeof AuthenticatedClientesIdRoute
+  '/compliance/certificados': typeof AuthenticatedComplianceCertificadosRoute
+  '/compliance/embalagens': typeof AuthenticatedComplianceEmbalagensRoute
+  '/compliance/epis': typeof AuthenticatedComplianceEpisRoute
+  '/compliance/livro-aplicacoes': typeof AuthenticatedComplianceLivroAplicacoesRoute
+  '/compliance/produtos-regulatorio': typeof AuthenticatedComplianceProdutosRegulatorioRoute
+  '/compliance/rt': typeof AuthenticatedComplianceRtRoute
   '/diagnosticos/novo': typeof AuthenticatedDiagnosticosNovoRoute
   '/financeiro/pagar': typeof AuthenticatedFinanceiroPagarRouteWithChildren
   '/financeiro/receber': typeof AuthenticatedFinanceiroReceberRouteWithChildren
@@ -267,6 +336,7 @@ export interface FileRoutesByFullPath {
   '/propostas/$id': typeof AuthenticatedPropostasIdRoute
   '/bi/': typeof AuthenticatedBiIndexRoute
   '/clientes/': typeof AuthenticatedClientesIndexRoute
+  '/compliance/': typeof AuthenticatedComplianceIndexRoute
   '/financeiro/': typeof AuthenticatedFinanceiroIndexRoute
   '/os/': typeof AuthenticatedOsIndexRoute
   '/propostas/': typeof AuthenticatedPropostasIndexRoute
@@ -277,6 +347,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/leads': typeof AuthenticatedLeadsRoute
+  '/ces/$token': typeof CesTokenRoute
   '/invite/$token': typeof InviteTokenRoute
   '/portal/documentos': typeof PortalDocumentosRoute
   '/portal/financeiro': typeof PortalFinanceiroRoute
@@ -294,6 +365,12 @@ export interface FileRoutesByTo {
   '/cadastros/produtos': typeof AuthenticatedCadastrosProdutosRoute
   '/cadastros/servicos': typeof AuthenticatedCadastrosServicosRoute
   '/clientes/$id': typeof AuthenticatedClientesIdRoute
+  '/compliance/certificados': typeof AuthenticatedComplianceCertificadosRoute
+  '/compliance/embalagens': typeof AuthenticatedComplianceEmbalagensRoute
+  '/compliance/epis': typeof AuthenticatedComplianceEpisRoute
+  '/compliance/livro-aplicacoes': typeof AuthenticatedComplianceLivroAplicacoesRoute
+  '/compliance/produtos-regulatorio': typeof AuthenticatedComplianceProdutosRegulatorioRoute
+  '/compliance/rt': typeof AuthenticatedComplianceRtRoute
   '/diagnosticos/novo': typeof AuthenticatedDiagnosticosNovoRoute
   '/financeiro/pagar': typeof AuthenticatedFinanceiroPagarRouteWithChildren
   '/financeiro/receber': typeof AuthenticatedFinanceiroReceberRouteWithChildren
@@ -301,6 +378,7 @@ export interface FileRoutesByTo {
   '/propostas/$id': typeof AuthenticatedPropostasIdRoute
   '/bi': typeof AuthenticatedBiIndexRoute
   '/clientes': typeof AuthenticatedClientesIndexRoute
+  '/compliance': typeof AuthenticatedComplianceIndexRoute
   '/financeiro': typeof AuthenticatedFinanceiroIndexRoute
   '/os': typeof AuthenticatedOsIndexRoute
   '/propostas': typeof AuthenticatedPropostasIndexRoute
@@ -314,7 +392,9 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/portal': typeof PortalRouteWithChildren
   '/_authenticated/bi': typeof AuthenticatedBiRouteWithChildren
+  '/_authenticated/compliance': typeof AuthenticatedComplianceRouteWithChildren
   '/_authenticated/leads': typeof AuthenticatedLeadsRoute
+  '/ces/$token': typeof CesTokenRoute
   '/invite/$token': typeof InviteTokenRoute
   '/portal/documentos': typeof PortalDocumentosRoute
   '/portal/financeiro': typeof PortalFinanceiroRoute
@@ -332,6 +412,12 @@ export interface FileRoutesById {
   '/_authenticated/cadastros/produtos': typeof AuthenticatedCadastrosProdutosRoute
   '/_authenticated/cadastros/servicos': typeof AuthenticatedCadastrosServicosRoute
   '/_authenticated/clientes/$id': typeof AuthenticatedClientesIdRoute
+  '/_authenticated/compliance/certificados': typeof AuthenticatedComplianceCertificadosRoute
+  '/_authenticated/compliance/embalagens': typeof AuthenticatedComplianceEmbalagensRoute
+  '/_authenticated/compliance/epis': typeof AuthenticatedComplianceEpisRoute
+  '/_authenticated/compliance/livro-aplicacoes': typeof AuthenticatedComplianceLivroAplicacoesRoute
+  '/_authenticated/compliance/produtos-regulatorio': typeof AuthenticatedComplianceProdutosRegulatorioRoute
+  '/_authenticated/compliance/rt': typeof AuthenticatedComplianceRtRoute
   '/_authenticated/diagnosticos/novo': typeof AuthenticatedDiagnosticosNovoRoute
   '/_authenticated/financeiro/pagar': typeof AuthenticatedFinanceiroPagarRouteWithChildren
   '/_authenticated/financeiro/receber': typeof AuthenticatedFinanceiroReceberRouteWithChildren
@@ -339,6 +425,7 @@ export interface FileRoutesById {
   '/_authenticated/propostas/$id': typeof AuthenticatedPropostasIdRoute
   '/_authenticated/bi/': typeof AuthenticatedBiIndexRoute
   '/_authenticated/clientes/': typeof AuthenticatedClientesIndexRoute
+  '/_authenticated/compliance/': typeof AuthenticatedComplianceIndexRoute
   '/_authenticated/financeiro/': typeof AuthenticatedFinanceiroIndexRoute
   '/_authenticated/os/': typeof AuthenticatedOsIndexRoute
   '/_authenticated/propostas/': typeof AuthenticatedPropostasIndexRoute
@@ -353,7 +440,9 @@ export interface FileRouteTypes {
     | '/auth'
     | '/portal'
     | '/bi'
+    | '/compliance'
     | '/leads'
+    | '/ces/$token'
     | '/invite/$token'
     | '/portal/documentos'
     | '/portal/financeiro'
@@ -370,6 +459,12 @@ export interface FileRouteTypes {
     | '/cadastros/produtos'
     | '/cadastros/servicos'
     | '/clientes/$id'
+    | '/compliance/certificados'
+    | '/compliance/embalagens'
+    | '/compliance/epis'
+    | '/compliance/livro-aplicacoes'
+    | '/compliance/produtos-regulatorio'
+    | '/compliance/rt'
     | '/diagnosticos/novo'
     | '/financeiro/pagar'
     | '/financeiro/receber'
@@ -377,6 +472,7 @@ export interface FileRouteTypes {
     | '/propostas/$id'
     | '/bi/'
     | '/clientes/'
+    | '/compliance/'
     | '/financeiro/'
     | '/os/'
     | '/propostas/'
@@ -387,6 +483,7 @@ export interface FileRouteTypes {
   to:
     | '/auth'
     | '/leads'
+    | '/ces/$token'
     | '/invite/$token'
     | '/portal/documentos'
     | '/portal/financeiro'
@@ -404,6 +501,12 @@ export interface FileRouteTypes {
     | '/cadastros/produtos'
     | '/cadastros/servicos'
     | '/clientes/$id'
+    | '/compliance/certificados'
+    | '/compliance/embalagens'
+    | '/compliance/epis'
+    | '/compliance/livro-aplicacoes'
+    | '/compliance/produtos-regulatorio'
+    | '/compliance/rt'
     | '/diagnosticos/novo'
     | '/financeiro/pagar'
     | '/financeiro/receber'
@@ -411,6 +514,7 @@ export interface FileRouteTypes {
     | '/propostas/$id'
     | '/bi'
     | '/clientes'
+    | '/compliance'
     | '/financeiro'
     | '/os'
     | '/propostas'
@@ -423,7 +527,9 @@ export interface FileRouteTypes {
     | '/auth'
     | '/portal'
     | '/_authenticated/bi'
+    | '/_authenticated/compliance'
     | '/_authenticated/leads'
+    | '/ces/$token'
     | '/invite/$token'
     | '/portal/documentos'
     | '/portal/financeiro'
@@ -441,6 +547,12 @@ export interface FileRouteTypes {
     | '/_authenticated/cadastros/produtos'
     | '/_authenticated/cadastros/servicos'
     | '/_authenticated/clientes/$id'
+    | '/_authenticated/compliance/certificados'
+    | '/_authenticated/compliance/embalagens'
+    | '/_authenticated/compliance/epis'
+    | '/_authenticated/compliance/livro-aplicacoes'
+    | '/_authenticated/compliance/produtos-regulatorio'
+    | '/_authenticated/compliance/rt'
     | '/_authenticated/diagnosticos/novo'
     | '/_authenticated/financeiro/pagar'
     | '/_authenticated/financeiro/receber'
@@ -448,6 +560,7 @@ export interface FileRouteTypes {
     | '/_authenticated/propostas/$id'
     | '/_authenticated/bi/'
     | '/_authenticated/clientes/'
+    | '/_authenticated/compliance/'
     | '/_authenticated/financeiro/'
     | '/_authenticated/os/'
     | '/_authenticated/propostas/'
@@ -460,6 +573,7 @@ export interface RootRouteChildren {
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   AuthRoute: typeof AuthRoute
   PortalRoute: typeof PortalRouteWithChildren
+  CesTokenRoute: typeof CesTokenRoute
   InviteTokenRoute: typeof InviteTokenRoute
 }
 
@@ -535,11 +649,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InviteTokenRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/ces/$token': {
+      id: '/ces/$token'
+      path: '/ces/$token'
+      fullPath: '/ces/$token'
+      preLoaderRoute: typeof CesTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/leads': {
       id: '/_authenticated/leads'
       path: '/leads'
       fullPath: '/leads'
       preLoaderRoute: typeof AuthenticatedLeadsRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/compliance': {
+      id: '/_authenticated/compliance'
+      path: '/compliance'
+      fullPath: '/compliance'
+      preLoaderRoute: typeof AuthenticatedComplianceRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/bi': {
@@ -569,6 +697,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/financeiro/'
       preLoaderRoute: typeof AuthenticatedFinanceiroIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/compliance/': {
+      id: '/_authenticated/compliance/'
+      path: '/'
+      fullPath: '/compliance/'
+      preLoaderRoute: typeof AuthenticatedComplianceIndexRouteImport
+      parentRoute: typeof AuthenticatedComplianceRoute
     }
     '/_authenticated/clientes/': {
       id: '/_authenticated/clientes/'
@@ -618,6 +753,48 @@ declare module '@tanstack/react-router' {
       fullPath: '/diagnosticos/novo'
       preLoaderRoute: typeof AuthenticatedDiagnosticosNovoRouteImport
       parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/compliance/rt': {
+      id: '/_authenticated/compliance/rt'
+      path: '/rt'
+      fullPath: '/compliance/rt'
+      preLoaderRoute: typeof AuthenticatedComplianceRtRouteImport
+      parentRoute: typeof AuthenticatedComplianceRoute
+    }
+    '/_authenticated/compliance/produtos-regulatorio': {
+      id: '/_authenticated/compliance/produtos-regulatorio'
+      path: '/produtos-regulatorio'
+      fullPath: '/compliance/produtos-regulatorio'
+      preLoaderRoute: typeof AuthenticatedComplianceProdutosRegulatorioRouteImport
+      parentRoute: typeof AuthenticatedComplianceRoute
+    }
+    '/_authenticated/compliance/livro-aplicacoes': {
+      id: '/_authenticated/compliance/livro-aplicacoes'
+      path: '/livro-aplicacoes'
+      fullPath: '/compliance/livro-aplicacoes'
+      preLoaderRoute: typeof AuthenticatedComplianceLivroAplicacoesRouteImport
+      parentRoute: typeof AuthenticatedComplianceRoute
+    }
+    '/_authenticated/compliance/epis': {
+      id: '/_authenticated/compliance/epis'
+      path: '/epis'
+      fullPath: '/compliance/epis'
+      preLoaderRoute: typeof AuthenticatedComplianceEpisRouteImport
+      parentRoute: typeof AuthenticatedComplianceRoute
+    }
+    '/_authenticated/compliance/embalagens': {
+      id: '/_authenticated/compliance/embalagens'
+      path: '/embalagens'
+      fullPath: '/compliance/embalagens'
+      preLoaderRoute: typeof AuthenticatedComplianceEmbalagensRouteImport
+      parentRoute: typeof AuthenticatedComplianceRoute
+    }
+    '/_authenticated/compliance/certificados': {
+      id: '/_authenticated/compliance/certificados'
+      path: '/certificados'
+      fullPath: '/compliance/certificados'
+      preLoaderRoute: typeof AuthenticatedComplianceCertificadosRouteImport
+      parentRoute: typeof AuthenticatedComplianceRoute
     }
     '/_authenticated/clientes/$id': {
       id: '/_authenticated/clientes/$id'
@@ -733,6 +910,36 @@ const AuthenticatedBiRouteWithChildren = AuthenticatedBiRoute._addFileChildren(
   AuthenticatedBiRouteChildren,
 )
 
+interface AuthenticatedComplianceRouteChildren {
+  AuthenticatedComplianceCertificadosRoute: typeof AuthenticatedComplianceCertificadosRoute
+  AuthenticatedComplianceEmbalagensRoute: typeof AuthenticatedComplianceEmbalagensRoute
+  AuthenticatedComplianceEpisRoute: typeof AuthenticatedComplianceEpisRoute
+  AuthenticatedComplianceLivroAplicacoesRoute: typeof AuthenticatedComplianceLivroAplicacoesRoute
+  AuthenticatedComplianceProdutosRegulatorioRoute: typeof AuthenticatedComplianceProdutosRegulatorioRoute
+  AuthenticatedComplianceRtRoute: typeof AuthenticatedComplianceRtRoute
+  AuthenticatedComplianceIndexRoute: typeof AuthenticatedComplianceIndexRoute
+}
+
+const AuthenticatedComplianceRouteChildren: AuthenticatedComplianceRouteChildren =
+  {
+    AuthenticatedComplianceCertificadosRoute:
+      AuthenticatedComplianceCertificadosRoute,
+    AuthenticatedComplianceEmbalagensRoute:
+      AuthenticatedComplianceEmbalagensRoute,
+    AuthenticatedComplianceEpisRoute: AuthenticatedComplianceEpisRoute,
+    AuthenticatedComplianceLivroAplicacoesRoute:
+      AuthenticatedComplianceLivroAplicacoesRoute,
+    AuthenticatedComplianceProdutosRegulatorioRoute:
+      AuthenticatedComplianceProdutosRegulatorioRoute,
+    AuthenticatedComplianceRtRoute: AuthenticatedComplianceRtRoute,
+    AuthenticatedComplianceIndexRoute: AuthenticatedComplianceIndexRoute,
+  }
+
+const AuthenticatedComplianceRouteWithChildren =
+  AuthenticatedComplianceRoute._addFileChildren(
+    AuthenticatedComplianceRouteChildren,
+  )
+
 interface AuthenticatedFinanceiroPagarRouteChildren {
   AuthenticatedFinanceiroPagarIdRoute: typeof AuthenticatedFinanceiroPagarIdRoute
 }
@@ -764,6 +971,7 @@ const AuthenticatedFinanceiroReceberRouteWithChildren =
 
 interface AuthenticatedRouteChildren {
   AuthenticatedBiRoute: typeof AuthenticatedBiRouteWithChildren
+  AuthenticatedComplianceRoute: typeof AuthenticatedComplianceRouteWithChildren
   AuthenticatedLeadsRoute: typeof AuthenticatedLeadsRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedCadastrosCategoriasFinanceirasRoute: typeof AuthenticatedCadastrosCategoriasFinanceirasRoute
@@ -786,6 +994,7 @@ interface AuthenticatedRouteChildren {
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedBiRoute: AuthenticatedBiRouteWithChildren,
+  AuthenticatedComplianceRoute: AuthenticatedComplianceRouteWithChildren,
   AuthenticatedLeadsRoute: AuthenticatedLeadsRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedCadastrosCategoriasFinanceirasRoute:
@@ -837,8 +1046,19 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   AuthRoute: AuthRoute,
   PortalRoute: PortalRouteWithChildren,
+  CesTokenRoute: CesTokenRoute,
   InviteTokenRoute: InviteTokenRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
