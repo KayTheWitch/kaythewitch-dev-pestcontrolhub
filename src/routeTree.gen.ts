@@ -20,6 +20,7 @@ import { Route as PortalFinanceiroRouteImport } from './routes/portal.financeiro
 import { Route as PortalDocumentosRouteImport } from './routes/portal.documentos'
 import { Route as InviteTokenRouteImport } from './routes/invite.$token'
 import { Route as CesTokenRouteImport } from './routes/ces.$token'
+import { Route as AuthenticatedSyncRouteImport } from './routes/_authenticated.sync'
 import { Route as AuthenticatedLeadsRouteImport } from './routes/_authenticated.leads'
 import { Route as AuthenticatedComplianceRouteImport } from './routes/_authenticated.compliance'
 import { Route as AuthenticatedBiRouteImport } from './routes/_authenticated.bi'
@@ -50,6 +51,7 @@ import { Route as AuthenticatedBiOperacionalRouteImport } from './routes/_authen
 import { Route as AuthenticatedBiFinanceiroRouteImport } from './routes/_authenticated.bi.financeiro'
 import { Route as AuthenticatedBiEstoqueRouteImport } from './routes/_authenticated.bi.estoque'
 import { Route as AuthenticatedBiComercialRouteImport } from './routes/_authenticated.bi.comercial'
+import { Route as AuthenticatedOsIdCampoRouteImport } from './routes/_authenticated.os.$id.campo'
 import { Route as AuthenticatedFinanceiroReceberIdRouteImport } from './routes/_authenticated.financeiro.receber.$id'
 import { Route as AuthenticatedFinanceiroPagarIdRouteImport } from './routes/_authenticated.financeiro.pagar.$id'
 import { Route as AuthenticatedFinanceiroLancamentoNovoRouteImport } from './routes/_authenticated.financeiro.lancamento.novo'
@@ -107,6 +109,11 @@ const CesTokenRoute = CesTokenRouteImport.update({
   id: '/ces/$token',
   path: '/ces/$token',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedSyncRoute = AuthenticatedSyncRouteImport.update({
+  id: '/sync',
+  path: '/sync',
+  getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedLeadsRoute = AuthenticatedLeadsRouteImport.update({
   id: '/leads',
@@ -280,6 +287,11 @@ const AuthenticatedBiComercialRoute =
     path: '/comercial',
     getParentRoute: () => AuthenticatedBiRoute,
   } as any)
+const AuthenticatedOsIdCampoRoute = AuthenticatedOsIdCampoRouteImport.update({
+  id: '/campo',
+  path: '/campo',
+  getParentRoute: () => AuthenticatedOsIdRoute,
+} as any)
 const AuthenticatedFinanceiroReceberIdRoute =
   AuthenticatedFinanceiroReceberIdRouteImport.update({
     id: '/$id',
@@ -306,6 +318,7 @@ export interface FileRoutesByFullPath {
   '/bi': typeof AuthenticatedBiRouteWithChildren
   '/compliance': typeof AuthenticatedComplianceRouteWithChildren
   '/leads': typeof AuthenticatedLeadsRoute
+  '/sync': typeof AuthenticatedSyncRoute
   '/ces/$token': typeof CesTokenRoute
   '/invite/$token': typeof InviteTokenRoute
   '/portal/documentos': typeof PortalDocumentosRoute
@@ -332,7 +345,7 @@ export interface FileRoutesByFullPath {
   '/diagnosticos/novo': typeof AuthenticatedDiagnosticosNovoRoute
   '/financeiro/pagar': typeof AuthenticatedFinanceiroPagarRouteWithChildren
   '/financeiro/receber': typeof AuthenticatedFinanceiroReceberRouteWithChildren
-  '/os/$id': typeof AuthenticatedOsIdRoute
+  '/os/$id': typeof AuthenticatedOsIdRouteWithChildren
   '/propostas/$id': typeof AuthenticatedPropostasIdRoute
   '/bi/': typeof AuthenticatedBiIndexRoute
   '/clientes/': typeof AuthenticatedClientesIndexRoute
@@ -343,10 +356,12 @@ export interface FileRoutesByFullPath {
   '/financeiro/lancamento/novo': typeof AuthenticatedFinanceiroLancamentoNovoRoute
   '/financeiro/pagar/$id': typeof AuthenticatedFinanceiroPagarIdRoute
   '/financeiro/receber/$id': typeof AuthenticatedFinanceiroReceberIdRoute
+  '/os/$id/campo': typeof AuthenticatedOsIdCampoRoute
 }
 export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/leads': typeof AuthenticatedLeadsRoute
+  '/sync': typeof AuthenticatedSyncRoute
   '/ces/$token': typeof CesTokenRoute
   '/invite/$token': typeof InviteTokenRoute
   '/portal/documentos': typeof PortalDocumentosRoute
@@ -374,7 +389,7 @@ export interface FileRoutesByTo {
   '/diagnosticos/novo': typeof AuthenticatedDiagnosticosNovoRoute
   '/financeiro/pagar': typeof AuthenticatedFinanceiroPagarRouteWithChildren
   '/financeiro/receber': typeof AuthenticatedFinanceiroReceberRouteWithChildren
-  '/os/$id': typeof AuthenticatedOsIdRoute
+  '/os/$id': typeof AuthenticatedOsIdRouteWithChildren
   '/propostas/$id': typeof AuthenticatedPropostasIdRoute
   '/bi': typeof AuthenticatedBiIndexRoute
   '/clientes': typeof AuthenticatedClientesIndexRoute
@@ -385,6 +400,7 @@ export interface FileRoutesByTo {
   '/financeiro/lancamento/novo': typeof AuthenticatedFinanceiroLancamentoNovoRoute
   '/financeiro/pagar/$id': typeof AuthenticatedFinanceiroPagarIdRoute
   '/financeiro/receber/$id': typeof AuthenticatedFinanceiroReceberIdRoute
+  '/os/$id/campo': typeof AuthenticatedOsIdCampoRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -394,6 +410,7 @@ export interface FileRoutesById {
   '/_authenticated/bi': typeof AuthenticatedBiRouteWithChildren
   '/_authenticated/compliance': typeof AuthenticatedComplianceRouteWithChildren
   '/_authenticated/leads': typeof AuthenticatedLeadsRoute
+  '/_authenticated/sync': typeof AuthenticatedSyncRoute
   '/ces/$token': typeof CesTokenRoute
   '/invite/$token': typeof InviteTokenRoute
   '/portal/documentos': typeof PortalDocumentosRoute
@@ -421,7 +438,7 @@ export interface FileRoutesById {
   '/_authenticated/diagnosticos/novo': typeof AuthenticatedDiagnosticosNovoRoute
   '/_authenticated/financeiro/pagar': typeof AuthenticatedFinanceiroPagarRouteWithChildren
   '/_authenticated/financeiro/receber': typeof AuthenticatedFinanceiroReceberRouteWithChildren
-  '/_authenticated/os/$id': typeof AuthenticatedOsIdRoute
+  '/_authenticated/os/$id': typeof AuthenticatedOsIdRouteWithChildren
   '/_authenticated/propostas/$id': typeof AuthenticatedPropostasIdRoute
   '/_authenticated/bi/': typeof AuthenticatedBiIndexRoute
   '/_authenticated/clientes/': typeof AuthenticatedClientesIndexRoute
@@ -432,6 +449,7 @@ export interface FileRoutesById {
   '/_authenticated/financeiro/lancamento/novo': typeof AuthenticatedFinanceiroLancamentoNovoRoute
   '/_authenticated/financeiro/pagar/$id': typeof AuthenticatedFinanceiroPagarIdRoute
   '/_authenticated/financeiro/receber/$id': typeof AuthenticatedFinanceiroReceberIdRoute
+  '/_authenticated/os/$id/campo': typeof AuthenticatedOsIdCampoRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -442,6 +460,7 @@ export interface FileRouteTypes {
     | '/bi'
     | '/compliance'
     | '/leads'
+    | '/sync'
     | '/ces/$token'
     | '/invite/$token'
     | '/portal/documentos'
@@ -479,10 +498,12 @@ export interface FileRouteTypes {
     | '/financeiro/lancamento/novo'
     | '/financeiro/pagar/$id'
     | '/financeiro/receber/$id'
+    | '/os/$id/campo'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/auth'
     | '/leads'
+    | '/sync'
     | '/ces/$token'
     | '/invite/$token'
     | '/portal/documentos'
@@ -521,6 +542,7 @@ export interface FileRouteTypes {
     | '/financeiro/lancamento/novo'
     | '/financeiro/pagar/$id'
     | '/financeiro/receber/$id'
+    | '/os/$id/campo'
   id:
     | '__root__'
     | '/_authenticated'
@@ -529,6 +551,7 @@ export interface FileRouteTypes {
     | '/_authenticated/bi'
     | '/_authenticated/compliance'
     | '/_authenticated/leads'
+    | '/_authenticated/sync'
     | '/ces/$token'
     | '/invite/$token'
     | '/portal/documentos'
@@ -567,6 +590,7 @@ export interface FileRouteTypes {
     | '/_authenticated/financeiro/lancamento/novo'
     | '/_authenticated/financeiro/pagar/$id'
     | '/_authenticated/financeiro/receber/$id'
+    | '/_authenticated/os/$id/campo'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -655,6 +679,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/ces/$token'
       preLoaderRoute: typeof CesTokenRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/sync': {
+      id: '/_authenticated/sync'
+      path: '/sync'
+      fullPath: '/sync'
+      preLoaderRoute: typeof AuthenticatedSyncRouteImport
+      parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/leads': {
       id: '/_authenticated/leads'
@@ -866,6 +897,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedBiComercialRouteImport
       parentRoute: typeof AuthenticatedBiRoute
     }
+    '/_authenticated/os/$id/campo': {
+      id: '/_authenticated/os/$id/campo'
+      path: '/campo'
+      fullPath: '/os/$id/campo'
+      preLoaderRoute: typeof AuthenticatedOsIdCampoRouteImport
+      parentRoute: typeof AuthenticatedOsIdRoute
+    }
     '/_authenticated/financeiro/receber/$id': {
       id: '/_authenticated/financeiro/receber/$id'
       path: '/$id'
@@ -969,10 +1007,22 @@ const AuthenticatedFinanceiroReceberRouteWithChildren =
     AuthenticatedFinanceiroReceberRouteChildren,
   )
 
+interface AuthenticatedOsIdRouteChildren {
+  AuthenticatedOsIdCampoRoute: typeof AuthenticatedOsIdCampoRoute
+}
+
+const AuthenticatedOsIdRouteChildren: AuthenticatedOsIdRouteChildren = {
+  AuthenticatedOsIdCampoRoute: AuthenticatedOsIdCampoRoute,
+}
+
+const AuthenticatedOsIdRouteWithChildren =
+  AuthenticatedOsIdRoute._addFileChildren(AuthenticatedOsIdRouteChildren)
+
 interface AuthenticatedRouteChildren {
   AuthenticatedBiRoute: typeof AuthenticatedBiRouteWithChildren
   AuthenticatedComplianceRoute: typeof AuthenticatedComplianceRouteWithChildren
   AuthenticatedLeadsRoute: typeof AuthenticatedLeadsRoute
+  AuthenticatedSyncRoute: typeof AuthenticatedSyncRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedCadastrosCategoriasFinanceirasRoute: typeof AuthenticatedCadastrosCategoriasFinanceirasRoute
   AuthenticatedCadastrosEpisRoute: typeof AuthenticatedCadastrosEpisRoute
@@ -983,7 +1033,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedDiagnosticosNovoRoute: typeof AuthenticatedDiagnosticosNovoRoute
   AuthenticatedFinanceiroPagarRoute: typeof AuthenticatedFinanceiroPagarRouteWithChildren
   AuthenticatedFinanceiroReceberRoute: typeof AuthenticatedFinanceiroReceberRouteWithChildren
-  AuthenticatedOsIdRoute: typeof AuthenticatedOsIdRoute
+  AuthenticatedOsIdRoute: typeof AuthenticatedOsIdRouteWithChildren
   AuthenticatedPropostasIdRoute: typeof AuthenticatedPropostasIdRoute
   AuthenticatedClientesIndexRoute: typeof AuthenticatedClientesIndexRoute
   AuthenticatedFinanceiroIndexRoute: typeof AuthenticatedFinanceiroIndexRoute
@@ -996,6 +1046,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedBiRoute: AuthenticatedBiRouteWithChildren,
   AuthenticatedComplianceRoute: AuthenticatedComplianceRouteWithChildren,
   AuthenticatedLeadsRoute: AuthenticatedLeadsRoute,
+  AuthenticatedSyncRoute: AuthenticatedSyncRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedCadastrosCategoriasFinanceirasRoute:
     AuthenticatedCadastrosCategoriasFinanceirasRoute,
@@ -1009,7 +1060,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
     AuthenticatedFinanceiroPagarRouteWithChildren,
   AuthenticatedFinanceiroReceberRoute:
     AuthenticatedFinanceiroReceberRouteWithChildren,
-  AuthenticatedOsIdRoute: AuthenticatedOsIdRoute,
+  AuthenticatedOsIdRoute: AuthenticatedOsIdRouteWithChildren,
   AuthenticatedPropostasIdRoute: AuthenticatedPropostasIdRoute,
   AuthenticatedClientesIndexRoute: AuthenticatedClientesIndexRoute,
   AuthenticatedFinanceiroIndexRoute: AuthenticatedFinanceiroIndexRoute,
@@ -1052,13 +1103,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

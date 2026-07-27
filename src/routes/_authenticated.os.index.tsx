@@ -20,9 +20,13 @@ import {
   TableBody,
   TableCell,
 } from "@/components/ui/table";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Download, HardDriveDownload, Play } from "lucide-react";
 import { formatDate } from "@/lib/format";
 import { OsStatusBadge } from "@/components/StatusBadge";
+import { toast } from "sonner";
+import { prepareOsForOffline, prepareTodayOs } from "@/lib/offline/os-offline";
+import { listOsCache, offlineAvailable } from "@/lib/offline/db";
+import { useEffect } from "react";
 
 export const Route = createFileRoute("/_authenticated/os/")({
   component: OsList,
@@ -30,6 +34,21 @@ export const Route = createFileRoute("/_authenticated/os/")({
 
 function OsList() {
   const [status, setStatus] = useState("all");
+  const [cachedIds, setCachedIds] = useState<string[]>([]);
+  const [busy, setBusy] = useState(false);
+
+  async function refreshCache() {
+    if (!offlineAvailable()) return;
+    try {
+      setCachedIds((await listOsCache()).map((c) => c.id));
+    } catch {
+      /* IndexedDB indisponível */
+    }
+  }
+
+  useEffect(() => {
+    void refreshCache();
+  }, []);
 
   const { data: rows = [] } = useQuery({
     queryKey: ["os-list", status],
@@ -45,11 +64,34 @@ function OsList() {
     },
   });
 
+
   return (
     <>
       <PageHeader
         title="Ordens de serviço"
         description="Ordens geradas a partir de propostas aprovadas."
+        actions={
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={busy}
+            onClick={async () => {
+              setBusy(true);
+              try {
+                const n = await prepareTodayOs();
+                await refreshCache();
+                toast.success(`${n} OS preparada(s) para uso offline.`);
+              } catch (e: any) {
+                toast.error(e?.message ?? "Falha ao preparar OS para offline.");
+              } finally {
+                setBusy(false);
+              }
+            }}
+          >
+            <Download className="w-4 h-4 mr-2" />
+            Preparar OS do dia para offline
+          </Button>
+        }
       />
       <div className="mb-4">
         <Select value={status} onValueChange={setStatus}>
@@ -74,6 +116,7 @@ function OsList() {
               <TableHead>Data prevista</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Criada em</TableHead>
+              <TableHead className="w-40 text-right">Offline</TableHead>
               <TableHead className="w-16"></TableHead>
             </TableRow>
           </TableHeader>
@@ -89,6 +132,37 @@ function OsList() {
                 <TableCell className="text-sm text-muted-foreground">
                   {formatDate(o.created_at)}
                 </TableCell>
+                <TableCell className="text-right">
+                  {cachedIds.includes(o.id) ? (
+                    <Button variant="ghost" size="sm" asChild>
+                      <Link to="/os/$id/campo" params={{ id: o.id }}>
+                        <Play className="w-4 h-4 mr-1" />
+                        Executar
+                      </Link>
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      disabled={busy}
+                      onClick={async () => {
+                        setBusy(true);
+                        try {
+                          await prepareOsForOffline(o.id);
+                          await refreshCache();
+                          toast.success(`OS #${o.numero} disponível offline.`);
+                        } catch (e: any) {
+                          toast.error(e?.message ?? "Falha ao preparar OS.");
+                        } finally {
+                          setBusy(false);
+                        }
+                      }}
+                    >
+                      <HardDriveDownload className="w-4 h-4 mr-1" />
+                      Preparar
+                    </Button>
+                  )}
+                </TableCell>
                 <TableCell>
                   <Button variant="ghost" size="sm" asChild>
                     <Link to="/os/$id" params={{ id: o.id }}>
@@ -98,6 +172,7 @@ function OsList() {
                 </TableCell>
               </TableRow>
             ))}
+
             {rows.length === 0 && (
               <TableRow>
                 <TableCell colSpan={6} className="text-center py-10 text-muted-foreground">
