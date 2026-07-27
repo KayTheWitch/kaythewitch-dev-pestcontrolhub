@@ -175,7 +175,7 @@ function OsList() {
 
             {rows.length === 0 && (
               <TableRow>
-                <TableCell colSpan={6} className="text-center py-10 text-muted-foreground">
+                <TableCell colSpan={7} className="text-center py-10 text-muted-foreground">
                   Nenhuma OS.
                 </TableCell>
               </TableRow>
