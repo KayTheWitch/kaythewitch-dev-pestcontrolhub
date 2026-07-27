@@ -19,12 +19,15 @@ import {
   Tags,
   BarChart3,
   FileCheck2,
+  RefreshCw,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
+import { OfflineIndicator } from "@/components/offline/OfflineIndicator";
+
 
 type NavItem = { to: string; label: string; icon: typeof LayoutDashboard };
 const nav: { section: string; items: NavItem[] }[] = [
@@ -38,8 +41,10 @@ const nav: { section: string; items: NavItem[] }[] = [
       { to: "/os", label: "Ordens de Serviço", icon: ClipboardList },
       { to: "/bi", label: "BI", icon: BarChart3 },
       { to: "/compliance", label: "Compliance", icon: FileCheck2 },
+      { to: "/sync", label: "Sincronização", icon: RefreshCw },
     ],
   },
+
   {
     section: "Financeiro",
     items: [
@@ -117,6 +122,9 @@ export function AppShell({ children }: { children: ReactNode }) {
           ))}
         </nav>
         <div className="p-3 border-t border-sidebar-border">
+          <div className="pb-1">
+            <OfflineIndicator />
+          </div>
           <div className="px-2 pb-2 text-xs text-sidebar-foreground/70 truncate">
             {user?.email}
           </div>
@@ -132,10 +140,14 @@ export function AppShell({ children }: { children: ReactNode }) {
         </div>
       </aside>
       <main className="flex-1 min-w-0 flex flex-col">
-        <div className="md:hidden flex items-center gap-2 px-4 py-3 border-b bg-card">
-          <Wrench className="w-5 h-5 text-primary" />
-          <span className="font-semibold text-sm">Ventura</span>
+        <div className="md:hidden flex items-center justify-between gap-2 px-4 py-3 border-b bg-card">
+          <div className="flex items-center gap-2">
+            <Wrench className="w-5 h-5 text-primary" />
+            <span className="font-semibold text-sm">Ventura</span>
+          </div>
+          <OfflineIndicator compact />
         </div>
+
         <div className="flex-1 p-6 md:p-8 max-w-7xl w-full mx-auto">{children}</div>
       </main>
     </div>

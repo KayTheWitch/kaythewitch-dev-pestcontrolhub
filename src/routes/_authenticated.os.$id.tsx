@@ -114,10 +114,16 @@ function OsDetail() {
               <Printer className="w-4 h-4 mr-2" />
               Imprimir
             </Button>
+            <Button variant="outline" size="sm" asChild>
+              <Link to="/os/$id/campo" params={{ id }}>
+                Executar em campo
+              </Link>
+            </Button>
             <Button size="sm" onClick={() => save.mutate()} disabled={save.isPending}>
               <Save className="w-4 h-4 mr-2" />
               Salvar
             </Button>
+
           </div>
         }
       />
