@@ -23,6 +23,7 @@ import { Route as InviteTokenRouteImport } from './routes/invite.$token'
 import { Route as CesTokenRouteImport } from './routes/ces.$token'
 import { Route as AuthenticatedSyncRouteImport } from './routes/_authenticated.sync'
 import { Route as AuthenticatedLeadsRouteImport } from './routes/_authenticated.leads'
+import { Route as AuthenticatedFornecedoresRouteImport } from './routes/_authenticated.fornecedores'
 import { Route as AuthenticatedEstoqueRouteImport } from './routes/_authenticated.estoque'
 import { Route as AuthenticatedComplianceRouteImport } from './routes/_authenticated.compliance'
 import { Route as AuthenticatedBiRouteImport } from './routes/_authenticated.bi'
@@ -127,6 +128,12 @@ const AuthenticatedLeadsRoute = AuthenticatedLeadsRouteImport.update({
   path: '/leads',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedFornecedoresRoute =
+  AuthenticatedFornecedoresRouteImport.update({
+    id: '/fornecedores',
+    path: '/fornecedores',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedEstoqueRoute = AuthenticatedEstoqueRouteImport.update({
   id: '/estoque',
   path: '/estoque',
@@ -330,6 +337,7 @@ export interface FileRoutesByFullPath {
   '/bi': typeof AuthenticatedBiRouteWithChildren
   '/compliance': typeof AuthenticatedComplianceRouteWithChildren
   '/estoque': typeof AuthenticatedEstoqueRoute
+  '/fornecedores': typeof AuthenticatedFornecedoresRoute
   '/leads': typeof AuthenticatedLeadsRoute
   '/sync': typeof AuthenticatedSyncRoute
   '/ces/$token': typeof CesTokenRoute
@@ -375,6 +383,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/estoque': typeof AuthenticatedEstoqueRoute
+  '/fornecedores': typeof AuthenticatedFornecedoresRoute
   '/leads': typeof AuthenticatedLeadsRoute
   '/sync': typeof AuthenticatedSyncRoute
   '/ces/$token': typeof CesTokenRoute
@@ -426,6 +435,7 @@ export interface FileRoutesById {
   '/_authenticated/bi': typeof AuthenticatedBiRouteWithChildren
   '/_authenticated/compliance': typeof AuthenticatedComplianceRouteWithChildren
   '/_authenticated/estoque': typeof AuthenticatedEstoqueRoute
+  '/_authenticated/fornecedores': typeof AuthenticatedFornecedoresRoute
   '/_authenticated/leads': typeof AuthenticatedLeadsRoute
   '/_authenticated/sync': typeof AuthenticatedSyncRoute
   '/ces/$token': typeof CesTokenRoute
@@ -478,6 +488,7 @@ export interface FileRouteTypes {
     | '/bi'
     | '/compliance'
     | '/estoque'
+    | '/fornecedores'
     | '/leads'
     | '/sync'
     | '/ces/$token'
@@ -523,6 +534,7 @@ export interface FileRouteTypes {
   to:
     | '/auth'
     | '/estoque'
+    | '/fornecedores'
     | '/leads'
     | '/sync'
     | '/ces/$token'
@@ -573,6 +585,7 @@ export interface FileRouteTypes {
     | '/_authenticated/bi'
     | '/_authenticated/compliance'
     | '/_authenticated/estoque'
+    | '/_authenticated/fornecedores'
     | '/_authenticated/leads'
     | '/_authenticated/sync'
     | '/ces/$token'
@@ -724,6 +737,13 @@ declare module '@tanstack/react-router' {
       path: '/leads'
       fullPath: '/leads'
       preLoaderRoute: typeof AuthenticatedLeadsRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/fornecedores': {
+      id: '/_authenticated/fornecedores'
+      path: '/fornecedores'
+      fullPath: '/fornecedores'
+      preLoaderRoute: typeof AuthenticatedFornecedoresRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/estoque': {
@@ -1061,6 +1081,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedBiRoute: typeof AuthenticatedBiRouteWithChildren
   AuthenticatedComplianceRoute: typeof AuthenticatedComplianceRouteWithChildren
   AuthenticatedEstoqueRoute: typeof AuthenticatedEstoqueRoute
+  AuthenticatedFornecedoresRoute: typeof AuthenticatedFornecedoresRoute
   AuthenticatedLeadsRoute: typeof AuthenticatedLeadsRoute
   AuthenticatedSyncRoute: typeof AuthenticatedSyncRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
@@ -1086,6 +1107,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedBiRoute: AuthenticatedBiRouteWithChildren,
   AuthenticatedComplianceRoute: AuthenticatedComplianceRouteWithChildren,
   AuthenticatedEstoqueRoute: AuthenticatedEstoqueRoute,
+  AuthenticatedFornecedoresRoute: AuthenticatedFornecedoresRoute,
   AuthenticatedLeadsRoute: AuthenticatedLeadsRoute,
   AuthenticatedSyncRoute: AuthenticatedSyncRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
