@@ -14,6 +14,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as PortalIndexRouteImport } from './routes/portal.index'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated.index'
+import { Route as RTokenRouteImport } from './routes/r.$token'
 import { Route as PortalPropostasRouteImport } from './routes/portal.propostas'
 import { Route as PortalOsRouteImport } from './routes/portal.os'
 import { Route as PortalFinanceiroRouteImport } from './routes/portal.financeiro'
@@ -79,6 +80,11 @@ const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AuthenticatedRoute,
+} as any)
+const RTokenRoute = RTokenRouteImport.update({
+  id: '/r/$token',
+  path: '/r/$token',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const PortalPropostasRoute = PortalPropostasRouteImport.update({
   id: '/propostas',
@@ -325,6 +331,7 @@ export interface FileRoutesByFullPath {
   '/portal/financeiro': typeof PortalFinanceiroRoute
   '/portal/os': typeof PortalOsRoute
   '/portal/propostas': typeof PortalPropostasRoute
+  '/r/$token': typeof RTokenRoute
   '/portal/': typeof PortalIndexRoute
   '/bi/comercial': typeof AuthenticatedBiComercialRoute
   '/bi/estoque': typeof AuthenticatedBiEstoqueRoute
@@ -368,6 +375,7 @@ export interface FileRoutesByTo {
   '/portal/financeiro': typeof PortalFinanceiroRoute
   '/portal/os': typeof PortalOsRoute
   '/portal/propostas': typeof PortalPropostasRoute
+  '/r/$token': typeof RTokenRoute
   '/': typeof AuthenticatedIndexRoute
   '/portal': typeof PortalIndexRoute
   '/bi/comercial': typeof AuthenticatedBiComercialRoute
@@ -417,6 +425,7 @@ export interface FileRoutesById {
   '/portal/financeiro': typeof PortalFinanceiroRoute
   '/portal/os': typeof PortalOsRoute
   '/portal/propostas': typeof PortalPropostasRoute
+  '/r/$token': typeof RTokenRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/portal/': typeof PortalIndexRoute
   '/_authenticated/bi/comercial': typeof AuthenticatedBiComercialRoute
@@ -467,6 +476,7 @@ export interface FileRouteTypes {
     | '/portal/financeiro'
     | '/portal/os'
     | '/portal/propostas'
+    | '/r/$token'
     | '/portal/'
     | '/bi/comercial'
     | '/bi/estoque'
@@ -510,6 +520,7 @@ export interface FileRouteTypes {
     | '/portal/financeiro'
     | '/portal/os'
     | '/portal/propostas'
+    | '/r/$token'
     | '/'
     | '/portal'
     | '/bi/comercial'
@@ -558,6 +569,7 @@ export interface FileRouteTypes {
     | '/portal/financeiro'
     | '/portal/os'
     | '/portal/propostas'
+    | '/r/$token'
     | '/_authenticated/'
     | '/portal/'
     | '/_authenticated/bi/comercial'
@@ -599,6 +611,7 @@ export interface RootRouteChildren {
   PortalRoute: typeof PortalRouteWithChildren
   CesTokenRoute: typeof CesTokenRoute
   InviteTokenRoute: typeof InviteTokenRoute
+  RTokenRoute: typeof RTokenRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -637,6 +650,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof AuthenticatedIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
+    }
+    '/r/$token': {
+      id: '/r/$token'
+      path: '/r/$token'
+      fullPath: '/r/$token'
+      preLoaderRoute: typeof RTokenRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/portal/propostas': {
       id: '/portal/propostas'
@@ -1099,6 +1119,7 @@ const rootRouteChildren: RootRouteChildren = {
   PortalRoute: PortalRouteWithChildren,
   CesTokenRoute: CesTokenRoute,
   InviteTokenRoute: InviteTokenRoute,
+  RTokenRoute: RTokenRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
