@@ -25,6 +25,7 @@ import { Route as AuthenticatedSyncRouteImport } from './routes/_authenticated.s
 import { Route as AuthenticatedLeadsRouteImport } from './routes/_authenticated.leads'
 import { Route as AuthenticatedFornecedoresRouteImport } from './routes/_authenticated.fornecedores'
 import { Route as AuthenticatedEstoqueRouteImport } from './routes/_authenticated.estoque'
+import { Route as AuthenticatedComprasRouteImport } from './routes/_authenticated.compras'
 import { Route as AuthenticatedComplianceRouteImport } from './routes/_authenticated.compliance'
 import { Route as AuthenticatedBiRouteImport } from './routes/_authenticated.bi'
 import { Route as AuthenticatedPropostasIndexRouteImport } from './routes/_authenticated.propostas.index'
@@ -137,6 +138,11 @@ const AuthenticatedFornecedoresRoute =
 const AuthenticatedEstoqueRoute = AuthenticatedEstoqueRouteImport.update({
   id: '/estoque',
   path: '/estoque',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedComprasRoute = AuthenticatedComprasRouteImport.update({
+  id: '/compras',
+  path: '/compras',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedComplianceRoute = AuthenticatedComplianceRouteImport.update({
@@ -336,6 +342,7 @@ export interface FileRoutesByFullPath {
   '/portal': typeof PortalRouteWithChildren
   '/bi': typeof AuthenticatedBiRouteWithChildren
   '/compliance': typeof AuthenticatedComplianceRouteWithChildren
+  '/compras': typeof AuthenticatedComprasRoute
   '/estoque': typeof AuthenticatedEstoqueRoute
   '/fornecedores': typeof AuthenticatedFornecedoresRoute
   '/leads': typeof AuthenticatedLeadsRoute
@@ -382,6 +389,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
+  '/compras': typeof AuthenticatedComprasRoute
   '/estoque': typeof AuthenticatedEstoqueRoute
   '/fornecedores': typeof AuthenticatedFornecedoresRoute
   '/leads': typeof AuthenticatedLeadsRoute
@@ -434,6 +442,7 @@ export interface FileRoutesById {
   '/portal': typeof PortalRouteWithChildren
   '/_authenticated/bi': typeof AuthenticatedBiRouteWithChildren
   '/_authenticated/compliance': typeof AuthenticatedComplianceRouteWithChildren
+  '/_authenticated/compras': typeof AuthenticatedComprasRoute
   '/_authenticated/estoque': typeof AuthenticatedEstoqueRoute
   '/_authenticated/fornecedores': typeof AuthenticatedFornecedoresRoute
   '/_authenticated/leads': typeof AuthenticatedLeadsRoute
@@ -487,6 +496,7 @@ export interface FileRouteTypes {
     | '/portal'
     | '/bi'
     | '/compliance'
+    | '/compras'
     | '/estoque'
     | '/fornecedores'
     | '/leads'
@@ -533,6 +543,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/auth'
+    | '/compras'
     | '/estoque'
     | '/fornecedores'
     | '/leads'
@@ -584,6 +595,7 @@ export interface FileRouteTypes {
     | '/portal'
     | '/_authenticated/bi'
     | '/_authenticated/compliance'
+    | '/_authenticated/compras'
     | '/_authenticated/estoque'
     | '/_authenticated/fornecedores'
     | '/_authenticated/leads'
@@ -751,6 +763,13 @@ declare module '@tanstack/react-router' {
       path: '/estoque'
       fullPath: '/estoque'
       preLoaderRoute: typeof AuthenticatedEstoqueRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/compras': {
+      id: '/_authenticated/compras'
+      path: '/compras'
+      fullPath: '/compras'
+      preLoaderRoute: typeof AuthenticatedComprasRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/compliance': {
@@ -1080,6 +1099,7 @@ const AuthenticatedOsIdRouteWithChildren =
 interface AuthenticatedRouteChildren {
   AuthenticatedBiRoute: typeof AuthenticatedBiRouteWithChildren
   AuthenticatedComplianceRoute: typeof AuthenticatedComplianceRouteWithChildren
+  AuthenticatedComprasRoute: typeof AuthenticatedComprasRoute
   AuthenticatedEstoqueRoute: typeof AuthenticatedEstoqueRoute
   AuthenticatedFornecedoresRoute: typeof AuthenticatedFornecedoresRoute
   AuthenticatedLeadsRoute: typeof AuthenticatedLeadsRoute
@@ -1106,6 +1126,7 @@ interface AuthenticatedRouteChildren {
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedBiRoute: AuthenticatedBiRouteWithChildren,
   AuthenticatedComplianceRoute: AuthenticatedComplianceRouteWithChildren,
+  AuthenticatedComprasRoute: AuthenticatedComprasRoute,
   AuthenticatedEstoqueRoute: AuthenticatedEstoqueRoute,
   AuthenticatedFornecedoresRoute: AuthenticatedFornecedoresRoute,
   AuthenticatedLeadsRoute: AuthenticatedLeadsRoute,
