@@ -20,6 +20,10 @@ import {
   BarChart3,
   FileCheck2,
   RefreshCw,
+  CalendarDays,
+  Boxes,
+  ShoppingCart,
+  Truck,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -32,19 +36,31 @@ import { OfflineIndicator } from "@/components/offline/OfflineIndicator";
 type NavItem = { to: string; label: string; icon: typeof LayoutDashboard };
 const nav: { section: string; items: NavItem[] }[] = [
   {
-    section: "Principal",
+    section: "Comercial",
     items: [
       { to: "/", label: "Painel", icon: LayoutDashboard },
       { to: "/leads", label: "Leads", icon: UserPlus },
       { to: "/clientes", label: "Clientes", icon: Users },
       { to: "/propostas", label: "Propostas", icon: FileText },
+    ],
+  },
+  {
+    section: "Operação",
+    items: [
       { to: "/os", label: "Ordens de Serviço", icon: ClipboardList },
-      { to: "/bi", label: "BI", icon: BarChart3 },
+      { to: "/agenda", label: "Agenda", icon: CalendarDays },
       { to: "/compliance", label: "Compliance", icon: FileCheck2 },
       { to: "/sync", label: "Sincronização", icon: RefreshCw },
     ],
   },
-
+  {
+    section: "Suprimentos",
+    items: [
+      { to: "/estoque", label: "Estoque", icon: Boxes },
+      { to: "/compras", label: "Compras", icon: ShoppingCart },
+      { to: "/fornecedores", label: "Fornecedores", icon: Truck },
+    ],
+  },
   {
     section: "Financeiro",
     items: [
@@ -54,8 +70,9 @@ const nav: { section: string; items: NavItem[] }[] = [
     ],
   },
   {
-    section: "Cadastros",
+    section: "Gestão",
     items: [
+      { to: "/bi", label: "BI", icon: BarChart3 },
       { to: "/cadastros/servicos", label: "Serviços", icon: Settings },
       { to: "/cadastros/equipes", label: "Equipes", icon: UsersRound },
       { to: "/cadastros/produtos", label: "Produtos", icon: Package },

@@ -114,6 +114,13 @@ function OsDetail() {
               <Printer className="w-4 h-4 mr-2" />
               Imprimir
             </Button>
+            {os.public_token && (
+              <Button variant="outline" size="sm" asChild>
+                <a href={`/r/${os.public_token}`} target="_blank" rel="noreferrer">
+                  Relatório
+                </a>
+              </Button>
+            )}
             <Button variant="outline" size="sm" asChild>
               <Link to="/os/$id/campo" params={{ id }}>
                 Executar em campo

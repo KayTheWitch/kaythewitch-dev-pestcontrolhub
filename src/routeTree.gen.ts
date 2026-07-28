@@ -14,6 +14,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as PortalIndexRouteImport } from './routes/portal.index'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated.index'
+import { Route as RTokenRouteImport } from './routes/r.$token'
 import { Route as PortalPropostasRouteImport } from './routes/portal.propostas'
 import { Route as PortalOsRouteImport } from './routes/portal.os'
 import { Route as PortalFinanceiroRouteImport } from './routes/portal.financeiro'
@@ -22,8 +23,12 @@ import { Route as InviteTokenRouteImport } from './routes/invite.$token'
 import { Route as CesTokenRouteImport } from './routes/ces.$token'
 import { Route as AuthenticatedSyncRouteImport } from './routes/_authenticated.sync'
 import { Route as AuthenticatedLeadsRouteImport } from './routes/_authenticated.leads'
+import { Route as AuthenticatedFornecedoresRouteImport } from './routes/_authenticated.fornecedores'
+import { Route as AuthenticatedEstoqueRouteImport } from './routes/_authenticated.estoque'
+import { Route as AuthenticatedComprasRouteImport } from './routes/_authenticated.compras'
 import { Route as AuthenticatedComplianceRouteImport } from './routes/_authenticated.compliance'
 import { Route as AuthenticatedBiRouteImport } from './routes/_authenticated.bi'
+import { Route as AuthenticatedAgendaRouteImport } from './routes/_authenticated.agenda'
 import { Route as AuthenticatedPropostasIndexRouteImport } from './routes/_authenticated.propostas.index'
 import { Route as AuthenticatedOsIndexRouteImport } from './routes/_authenticated.os.index'
 import { Route as AuthenticatedFinanceiroIndexRouteImport } from './routes/_authenticated.financeiro.index'
@@ -80,6 +85,11 @@ const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const RTokenRoute = RTokenRouteImport.update({
+  id: '/r/$token',
+  path: '/r/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PortalPropostasRoute = PortalPropostasRouteImport.update({
   id: '/propostas',
   path: '/propostas',
@@ -120,6 +130,22 @@ const AuthenticatedLeadsRoute = AuthenticatedLeadsRouteImport.update({
   path: '/leads',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedFornecedoresRoute =
+  AuthenticatedFornecedoresRouteImport.update({
+    id: '/fornecedores',
+    path: '/fornecedores',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedEstoqueRoute = AuthenticatedEstoqueRouteImport.update({
+  id: '/estoque',
+  path: '/estoque',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedComprasRoute = AuthenticatedComprasRouteImport.update({
+  id: '/compras',
+  path: '/compras',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedComplianceRoute = AuthenticatedComplianceRouteImport.update({
   id: '/compliance',
   path: '/compliance',
@@ -128,6 +154,11 @@ const AuthenticatedComplianceRoute = AuthenticatedComplianceRouteImport.update({
 const AuthenticatedBiRoute = AuthenticatedBiRouteImport.update({
   id: '/bi',
   path: '/bi',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedAgendaRoute = AuthenticatedAgendaRouteImport.update({
+  id: '/agenda',
+  path: '/agenda',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedPropostasIndexRoute =
@@ -315,8 +346,12 @@ export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
   '/auth': typeof AuthRoute
   '/portal': typeof PortalRouteWithChildren
+  '/agenda': typeof AuthenticatedAgendaRoute
   '/bi': typeof AuthenticatedBiRouteWithChildren
   '/compliance': typeof AuthenticatedComplianceRouteWithChildren
+  '/compras': typeof AuthenticatedComprasRoute
+  '/estoque': typeof AuthenticatedEstoqueRoute
+  '/fornecedores': typeof AuthenticatedFornecedoresRoute
   '/leads': typeof AuthenticatedLeadsRoute
   '/sync': typeof AuthenticatedSyncRoute
   '/ces/$token': typeof CesTokenRoute
@@ -325,6 +360,7 @@ export interface FileRoutesByFullPath {
   '/portal/financeiro': typeof PortalFinanceiroRoute
   '/portal/os': typeof PortalOsRoute
   '/portal/propostas': typeof PortalPropostasRoute
+  '/r/$token': typeof RTokenRoute
   '/portal/': typeof PortalIndexRoute
   '/bi/comercial': typeof AuthenticatedBiComercialRoute
   '/bi/estoque': typeof AuthenticatedBiEstoqueRoute
@@ -360,6 +396,10 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
+  '/agenda': typeof AuthenticatedAgendaRoute
+  '/compras': typeof AuthenticatedComprasRoute
+  '/estoque': typeof AuthenticatedEstoqueRoute
+  '/fornecedores': typeof AuthenticatedFornecedoresRoute
   '/leads': typeof AuthenticatedLeadsRoute
   '/sync': typeof AuthenticatedSyncRoute
   '/ces/$token': typeof CesTokenRoute
@@ -368,6 +408,7 @@ export interface FileRoutesByTo {
   '/portal/financeiro': typeof PortalFinanceiroRoute
   '/portal/os': typeof PortalOsRoute
   '/portal/propostas': typeof PortalPropostasRoute
+  '/r/$token': typeof RTokenRoute
   '/': typeof AuthenticatedIndexRoute
   '/portal': typeof PortalIndexRoute
   '/bi/comercial': typeof AuthenticatedBiComercialRoute
@@ -407,8 +448,12 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/auth': typeof AuthRoute
   '/portal': typeof PortalRouteWithChildren
+  '/_authenticated/agenda': typeof AuthenticatedAgendaRoute
   '/_authenticated/bi': typeof AuthenticatedBiRouteWithChildren
   '/_authenticated/compliance': typeof AuthenticatedComplianceRouteWithChildren
+  '/_authenticated/compras': typeof AuthenticatedComprasRoute
+  '/_authenticated/estoque': typeof AuthenticatedEstoqueRoute
+  '/_authenticated/fornecedores': typeof AuthenticatedFornecedoresRoute
   '/_authenticated/leads': typeof AuthenticatedLeadsRoute
   '/_authenticated/sync': typeof AuthenticatedSyncRoute
   '/ces/$token': typeof CesTokenRoute
@@ -417,6 +462,7 @@ export interface FileRoutesById {
   '/portal/financeiro': typeof PortalFinanceiroRoute
   '/portal/os': typeof PortalOsRoute
   '/portal/propostas': typeof PortalPropostasRoute
+  '/r/$token': typeof RTokenRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/portal/': typeof PortalIndexRoute
   '/_authenticated/bi/comercial': typeof AuthenticatedBiComercialRoute
@@ -457,8 +503,12 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/portal'
+    | '/agenda'
     | '/bi'
     | '/compliance'
+    | '/compras'
+    | '/estoque'
+    | '/fornecedores'
     | '/leads'
     | '/sync'
     | '/ces/$token'
@@ -467,6 +517,7 @@ export interface FileRouteTypes {
     | '/portal/financeiro'
     | '/portal/os'
     | '/portal/propostas'
+    | '/r/$token'
     | '/portal/'
     | '/bi/comercial'
     | '/bi/estoque'
@@ -502,6 +553,10 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/auth'
+    | '/agenda'
+    | '/compras'
+    | '/estoque'
+    | '/fornecedores'
     | '/leads'
     | '/sync'
     | '/ces/$token'
@@ -510,6 +565,7 @@ export interface FileRouteTypes {
     | '/portal/financeiro'
     | '/portal/os'
     | '/portal/propostas'
+    | '/r/$token'
     | '/'
     | '/portal'
     | '/bi/comercial'
@@ -548,8 +604,12 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/auth'
     | '/portal'
+    | '/_authenticated/agenda'
     | '/_authenticated/bi'
     | '/_authenticated/compliance'
+    | '/_authenticated/compras'
+    | '/_authenticated/estoque'
+    | '/_authenticated/fornecedores'
     | '/_authenticated/leads'
     | '/_authenticated/sync'
     | '/ces/$token'
@@ -558,6 +618,7 @@ export interface FileRouteTypes {
     | '/portal/financeiro'
     | '/portal/os'
     | '/portal/propostas'
+    | '/r/$token'
     | '/_authenticated/'
     | '/portal/'
     | '/_authenticated/bi/comercial'
@@ -599,6 +660,7 @@ export interface RootRouteChildren {
   PortalRoute: typeof PortalRouteWithChildren
   CesTokenRoute: typeof CesTokenRoute
   InviteTokenRoute: typeof InviteTokenRoute
+  RTokenRoute: typeof RTokenRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -637,6 +699,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof AuthenticatedIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
+    }
+    '/r/$token': {
+      id: '/r/$token'
+      path: '/r/$token'
+      fullPath: '/r/$token'
+      preLoaderRoute: typeof RTokenRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/portal/propostas': {
       id: '/portal/propostas'
@@ -694,6 +763,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedLeadsRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/fornecedores': {
+      id: '/_authenticated/fornecedores'
+      path: '/fornecedores'
+      fullPath: '/fornecedores'
+      preLoaderRoute: typeof AuthenticatedFornecedoresRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/estoque': {
+      id: '/_authenticated/estoque'
+      path: '/estoque'
+      fullPath: '/estoque'
+      preLoaderRoute: typeof AuthenticatedEstoqueRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/compras': {
+      id: '/_authenticated/compras'
+      path: '/compras'
+      fullPath: '/compras'
+      preLoaderRoute: typeof AuthenticatedComprasRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/compliance': {
       id: '/_authenticated/compliance'
       path: '/compliance'
@@ -706,6 +796,13 @@ declare module '@tanstack/react-router' {
       path: '/bi'
       fullPath: '/bi'
       preLoaderRoute: typeof AuthenticatedBiRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/agenda': {
+      id: '/_authenticated/agenda'
+      path: '/agenda'
+      fullPath: '/agenda'
+      preLoaderRoute: typeof AuthenticatedAgendaRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/propostas/': {
@@ -1019,8 +1116,12 @@ const AuthenticatedOsIdRouteWithChildren =
   AuthenticatedOsIdRoute._addFileChildren(AuthenticatedOsIdRouteChildren)
 
 interface AuthenticatedRouteChildren {
+  AuthenticatedAgendaRoute: typeof AuthenticatedAgendaRoute
   AuthenticatedBiRoute: typeof AuthenticatedBiRouteWithChildren
   AuthenticatedComplianceRoute: typeof AuthenticatedComplianceRouteWithChildren
+  AuthenticatedComprasRoute: typeof AuthenticatedComprasRoute
+  AuthenticatedEstoqueRoute: typeof AuthenticatedEstoqueRoute
+  AuthenticatedFornecedoresRoute: typeof AuthenticatedFornecedoresRoute
   AuthenticatedLeadsRoute: typeof AuthenticatedLeadsRoute
   AuthenticatedSyncRoute: typeof AuthenticatedSyncRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
@@ -1043,8 +1144,12 @@ interface AuthenticatedRouteChildren {
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedAgendaRoute: AuthenticatedAgendaRoute,
   AuthenticatedBiRoute: AuthenticatedBiRouteWithChildren,
   AuthenticatedComplianceRoute: AuthenticatedComplianceRouteWithChildren,
+  AuthenticatedComprasRoute: AuthenticatedComprasRoute,
+  AuthenticatedEstoqueRoute: AuthenticatedEstoqueRoute,
+  AuthenticatedFornecedoresRoute: AuthenticatedFornecedoresRoute,
   AuthenticatedLeadsRoute: AuthenticatedLeadsRoute,
   AuthenticatedSyncRoute: AuthenticatedSyncRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
@@ -1099,17 +1204,8 @@ const rootRouteChildren: RootRouteChildren = {
   PortalRoute: PortalRouteWithChildren,
   CesTokenRoute: CesTokenRoute,
   InviteTokenRoute: InviteTokenRoute,
+  RTokenRoute: RTokenRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

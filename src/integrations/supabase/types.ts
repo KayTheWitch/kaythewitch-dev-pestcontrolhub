@@ -1900,6 +1900,7 @@ export type Database = {
       create_receivable_from_os: { Args: { _os_id: string }; Returns: string }
       current_portal_client_id: { Args: never; Returns: string }
       get_certificate_by_token: { Args: { _token: string }; Returns: Json }
+      get_os_report_by_token: { Args: { _token: string }; Returns: Json }
       has_any_role: { Args: { _user_id: string }; Returns: boolean }
       has_role: {
         Args: {
