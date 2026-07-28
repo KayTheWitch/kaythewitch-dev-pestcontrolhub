@@ -23,6 +23,7 @@ import { Route as InviteTokenRouteImport } from './routes/invite.$token'
 import { Route as CesTokenRouteImport } from './routes/ces.$token'
 import { Route as AuthenticatedSyncRouteImport } from './routes/_authenticated.sync'
 import { Route as AuthenticatedLeadsRouteImport } from './routes/_authenticated.leads'
+import { Route as AuthenticatedEstoqueRouteImport } from './routes/_authenticated.estoque'
 import { Route as AuthenticatedComplianceRouteImport } from './routes/_authenticated.compliance'
 import { Route as AuthenticatedBiRouteImport } from './routes/_authenticated.bi'
 import { Route as AuthenticatedPropostasIndexRouteImport } from './routes/_authenticated.propostas.index'
@@ -124,6 +125,11 @@ const AuthenticatedSyncRoute = AuthenticatedSyncRouteImport.update({
 const AuthenticatedLeadsRoute = AuthenticatedLeadsRouteImport.update({
   id: '/leads',
   path: '/leads',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedEstoqueRoute = AuthenticatedEstoqueRouteImport.update({
+  id: '/estoque',
+  path: '/estoque',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedComplianceRoute = AuthenticatedComplianceRouteImport.update({
@@ -323,6 +329,7 @@ export interface FileRoutesByFullPath {
   '/portal': typeof PortalRouteWithChildren
   '/bi': typeof AuthenticatedBiRouteWithChildren
   '/compliance': typeof AuthenticatedComplianceRouteWithChildren
+  '/estoque': typeof AuthenticatedEstoqueRoute
   '/leads': typeof AuthenticatedLeadsRoute
   '/sync': typeof AuthenticatedSyncRoute
   '/ces/$token': typeof CesTokenRoute
@@ -367,6 +374,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
+  '/estoque': typeof AuthenticatedEstoqueRoute
   '/leads': typeof AuthenticatedLeadsRoute
   '/sync': typeof AuthenticatedSyncRoute
   '/ces/$token': typeof CesTokenRoute
@@ -417,6 +425,7 @@ export interface FileRoutesById {
   '/portal': typeof PortalRouteWithChildren
   '/_authenticated/bi': typeof AuthenticatedBiRouteWithChildren
   '/_authenticated/compliance': typeof AuthenticatedComplianceRouteWithChildren
+  '/_authenticated/estoque': typeof AuthenticatedEstoqueRoute
   '/_authenticated/leads': typeof AuthenticatedLeadsRoute
   '/_authenticated/sync': typeof AuthenticatedSyncRoute
   '/ces/$token': typeof CesTokenRoute
@@ -468,6 +477,7 @@ export interface FileRouteTypes {
     | '/portal'
     | '/bi'
     | '/compliance'
+    | '/estoque'
     | '/leads'
     | '/sync'
     | '/ces/$token'
@@ -512,6 +522,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/auth'
+    | '/estoque'
     | '/leads'
     | '/sync'
     | '/ces/$token'
@@ -561,6 +572,7 @@ export interface FileRouteTypes {
     | '/portal'
     | '/_authenticated/bi'
     | '/_authenticated/compliance'
+    | '/_authenticated/estoque'
     | '/_authenticated/leads'
     | '/_authenticated/sync'
     | '/ces/$token'
@@ -712,6 +724,13 @@ declare module '@tanstack/react-router' {
       path: '/leads'
       fullPath: '/leads'
       preLoaderRoute: typeof AuthenticatedLeadsRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/estoque': {
+      id: '/_authenticated/estoque'
+      path: '/estoque'
+      fullPath: '/estoque'
+      preLoaderRoute: typeof AuthenticatedEstoqueRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/compliance': {
@@ -1041,6 +1060,7 @@ const AuthenticatedOsIdRouteWithChildren =
 interface AuthenticatedRouteChildren {
   AuthenticatedBiRoute: typeof AuthenticatedBiRouteWithChildren
   AuthenticatedComplianceRoute: typeof AuthenticatedComplianceRouteWithChildren
+  AuthenticatedEstoqueRoute: typeof AuthenticatedEstoqueRoute
   AuthenticatedLeadsRoute: typeof AuthenticatedLeadsRoute
   AuthenticatedSyncRoute: typeof AuthenticatedSyncRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
@@ -1065,6 +1085,7 @@ interface AuthenticatedRouteChildren {
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedBiRoute: AuthenticatedBiRouteWithChildren,
   AuthenticatedComplianceRoute: AuthenticatedComplianceRouteWithChildren,
+  AuthenticatedEstoqueRoute: AuthenticatedEstoqueRoute,
   AuthenticatedLeadsRoute: AuthenticatedLeadsRoute,
   AuthenticatedSyncRoute: AuthenticatedSyncRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
