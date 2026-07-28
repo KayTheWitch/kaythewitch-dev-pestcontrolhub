@@ -20,6 +20,10 @@ import {
   BarChart3,
   FileCheck2,
   RefreshCw,
+  CalendarDays,
+  Boxes,
+  ShoppingCart,
+  Truck,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
