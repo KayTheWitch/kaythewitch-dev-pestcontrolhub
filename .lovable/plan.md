@@ -1,65 +1,68 @@
 
-# Fase 9 — App instalável (PWA) com modo offline em campo
+# Plano de melhorias e upgrades — Ventura
 
-Objetivo: o técnico executa a OS inteira sem internet (subsolo, zona rural, indústria) e o sistema sincroniza sozinho ao voltar o sinal, sem perder dados nem duplicar registros.
+Antes de novas funcionalidades, uma verificação do código atual mostrou lacunas concretas em relação ao que o roadmap dava como entregue. Isso define a prioridade.
 
-Como a rota `/agenda` não existe no código atual, a preparação offline sai da lista de Ordens de Serviço (`/os`).
+## Verificado no código (estado real)
 
-## 1. Instalação como app
+- Rotas existentes: leads, clientes, propostas, OS (+ execução em campo), BI, compliance, financeiro, cadastros, portal do cliente, sync, CES público, convite.
+- **Não existem** rotas de: agenda/roteirização (`/agenda`), estoque (`/estoque`), compras (`/compras`), fornecedores (`/fornecedores`) e relatório público da OS (`/r/:token`) — apesar de o banco já ter as tabelas de estoque, compras e fornecedores.
+- **Não existe** `README.md` no projeto.
+- O menu lateral não tem entradas para estoque, compras, fornecedores nem agenda.
 
-- Manifest com nome "Ventura", ícones (192/512 + maskable), cor de tema alinhada ao design atual e `display: standalone`.
-- Ícones gerados e servidos em `public/`; tags de manifest, theme-color e apple-touch-icon no root.
-- Service worker gerado por `vite-plugin-pwa` (`generateSW`, `registerType: autoUpdate`), registrado apenas em produção por um módulo com guardas — nunca no preview do editor nem em iframe, com kill-switch `?sw=off`.
-- Navegações HTML em `network-first`; assets estáticos com hash em `cache-first`.
+## Frente 1 — Fechar lacunas (prioridade máxima)
 
-Observação: o modo offline só funciona no app publicado, não dentro do preview do editor.
+Reaproveita banco já pronto; é onde o sistema hoje tem dado sem tela.
 
-## 2. Preparar OS do dia para offline
+- `/estoque`: saldos por produto/lote, validades, alertas de mínimo, entradas e ajustes, histórico de movimentações.
+- `/fornecedores` e `/compras`: cadastro, pedidos de compra, recebimento com entrada de lote (RPC `receive_purchase_order_item` já existe).
+- `/agenda`: visão semanal por equipe, arrastar OS entre dias, bloqueios de agenda; base para o "preparar offline do dia".
+- `/r/:token`: relatório técnico público imprimível da OS + compartilhamento por WhatsApp/e-mail.
+- Reorganização do menu em seções coerentes (Operação, Suprimentos, Financeiro, Gestão).
+- `README.md` completo no padrão GitHub.
 
-- Na lista `/os`, botão "Preparar para offline" (OS do dia / próximos dias do técnico) e um marcador por OS já disponível offline.
-- O sistema baixa e guarda no aparelho: dados do cliente e endereço, checklist, produtos previstos, lotes disponíveis com validade, RT vigente e informações regulatórias necessárias à conclusão.
-- Indicador na tela da OS quando o conteúdo veio do cache local.
+## Frente 2 — Contratos recorrentes e renovação
 
-## 3. Execução offline da OS
+Hoje o ciclo termina na OS avulsa.
 
-Todas as etapas já existentes passam a funcionar sem rede:
+- Tabela de contratos (cliente, serviços, periodicidade, vigência, valor mensal, reajuste).
+- Geração automática de OS recorrentes a partir do contrato.
+- Painel de vencimentos e renovações; faturamento recorrente ligado ao contas a receber.
 
-- Check-in e check-out com geolocalização (GPS funciona offline).
-- Checklist técnico.
-- Produtos aplicados, com seleção de lote a partir do cache.
-- Fotos: capturadas, **comprimidas automaticamente** (redimensionamento para lado máximo ~1600px e JPEG ~0,7) antes de gravar no aparelho, evitando estourar a cota do navegador. Aviso na tela se o armazenamento local ficar próximo do limite.
-- Assinatura do cliente no canvas.
-- Conclusão local marca a OS como "pendente de sincronização" — o certificado (CES) e a baixa de estoque só ocorrem no servidor, na sincronização.
+## Frente 3 — Comunicação e automações
 
-## 4. Fila de sincronização
+- Templates de e-mail transacional (proposta enviada, OS agendada, CES emitido, título vencendo).
+- Lembretes automáticos de visita para o cliente (D-1) e alertas internos por vencimento de ART, validade de lote e estoque mínimo.
+- Central de notificações no app com contador de pendências por papel.
 
-- Ao detectar rede, a fila é processada em ordem: fotos e assinatura → baixa de estoque → atualização de status da OS (o que dispara CES, financeiro e demais automações já existentes).
-- Cada item da fila carrega uma chave de idempotência para não duplicar registros em caso de reenvio.
-- Repetição automática com espera crescente para falhas de rede.
-- Erros de regra de negócio (ex.: lote esgotado por outro técnico) param aquele item e pedem intervenção manual.
+## Frente 4 — Qualidade, segurança e desempenho
 
-## 5. Tela `/sync` e indicadores
+- Revisar RLS de todas as tabelas com varredura de segurança e corrigir achados.
+- Papel `tecnico` hoje existe no código mas quase não restringe telas: aplicar gate por papel em rotas e ações sensíveis (financeiro, compras, cadastros).
+- Trilha de auditoria (quem mudou status, valor, lote) e log de acesso a documentos regulatórios.
+- Paginação e busca server-side nas listagens grandes (OS, títulos, movimentações).
+- Testes automatizados dos fluxos críticos: conclusão de OS, baixa de estoque, sincronização offline.
 
-- Lista de pendências com status, tentativas e último erro; log das sincronizações concluídas.
-- Tela de resolução de conflito: trocar o lote indisponível mantendo o resto da execução registrada.
-- No cabeçalho: ícone de conectividade (online / offline / sincronizando), contador "N pendentes", horário da última sincronização e aviso destacado se houver registro local com mais de 24h sem enviar.
+## Frente 5 — Experiência e produtividade
+
+- Busca global (Cmd+K) por cliente, OS, proposta e título.
+- Painel inicial configurável por papel, com filtros salvos.
+- Layout mobile refinado para o técnico (telas de campo em uma coluna, botões grandes).
+- Exportações padronizadas (CSV/PDF) em todas as listagens.
+- Modo escuro e revisão de acessibilidade (contraste, foco, leitores de tela).
 
 ## Detalhes técnicos
 
-- `vite-plugin-pwa` (`devOptions.enabled: false`, `injectRegister: null`) + wrapper único de registro com as guardas de preview/iframe/dev e `?sw=off`.
-- `idb` para stores tipadas: `os_cache`, `sync_queue`, `photo_blobs`, `meta`.
-- Nova camada `src/lib/offline/`: `db.ts` (schema), `sync.ts` (enfileirar/processar/retry), `net.ts` (detecção de rede: `navigator.onLine` + heartbeat leve), `os-offline.ts` (mesma assinatura das chamadas online, decidindo local x remoto).
-- Compressão de imagem via `canvas` no cliente, antes da gravação em IndexedDB.
-- Sem alterações de schema no banco; a sincronização reutiliza as RPCs existentes (`apply_os_stock_deduction`, triggers de CES e financeiro).
-- Ajustes de UI em: lista `/os`, detalhe `/os/$id`, `AppShell` (indicador), nova rota `/sync`.
+- Novas tabelas previstas: `contracts`, `contract_items`, `contract_occurrences`, `notifications`, `audit_log` — todas com GRANTs explícitos e RLS por papel.
+- Geração de OS recorrentes via função no banco acionada por endpoint público de cron (`/api/public/*`) com verificação de segredo.
+- E-mails por função de servidor, sem expor chaves no cliente.
+- Agenda reutiliza Leaflet apenas no cliente, carregado após hidratação.
+- Nenhuma alteração nas camadas offline já entregues; a agenda passa a ser origem alternativa do "preparar para offline".
 
-## Fora do escopo
+## Sequência sugerida
 
-- Offline para módulos administrativos (financeiro, BI, compras) — apenas execução de OS em campo.
-- Notificações push.
-- Sincronização entre técnicos sem servidor.
-
-## Entrega final
-
-- Configuração PWA + camada offline + tela `/sync`.
-- Atualização do `README.md` no mesmo padrão de detalhe, marcando a Fase 9 como concluída.
+1. Frente 1 (lacunas + README)
+2. Frente 4 (segurança e papéis)
+3. Frente 2 (contratos)
+4. Frente 3 (notificações)
+5. Frente 5 (UX)
