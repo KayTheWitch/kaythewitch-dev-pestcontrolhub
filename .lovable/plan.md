@@ -1,68 +1,33 @@
+# Remoção da marca "Ventura" — renomeação para Pest Control Hub
 
-# Plano de melhorias e upgrades — Ventura
+Objetivo: eliminar toda menção à empresa Ventura no app e na documentação, substituindo por nome genérico de controle de pragas.
 
-Antes de novas funcionalidades, uma verificação do código atual mostrou lacunas concretas em relação ao que o roadmap dava como entregue. Isso define a prioridade.
+## Nome adotado
 
-## Verificado no código (estado real)
+- Nome do produto: **Pest Control Hub**
+- Nome curto (PWA/menu): **Pest Control**
+- Onde hoje aparece "Ventura Dedetização" (documentos públicos, relatórios, certificados): **Pest Control Hub — Controle de Pragas**
 
-- Rotas existentes: leads, clientes, propostas, OS (+ execução em campo), BI, compliance, financeiro, cadastros, portal do cliente, sync, CES público, convite.
-- **Não existem** rotas de: agenda/roteirização (`/agenda`), estoque (`/estoque`), compras (`/compras`), fornecedores (`/fornecedores`) e relatório público da OS (`/r/:token`) — apesar de o banco já ter as tabelas de estoque, compras e fornecedores.
-- **Não existe** `README.md` no projeto.
-- O menu lateral não tem entradas para estoque, compras, fornecedores nem agenda.
+## O que muda na interface
 
-## Frente 1 — Fechar lacunas (prioridade máxima)
+- Menu lateral do sistema (topo) e cabeçalho mobile: "Ventura / Gestão Operacional" → "Pest Control Hub / Gestão Operacional".
+- Tela de login e tela de convite: logo/título passam a "Pest Control Hub".
+- Portal do cliente (cabeçalho e mensagem de acesso não vinculado): "Ventura" → "Pest Control Hub".
+- Relatório técnico público (`/r/$token`): rodapé/emissor passa a "Pest Control Hub — Controle de Pragas"; mensagem de compartilhamento no WhatsApp também.
+- Certificado público (`/ces/$token`): emissor passa a "Pest Control Hub — Controle de Pragas" (mantida a referência à RDC 52/2009, que é norma e não marca).
+- App instalável (PWA): nome "Pest Control Hub", nome curto "Pest Control", descrição sem menção à empresa.
 
-Reaproveita banco já pronto; é onde o sistema hoje tem dado sem tela.
+## O que muda em SEO / títulos de página
 
-- `/estoque`: saldos por produto/lote, validades, alertas de mínimo, entradas e ajustes, histórico de movimentações.
-- `/fornecedores` e `/compras`: cadastro, pedidos de compra, recebimento com entrada de lote (RPC `receive_purchase_order_item` já existe).
-- `/agenda`: visão semanal por equipe, arrastar OS entre dias, bloqueios de agenda; base para o "preparar offline do dia".
-- `/r/:token`: relatório técnico público imprimível da OS + compartilhamento por WhatsApp/e-mail.
-- Reorganização do menu em seções coerentes (Operação, Suprimentos, Financeiro, Gestão).
-- `README.md` completo no padrão GitHub.
+Títulos e descrições (head) de: raiz do app, login, BI (índice, comercial, operacional, estoque, financeiro), relatório público e certificado público — todos passam a usar "Pest Control Hub", sem citar a empresa.
 
-## Frente 2 — Contratos recorrentes e renovação
+## Documentação
 
-Hoje o ciclo termina na OS avulsa.
-
-- Tabela de contratos (cliente, serviços, periodicidade, vigência, valor mensal, reajuste).
-- Geração automática de OS recorrentes a partir do contrato.
-- Painel de vencimentos e renovações; faturamento recorrente ligado ao contas a receber.
-
-## Frente 3 — Comunicação e automações
-
-- Templates de e-mail transacional (proposta enviada, OS agendada, CES emitido, título vencendo).
-- Lembretes automáticos de visita para o cliente (D-1) e alertas internos por vencimento de ART, validade de lote e estoque mínimo.
-- Central de notificações no app com contador de pendências por papel.
-
-## Frente 4 — Qualidade, segurança e desempenho
-
-- Revisar RLS de todas as tabelas com varredura de segurança e corrigir achados.
-- Papel `tecnico` hoje existe no código mas quase não restringe telas: aplicar gate por papel em rotas e ações sensíveis (financeiro, compras, cadastros).
-- Trilha de auditoria (quem mudou status, valor, lote) e log de acesso a documentos regulatórios.
-- Paginação e busca server-side nas listagens grandes (OS, títulos, movimentações).
-- Testes automatizados dos fluxos críticos: conclusão de OS, baixa de estoque, sincronização offline.
-
-## Frente 5 — Experiência e produtividade
-
-- Busca global (Cmd+K) por cliente, OS, proposta e título.
-- Painel inicial configurável por papel, com filtros salvos.
-- Layout mobile refinado para o técnico (telas de campo em uma coluna, botões grandes).
-- Exportações padronizadas (CSV/PDF) em todas as listagens.
-- Modo escuro e revisão de acessibilidade (contraste, foco, leitores de tela).
+`README.md`: título e descrição reescritos como "Pest Control Hub — ERP para controle de pragas", removendo "Ventura" e "Ventura Dedetização"; restante do conteúdo permanece.
 
 ## Detalhes técnicos
 
-- Novas tabelas previstas: `contracts`, `contract_items`, `contract_occurrences`, `notifications`, `audit_log` — todas com GRANTs explícitos e RLS por papel.
-- Geração de OS recorrentes via função no banco acionada por endpoint público de cron (`/api/public/*`) com verificação de segredo.
-- E-mails por função de servidor, sem expor chaves no cliente.
-- Agenda reutiliza Leaflet apenas no cliente, carregado após hidratação.
-- Nenhuma alteração nas camadas offline já entregues; a agenda passa a ser origem alternativa do "preparar para offline".
-
-## Sequência sugerida
-
-1. Frente 1 (lacunas + README)
-2. Frente 4 (segurança e papéis)
-3. Frente 2 (contratos)
-4. Frente 3 (notificações)
-5. Frente 5 (UX)
+- Arquivos com ocorrências: `src/routes/__root.tsx`, `src/routes/auth.tsx`, `src/routes/portal.tsx`, `src/routes/invite.$token.tsx`, `src/routes/r.$token.tsx`, `src/routes/ces.$token.tsx`, `src/routes/_authenticated.bi.{index,comercial,operacional,estoque,financeiro}.tsx`, `src/components/AppShell.tsx`, `src/components/PortalShell.tsx`, `src/lib/offline/db.ts`, `vite.config.ts`, `README.md`.
+- `src/lib/offline/db.ts`: interface `VenturaDB` → `OfflineDB`. O nome do banco local (`ventura-offline`) e os caches do service worker (`ventura-html`, `ventura-assets`) são identificadores internos: renomeá-los descarta cache offline e fila de sincronização pendente nos aparelhos já em uso. Proposta: renomear (identificadores não são visíveis ao usuário final, mas cumprem o pedido de remover qualquer menção) — a fila pendente deve ser sincronizada antes do deploy.
+- Nenhuma alteração de banco de dados, schema ou lógica de negócio.
+- Verificação: typecheck e revisão de que nenhuma ocorrência de "ventura" resta no projeto.
