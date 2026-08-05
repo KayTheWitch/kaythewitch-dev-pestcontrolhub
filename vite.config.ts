@@ -23,10 +23,10 @@ export default defineConfig({
         filename: "sw.js",
         manifest: {
           id: "/",
-          name: "Ventura — Gestão Operacional",
-          short_name: "Ventura",
+          name: "Pest Control Hub — Gestão Operacional",
+          short_name: "Pest Control",
           description:
-            "ERP da Ventura's Dedetização: execução de ordens de serviço em campo, com modo offline.",
+            "ERP de controle de pragas: execução de ordens de serviço em campo, com modo offline.",
           lang: "pt-BR",
           start_url: "/",
           scope: "/",
@@ -59,7 +59,7 @@ export default defineConfig({
                 request.mode === "navigate" && !url.pathname.startsWith("/~oauth"),
               handler: "NetworkFirst",
               options: {
-                cacheName: "ventura-html",
+                cacheName: "pest-control-hub-html",
                 networkTimeoutSeconds: 5,
                 expiration: { maxEntries: 50, maxAgeSeconds: 60 * 60 * 24 * 7 },
               },
@@ -70,7 +70,7 @@ export default defineConfig({
                 sameOrigin && /\.(?:js|css|woff2?|png|svg|ico)$/.test(url.pathname),
               handler: "CacheFirst",
               options: {
-                cacheName: "ventura-assets",
+                cacheName: "pest-control-hub-assets",
                 expiration: { maxEntries: 300, maxAgeSeconds: 60 * 60 * 24 * 30 },
               },
             },

@@ -101,7 +101,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             <Bug className="w-5 h-5 text-sidebar-primary-foreground" />
           </div>
           <div className="leading-tight">
-            <div className="font-semibold text-sm">Ventura</div>
+            <div className="font-semibold text-sm">Pest Control Hub</div>
             <div className="text-xs text-sidebar-foreground/60">Gestão Operacional</div>
           </div>
         </div>
@@ -160,7 +160,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         <div className="md:hidden flex items-center justify-between gap-2 px-4 py-3 border-b bg-card">
           <div className="flex items-center gap-2">
             <Wrench className="w-5 h-5 text-primary" />
-            <span className="font-semibold text-sm">Ventura</span>
+            <span className="font-semibold text-sm">Pest Control Hub</span>
           </div>
           <OfflineIndicator compact />
         </div>

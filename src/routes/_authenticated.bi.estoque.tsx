@@ -14,7 +14,7 @@ import {
 import { formatCurrency } from "@/lib/format";
 
 export const Route = createFileRoute("/_authenticated/bi/estoque")({
-  head: () => ({ meta: [{ title: "BI · Estoque — Ventura" }] }),
+  head: () => ({ meta: [{ title: "BI · Estoque — Pest Control Hub" }] }),
   component: BIEstoque,
 });
 

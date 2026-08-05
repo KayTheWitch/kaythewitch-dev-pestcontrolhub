@@ -6,7 +6,7 @@ import { BarChart3, ClipboardList, Package, Wallet, ArrowRight } from "lucide-re
 export const Route = createFileRoute("/_authenticated/bi/")({
   head: () => ({
     meta: [
-      { title: "BI — Ventura" },
+      { title: "BI — Pest Control Hub" },
       { name: "description", content: "Painéis analíticos da operação." },
     ],
   }),

@@ -1,6 +1,6 @@
-# Ventura — ERP para dedetização
+# Pest Control Hub — ERP para controle de pragas
 
-Sistema interno de gestão da Ventura Dedetização: do lead ao faturamento, com execução de campo offline e compliance sanitário.
+Sistema interno de gestão para empresas de controle de pragas: do lead ao faturamento, com execução de campo offline e compliance sanitário.
 
 ## Stack
 

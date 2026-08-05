@@ -13,8 +13,8 @@ import { useAuth } from "@/hooks/useAuth";
 export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
-      { title: "Entrar — Ventura" },
-      { name: "description", content: "Acesse o sistema de gestão da Ventura." },
+      { title: "Entrar — Pest Control Hub" },
+      { name: "description", content: "Acesse o sistema de gestão da Pest Control Hub." },
     ],
   }),
   component: AuthPage,
@@ -69,7 +69,7 @@ function AuthPage() {
             <Bug className="w-6 h-6 text-primary-foreground" />
           </div>
           <div>
-            <div className="text-lg font-semibold">Ventura</div>
+            <div className="text-lg font-semibold">Pest Control Hub</div>
             <div className="text-xs text-muted-foreground">
               Serviços Ambientais e Higienização
             </div>

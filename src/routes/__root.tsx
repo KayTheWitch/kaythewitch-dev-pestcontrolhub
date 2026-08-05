@@ -78,22 +78,22 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Ventura — Gestão de Dedetização e Higienização" },
+      { title: "Pest Control Hub — Gestão de Controle de Pragas" },
       {
         name: "description",
         content:
-          "Sistema interno da Ventura's Dedetização para gestão comercial: leads, clientes, propostas, contratos com assinatura eletrônica e ordens de serviço.",
+          "Sistema interno da Pest Control Hub — Controle de Pragas para gestão comercial: leads, clientes, propostas, contratos com assinatura eletrônica e ordens de serviço.",
       },
-      { property: "og:title", content: "Ventura — Gestão de Dedetização e Higienização" },
+      { property: "og:title", content: "Pest Control Hub — Gestão de Controle de Pragas" },
       {
         property: "og:description",
         content:
-          "Sistema interno da Ventura's Dedetização para gestão comercial: leads, clientes, propostas, contratos com assinatura eletrônica e ordens de serviço.",
+          "Sistema interno da Pest Control Hub — Controle de Pragas para gestão comercial: leads, clientes, propostas, contratos com assinatura eletrônica e ordens de serviço.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "Ventura — Gestão de Dedetização e Higienização" },
-      { name: "twitter:description", content: "Sistema interno da Ventura's Dedetização para gestão comercial: leads, clientes, propostas, contratos com assinatura eletrônica e ordens de serviço." },
+      { name: "twitter:title", content: "Pest Control Hub — Gestão de Controle de Pragas" },
+      { name: "twitter:description", content: "Sistema interno da Pest Control Hub — Controle de Pragas para gestão comercial: leads, clientes, propostas, contratos com assinatura eletrônica e ordens de serviço." },
       { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/9c249cfe-f3e0-4fe6-8d83-c8f4ae1fb90f/id-preview-8f1e72c9--b649d056-23c3-4f9b-80ba-819d0af4f6b7.lovable.app-1783474560459.png" },
       { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/9c249cfe-f3e0-4fe6-8d83-c8f4ae1fb90f/id-preview-8f1e72c9--b649d056-23c3-4f9b-80ba-819d0af4f6b7.lovable.app-1783474560459.png" },
     ],
