@@ -24,9 +24,9 @@ export default defineConfig({
         manifest: {
           id: "/",
           name: "Pest Control Hub — Gestão Operacional",
-          short_name: "Pest Control Hub",
+          short_name: "Pest Control",
           description:
-            "ERP da Pest Control Hub — Controle de Pragas: execução de ordens de serviço em campo, com modo offline.",
+            "ERP de controle de pragas: execução de ordens de serviço em campo, com modo offline.",
           lang: "pt-BR",
           start_url: "/",
           scope: "/",

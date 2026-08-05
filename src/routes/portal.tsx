@@ -98,7 +98,7 @@ function NoAccess() {
         <h2 className="text-lg font-semibold">Acesso não liberado</h2>
         <p className="text-sm text-muted-foreground">
           Sua conta ainda não está vinculada a um cliente. Verifique o e-mail de convite
-          recebido ou solicite acesso à Pest Control Hub.
+          recebido ou solicite acesso ao suporte.
         </p>
         <Button variant="outline" onClick={signOut}>
           <LogOut className="w-4 h-4 mr-2" />

@@ -13,7 +13,7 @@ export const Route = createFileRoute("/r/$token")({
       {
         name: "description",
         content:
-          "Relatório técnico da ordem de serviço executada pela Pest Control Hub — Controle de Pragas, com produtos aplicados, lotes e responsável técnico.",
+          "Relatório técnico da ordem de serviço executada,  com produtos aplicados, lotes e responsável técnico.",
       },
       { name: "robots", content: "noindex" },
       { property: "og:title", content: "Relatório técnico de serviço | Pest Control Hub" },
@@ -61,7 +61,7 @@ function ReportPublic() {
   const rt = data.rt;
   const checklist: any[] = Array.isArray(os.checklist) ? os.checklist : [];
   const url = typeof window !== "undefined" ? window.location.href : "";
-  const msg = `Relatório técnico da OS #${os.numero} — Pest Control Hub — Controle de Pragas: ${url}`;
+  const msg = `Relatório técnico da OS #${os.numero} — Pest Control Hub: ${url}`;
 
   return (
     <div className="min-h-screen bg-muted/30 py-8 print:bg-white print:py-0">
