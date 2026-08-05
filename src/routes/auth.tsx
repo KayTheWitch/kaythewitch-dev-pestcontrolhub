@@ -144,7 +144,8 @@ function AuthPage() {
                   {submitting ? "Criando..." : "Criar conta"}
                 </Button>
                 <p className="text-xs text-muted-foreground text-center">
-                  O primeiro usuário criado recebe permissões de administrador.
+                  Novas contas não recebem permissões automaticamente. Um administrador
+                  precisa liberar seu acesso.
                 </p>
               </form>
             </TabsContent>
