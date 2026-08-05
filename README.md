@@ -123,9 +123,30 @@ Dashboard, propostas, ordens de serviço, financeiro e documentos, restritos ao 
 ## Segurança
 
 - RLS habilitada em todas as tabelas de negócio.
-- Papéis em `user_roles` (`admin`, `comercial`, `cliente`) verificados por `has_role` / `has_any_role` (SECURITY DEFINER, sem recursão).
+- Papéis em `user_roles` (`admin`, `comercial`, `tecnico`, `cliente`) verificados por `has_role` / `has_any_role` (SECURITY DEFINER, sem recursão). Papéis nunca ficam em `profiles` nem nos metadados do usuário.
 - Cliente do portal enxerga apenas registros do próprio `client_id` (`current_portal_client_id`).
 - Conteúdo público é exposto somente por funções de token, nunca por acesso direto às tabelas.
+- Execução das funções internas do banco é revogada de `anon` e concedida seletivamente; apenas `get_os_report_by_token` e `get_certificate_by_token` são públicas.
+
+### Papéis e primeiro acesso
+
+| Papel | Alcance |
+| --- | --- |
+| `admin` | Acesso total, incluindo cadastros, compliance, BI e concessão de papéis |
+| `comercial` | Ciclo comercial, operação, suprimentos e financeiro |
+| `tecnico` | Execução de campo das OS atribuídas |
+| `cliente` | Somente o portal, restrito ao próprio `client_id` |
+
+1. O **primeiro usuário** criado no sistema recebe `admin` + `comercial` (bootstrap).
+2. Qualquer cadastro posterior em `/auth` **não recebe papel algum** e fica sem acesso até um administrador conceder um papel.
+3. Clientes entram pelo convite (`/invite/$token`), que vincula `profiles.client_id` e concede apenas `cliente`.
+
+### Storage
+
+| Bucket | Conteúdo |
+| --- | --- |
+| `os-fotos` | Fotos de execução das OS (privado, acesso por URL assinada) |
+| `compliance-docs` | ART, alvarás e documentos regulatórios (privado) |
 
 ## Offline / PWA
 
@@ -134,8 +155,36 @@ Dashboard, propostas, ordens de serviço, financeiro e documentos, restritos ao 
 - Fotos comprimidas (~1600px, JPEG 0,7) antes de gravar no aparelho.
 - Fila idempotente: fotos/assinatura → produtos → baixa de estoque → status da OS.
 
+### Fluxo de campo sem sinal
+
+1. Em `/os`, use **preparar para offline** (OS individual ou o roteiro do dia) enquanto há rede.
+2. Execute em `/os/$id/campo`: check-in geolocalizado, checklist, produtos por lote, fotos e assinatura ficam no aparelho.
+3. Ao voltar a rede, a fila sincroniza automaticamente; acompanhe, reprocesse ou descarte itens em `/sync`.
+
+## Convenções de desenvolvimento
+
+- Cores, sombras e gradientes sempre por tokens semânticos de `src/styles.css` — sem `text-white`, `bg-black` ou hex direto nos componentes.
+- Rotas novas são arquivos em `src/routes/`; `src/routeTree.gen.ts` é gerado e não deve ser editado.
+- Mudanças de schema sempre por migração; dados por operações de insert/update, nunca por migração.
+- Arquivos em `src/integrations/supabase/` são gerados automaticamente.
+- Cada rota de conteúdo define seu próprio `head()` com título e descrição únicos.
+
+## Deploy
+
+Publicação pela própria plataforma Lovable (build SSR para runtime edge). URLs estáveis:
+
+- Produção: `project--<id>.lovable.app`
+- Preview: `project--<id>-dev.lovable.app`
+
+Rotas destinadas a chamadas externas (webhooks, cron) devem ficar sob `src/routes/api/public/*` e validar o chamador no próprio handler.
+
 ## Roadmap
 
 Entregues: relatórios, agenda, estoque, compras, financeiro, portal do cliente, BI, compliance ANVISA, PWA offline.
 
 Próximas frentes: contratos recorrentes, notificações e e-mails transacionais, auditoria e gates por papel, busca global e refinamento mobile.
+
+## Licença
+
+Software proprietário de uso interno. Todos os direitos reservados.
+
