@@ -13,10 +13,56 @@ Sistema interno de gestão para empresas de controle de pragas: do lead ao fatur
 
 ## Como rodar
 
+Requisitos: [Bun](https://bun.sh) 1.1+ (ou Node 20+ com npm) e um backend Lovable Cloud provisionado.
+
 ```bash
 bun install
-bun run dev     # http://localhost:8080
+bun run dev        # http://localhost:8080
 ```
+
+### Scripts
+
+| Script | O que faz |
+| --- | --- |
+| `bun run dev` | Servidor de desenvolvimento com HMR na porta 8080 |
+| `bun run build` | Build de produção (SSR para runtime edge) |
+| `bun run build:dev` | Build em modo development, útil para depurar prerender |
+| `bun run preview` | Serve localmente o resultado do build |
+| `bun run lint` | ESLint em todo o projeto |
+| `bun run format` | Prettier com escrita em disco |
+
+### Variáveis de ambiente
+
+O arquivo `.env` é gerado e mantido automaticamente pelo Lovable Cloud — não edite à mão.
+
+| Variável | Uso |
+| --- | --- |
+| `VITE_SUPABASE_URL` | Endpoint do backend usado pelo cliente do navegador |
+| `VITE_SUPABASE_PUBLISHABLE_KEY` | Chave publicável (segura no bundle, protegida por RLS) |
+| `VITE_SUPABASE_PROJECT_ID` | Identificador do projeto backend |
+| `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_PROJECT_ID` | Equivalentes para execução no servidor (SSR / server functions) |
+
+Segredos de servidor (chaves de serviço, tokens de integração) ficam no cofre do backend e são lidos apenas dentro de handlers — nunca no escopo de módulo e nunca no cliente.
+
+### Estrutura do projeto
+
+```text
+src/
+  routes/            rotas por arquivo (_authenticated.*, portal.*, públicas)
+  components/        AppShell, PortalShell, UI de domínio
+    ui/              primitivos shadcn/ui
+    offline/         indicador de conectividade, captura de assinatura
+    bi/              filtros e utilitários dos painéis
+  hooks/             useAuth, useOfflineStatus, use-mobile
+  lib/
+    offline/          IndexedDB, compressão de imagem, fila de sync
+    pwa/register.ts   registro do service worker
+    format.ts         moeda, datas e documentos (pt-BR)
+  integrations/supabase/   clientes e tipos gerados (não editar)
+  styles.css         tokens de design e tema Tailwind v4
+public/              ícones do PWA e assets estáticos
+```
+
 
 ## Módulos e rotas
 
