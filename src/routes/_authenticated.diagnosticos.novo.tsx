@@ -84,7 +84,7 @@ function DiagnosticoNovo() {
 
   useEffect(() => {
     if (lead && lead.client_id && !form.client_id) {
-      setForm((f) => ({ ...f, client_id: lead.client_id }));
+      setForm((f) => ({ ...f, client_id: lead.client_id as string }));
     }
   }, [lead, form.client_id]);
 
