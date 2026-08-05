@@ -15,7 +15,7 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGri
 import { formatCurrency } from "@/lib/format";
 
 export const Route = createFileRoute("/_authenticated/bi/comercial")({
-  head: () => ({ meta: [{ title: "BI · Comercial — Ventura" }] }),
+  head: () => ({ meta: [{ title: "BI · Comercial — Pest Control Hub" }] }),
   component: BIComercial,
 });
 

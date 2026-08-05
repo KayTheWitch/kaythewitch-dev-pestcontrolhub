@@ -14,7 +14,7 @@ import {
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
 
 export const Route = createFileRoute("/_authenticated/bi/operacional")({
-  head: () => ({ meta: [{ title: "BI · Operacional — Ventura" }] }),
+  head: () => ({ meta: [{ title: "BI · Operacional — Pest Control Hub" }] }),
   component: BIOperacional,
 });
 

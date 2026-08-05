@@ -85,17 +85,17 @@ export type PhotoRecord = {
   createdAt: string;
 };
 
-interface VenturaDB extends DBSchema {
+interface OfflineDB extends DBSchema {
   os_cache: { key: string; value: CachedOs };
   sync_queue: { key: string; value: QueueItem; indexes: { by_os: string } };
   photo_blobs: { key: string; value: PhotoRecord; indexes: { by_os: string } };
   meta: { key: string; value: any };
 }
 
-const DB_NAME = "ventura-offline";
+const DB_NAME = "pest-control-hub-offline";
 const DB_VERSION = 1;
 
-let dbPromise: Promise<IDBPDatabase<VenturaDB>> | null = null;
+let dbPromise: Promise<IDBPDatabase<OfflineDB>> | null = null;
 
 export function offlineAvailable(): boolean {
   return typeof window !== "undefined" && typeof indexedDB !== "undefined";
@@ -106,7 +106,7 @@ function db() {
     return Promise.reject(new Error("Armazenamento offline indisponível neste dispositivo."));
   }
   if (!dbPromise) {
-    dbPromise = openDB<VenturaDB>(DB_NAME, DB_VERSION, {
+    dbPromise = openDB<OfflineDB>(DB_NAME, DB_VERSION, {
       upgrade(database) {
         if (!database.objectStoreNames.contains("os_cache")) {
           database.createObjectStore("os_cache", { keyPath: "id" });

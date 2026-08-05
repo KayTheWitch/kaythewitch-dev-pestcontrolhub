@@ -75,7 +75,7 @@ function AcceptInvite() {
             <Bug className="w-5 h-5 text-primary-foreground" />
           </div>
           <div>
-            <div className="font-semibold">Ventura</div>
+            <div className="font-semibold">Pest Control Hub</div>
             <div className="text-xs text-muted-foreground">Aceitar convite</div>
           </div>
         </div>

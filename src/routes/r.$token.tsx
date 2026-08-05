@@ -9,14 +9,14 @@ export const Route = createFileRoute("/r/$token")({
   component: ReportPublic,
   head: () => ({
     meta: [
-      { title: "Relatório técnico de serviço | Ventura" },
+      { title: "Relatório técnico de serviço | Pest Control Hub" },
       {
         name: "description",
         content:
-          "Relatório técnico da ordem de serviço executada pela Ventura Dedetização, com produtos aplicados, lotes e responsável técnico.",
+          "Relatório técnico da ordem de serviço executada pela Pest Control Hub — Controle de Pragas, com produtos aplicados, lotes e responsável técnico.",
       },
       { name: "robots", content: "noindex" },
-      { property: "og:title", content: "Relatório técnico de serviço | Ventura" },
+      { property: "og:title", content: "Relatório técnico de serviço | Pest Control Hub" },
       {
         property: "og:description",
         content: "Consulte o relatório técnico da sua ordem de serviço.",
@@ -61,7 +61,7 @@ function ReportPublic() {
   const rt = data.rt;
   const checklist: any[] = Array.isArray(os.checklist) ? os.checklist : [];
   const url = typeof window !== "undefined" ? window.location.href : "";
-  const msg = `Relatório técnico da OS #${os.numero} — Ventura Dedetização: ${url}`;
+  const msg = `Relatório técnico da OS #${os.numero} — Pest Control Hub — Controle de Pragas: ${url}`;
 
   return (
     <div className="min-h-screen bg-muted/30 py-8 print:bg-white print:py-0">
@@ -97,7 +97,7 @@ function ReportPublic() {
             <div className="text-2xl font-semibold mt-1">OS #{os.numero}</div>
           </div>
           <div className="text-right text-xs text-muted-foreground">
-            <div>Ventura Dedetização</div>
+            <div>Pest Control Hub — Controle de Pragas</div>
             <div>{OS_STATUS_LABEL[os.status] ?? os.status}</div>
           </div>
         </header>

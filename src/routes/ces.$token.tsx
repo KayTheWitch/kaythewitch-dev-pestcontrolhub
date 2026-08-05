@@ -8,11 +8,11 @@ export const Route = createFileRoute("/ces/$token")({
   component: CesPublic,
   head: () => ({
     meta: [
-      { title: "Certificado de Execução de Serviço | Ventura" },
+      { title: "Certificado de Execução de Serviço | Pest Control Hub" },
       {
         name: "description",
         content:
-          "Verificação pública de Certificado de Execução de Serviço emitido pela Ventura Dedetização.",
+          "Verificação pública de Certificado de Execução de Serviço emitido pela Pest Control Hub — Controle de Pragas.",
       },
       { name: "robots", content: "noindex" },
     ],
@@ -59,7 +59,7 @@ function CesPublic() {
                 Certificado de Execução de Serviço
               </div>
             </div>
-            <h1 className="text-2xl font-bold mt-2">Ventura Dedetização</h1>
+            <h1 className="text-2xl font-bold mt-2">Pest Control Hub — Controle de Pragas</h1>
             <div className="text-xs text-muted-foreground">
               Documento emitido conforme RDC 52/2009 — ANVISA
             </div>

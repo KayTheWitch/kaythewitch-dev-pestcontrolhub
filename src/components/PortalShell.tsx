@@ -43,7 +43,7 @@ export function PortalShell({ children }: { children: ReactNode }) {
               <Bug className="w-5 h-5 text-primary-foreground" />
             </div>
             <div className="leading-tight">
-              <div className="font-semibold text-sm">Ventura</div>
+              <div className="font-semibold text-sm">Pest Control Hub</div>
               <div className="text-[11px] text-muted-foreground">Portal do Cliente</div>
             </div>
           </div>
