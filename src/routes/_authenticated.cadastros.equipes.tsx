@@ -15,7 +15,6 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   Table,
@@ -27,6 +26,7 @@ import {
 } from "@/components/ui/table";
 import { Plus } from "lucide-react";
 import { toast } from "sonner";
+import { RowActions } from "@/components/RowActions";
 
 export const Route = createFileRoute("/_authenticated/cadastros/equipes")({
   component: EquipesPage,
@@ -35,6 +35,8 @@ export const Route = createFileRoute("/_authenticated/cadastros/equipes")({
 function EquipesPage() {
   const qc = useQueryClient();
   const [open, setOpen] = useState(false);
+  const [editing, setEditing] = useState<any>(null);
+
   const { data: rows = [] } = useQuery({
     queryKey: ["teams"],
     queryFn: async () => {
@@ -43,15 +45,34 @@ function EquipesPage() {
     },
   });
 
-  const create = useMutation({
+  const save = useMutation({
     mutationFn: async (v: any) => {
-      const { error } = await supabase.from("teams").insert(v);
+      const { id, ...rest } = v;
+      if (id) {
+        const { error } = await supabase.from("teams").update(rest).eq("id", id);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase.from("teams").insert(rest);
+        if (error) throw error;
+      }
+    },
+    onSuccess: () => {
+      toast.success("Equipe salva");
+      qc.invalidateQueries({ queryKey: ["teams"] });
+      setOpen(false);
+      setEditing(null);
+    },
+    onError: (e: any) => toast.error(e.message),
+  });
+
+  const remove = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await (supabase.rpc as any)("delete_team", { _id: id });
       if (error) throw error;
     },
     onSuccess: () => {
-      toast.success("Equipe criada");
+      toast.success("Equipe excluída");
       qc.invalidateQueries({ queryKey: ["teams"] });
-      setOpen(false);
     },
     onError: (e: any) => toast.error(e.message),
   });
@@ -70,19 +91,35 @@ function EquipesPage() {
         title="Equipes"
         description="Equipes técnicas designadas para execução das ordens de serviço."
         actions={
-          <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-              <Button>
-                <Plus className="w-4 h-4 mr-2" />
-                Nova equipe
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <TeamForm onSubmit={(v) => create.mutate(v)} submitting={create.isPending} />
-            </DialogContent>
-          </Dialog>
+          <Button
+            onClick={() => {
+              setEditing(null);
+              setOpen(true);
+            }}
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Nova equipe
+          </Button>
         }
       />
+
+      <Dialog
+        open={open}
+        onOpenChange={(o) => {
+          setOpen(o);
+          if (!o) setEditing(null);
+        }}
+      >
+        <DialogContent>
+          <TeamForm
+            key={editing?.id ?? "novo"}
+            initial={editing}
+            onSubmit={(v) => save.mutate(v)}
+            submitting={save.isPending}
+          />
+        </DialogContent>
+      </Dialog>
+
       <Card>
         <Table>
           <TableHeader>
@@ -91,15 +128,14 @@ function EquipesPage() {
               <TableHead>Descrição</TableHead>
               <TableHead>Membros</TableHead>
               <TableHead className="w-24">Ativa</TableHead>
+              <TableHead className="w-24 text-right">Ações</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {rows.map((r: any) => (
               <TableRow key={r.id}>
                 <TableCell className="font-medium">{r.nome}</TableCell>
-                <TableCell className="text-sm text-muted-foreground">
-                  {r.descricao}
-                </TableCell>
+                <TableCell className="text-sm text-muted-foreground">{r.descricao}</TableCell>
                 <TableCell className="text-sm">
                   {((r.membros as any[]) ?? []).length} pessoas
                 </TableCell>
@@ -109,11 +145,23 @@ function EquipesPage() {
                     onCheckedChange={(v) => toggle.mutate({ id: r.id, ativo: v })}
                   />
                 </TableCell>
+                <TableCell>
+                  <RowActions
+                    onEdit={() => {
+                      setEditing(r);
+                      setOpen(true);
+                    }}
+                    onDelete={() => remove.mutate(r.id)}
+                    deleting={remove.isPending}
+                    label={`Excluir equipe "${r.nome}"?`}
+                    description="Equipes com ordens de serviço vinculadas não podem ser excluídas — nesse caso, inative a equipe."
+                  />
+                </TableCell>
               </TableRow>
             ))}
             {rows.length === 0 && (
               <TableRow>
-                <TableCell colSpan={4} className="text-center py-10 text-muted-foreground">
+                <TableCell colSpan={5} className="text-center py-10 text-muted-foreground">
                   Cadastre a primeira equipe.
                 </TableCell>
               </TableRow>
@@ -126,17 +174,27 @@ function EquipesPage() {
 }
 
 function TeamForm({
+  initial,
   onSubmit,
   submitting,
 }: {
+  initial?: any;
   onSubmit: (v: any) => void;
   submitting: boolean;
 }) {
-  const [form, setForm] = useState({ nome: "", descricao: "", membros_raw: "" });
+  const [form, setForm] = useState({
+    id: initial?.id as string | undefined,
+    nome: initial?.nome ?? "",
+    descricao: initial?.descricao ?? "",
+    membros_raw: ((initial?.membros as any[]) ?? [])
+      .map((m: any) => m?.nome ?? "")
+      .filter(Boolean)
+      .join("\n"),
+  });
   return (
     <>
       <DialogHeader>
-        <DialogTitle>Nova equipe</DialogTitle>
+        <DialogTitle>{initial ? "Editar equipe" : "Nova equipe"}</DialogTitle>
       </DialogHeader>
       <form
         onSubmit={(e) => {
@@ -146,7 +204,12 @@ function TeamForm({
             .map((s) => s.trim())
             .filter(Boolean)
             .map((nome) => ({ nome }));
-          onSubmit({ nome: form.nome, descricao: form.descricao, membros });
+          onSubmit({
+            id: form.id,
+            nome: form.nome,
+            descricao: form.descricao,
+            membros,
+          });
         }}
         className="space-y-3"
       >
@@ -161,7 +224,7 @@ function TeamForm({
         <div>
           <Label>Descrição</Label>
           <Input
-            value={form.descricao}
+            value={form.descricao ?? ""}
             onChange={(e) => setForm({ ...form, descricao: e.target.value })}
           />
         </div>
