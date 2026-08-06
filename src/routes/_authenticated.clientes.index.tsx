@@ -149,6 +149,7 @@ function ClientsPage() {
               <TableHead>Cidade</TableHead>
               <TableHead>Criado</TableHead>
               <TableHead className="w-16"></TableHead>
+              <TableHead className="w-24 text-right">Ações</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -181,6 +182,19 @@ function ClientsPage() {
                     </Link>
                   </Button>
                 </TableCell>
+                <TableCell>
+                  <RowActions
+                    onEdit={() => {
+                      setEditing(c);
+                      setOpen(true);
+                    }}
+                    onDelete={() => remove.mutate(c.id)}
+                    deleting={remove.isPending}
+                    label={`Excluir "${c.nome}"?`}
+                    description="Clientes com propostas, ordens de serviço ou títulos financeiros não podem ser excluídos."
+                  />
+                </TableCell>
+
               </TableRow>
             ))}
             {clients.length === 0 && (
