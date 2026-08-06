@@ -35,6 +35,8 @@ import { Badge } from "@/components/ui/badge";
 import { Plus, ArrowRight } from "lucide-react";
 import { formatDate, CATEGORY_LABEL } from "@/lib/format";
 import { toast } from "sonner";
+import { RowActions } from "@/components/RowActions";
+
 
 export const Route = createFileRoute("/_authenticated/clientes/")({
   component: ClientsPage,
@@ -43,6 +45,7 @@ export const Route = createFileRoute("/_authenticated/clientes/")({
 function ClientsPage() {
   const qc = useQueryClient();
   const [open, setOpen] = useState(false);
+  const [editing, setEditing] = useState<any>(null);
   const [search, setSearch] = useState("");
 
   const { data: clients = [] } = useQuery({
@@ -56,16 +59,36 @@ function ClientsPage() {
     },
   });
 
-  const create = useMutation({
+  const save = useMutation({
     mutationFn: async (v: any) => {
-      const { error } = await supabase.from("clients").insert(v);
-      if (error) throw error;
+      const { id, ...rest } = v;
+      if (id) {
+        const { error } = await supabase.from("clients").update(rest).eq("id", id);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase.from("clients").insert(rest);
+        if (error) throw error;
+      }
     },
     onSuccess: () => {
-      toast.success("Cliente cadastrado");
+      toast.success("Cliente salvo");
       qc.invalidateQueries({ queryKey: ["clients"] });
       qc.invalidateQueries({ queryKey: ["dashboard"] });
       setOpen(false);
+      setEditing(null);
+    },
+    onError: (e: any) => toast.error(e.message),
+  });
+
+  const remove = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await (supabase.rpc as any)("delete_client", { _id: id });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success("Cliente excluído");
+      qc.invalidateQueries({ queryKey: ["clients"] });
+      qc.invalidateQueries({ queryKey: ["dashboard"] });
     },
     onError: (e: any) => toast.error(e.message),
   });
@@ -76,19 +99,35 @@ function ClientsPage() {
         title="Clientes"
         description="Base única com clientes PF/PJ, categoria e histórico."
         actions={
-          <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-              <Button>
-                <Plus className="w-4 h-4 mr-2" />
-                Novo cliente
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-2xl">
-              <ClientForm onSubmit={(v) => create.mutate(v)} submitting={create.isPending} />
-            </DialogContent>
-          </Dialog>
+          <Button
+            onClick={() => {
+              setEditing(null);
+              setOpen(true);
+            }}
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Novo cliente
+          </Button>
         }
       />
+
+      <Dialog
+        open={open}
+        onOpenChange={(o) => {
+          setOpen(o);
+          if (!o) setEditing(null);
+        }}
+      >
+        <DialogContent className="max-w-2xl">
+          <ClientForm
+            key={editing?.id ?? "novo"}
+            initial={editing}
+            onSubmit={(v) => save.mutate(v)}
+            submitting={save.isPending}
+          />
+        </DialogContent>
+      </Dialog>
+
 
       <div className="mb-4">
         <Input
@@ -110,6 +149,7 @@ function ClientsPage() {
               <TableHead>Cidade</TableHead>
               <TableHead>Criado</TableHead>
               <TableHead className="w-16"></TableHead>
+              <TableHead className="w-24 text-right">Ações</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -142,11 +182,24 @@ function ClientsPage() {
                     </Link>
                   </Button>
                 </TableCell>
+                <TableCell>
+                  <RowActions
+                    onEdit={() => {
+                      setEditing(c);
+                      setOpen(true);
+                    }}
+                    onDelete={() => remove.mutate(c.id)}
+                    deleting={remove.isPending}
+                    label={`Excluir "${c.nome}"?`}
+                    description="Clientes com propostas, ordens de serviço ou títulos financeiros não podem ser excluídos."
+                  />
+                </TableCell>
+
               </TableRow>
             ))}
             {clients.length === 0 && (
               <TableRow>
-                <TableCell colSpan={7} className="text-center py-10 text-muted-foreground">
+                <TableCell colSpan={8} className="text-center py-10 text-muted-foreground">
                   Nenhum cliente cadastrado.
                 </TableCell>
               </TableRow>
@@ -159,30 +212,34 @@ function ClientsPage() {
 }
 
 function ClientForm({
+  initial,
   onSubmit,
   submitting,
 }: {
+  initial?: any;
   onSubmit: (v: any) => void;
   submitting: boolean;
 }) {
   const [form, setForm] = useState({
-    tipo: "PF",
-    documento: "",
-    nome: "",
-    email: "",
-    telefone: "",
-    categoria: "residencial",
-    endereco: "",
-    cidade: "",
-    estado: "",
-    cep: "",
-    responsavel: "",
-    observacoes: "",
+    id: initial?.id as string | undefined,
+    tipo: initial?.tipo ?? "PF",
+    documento: initial?.documento ?? "",
+    nome: initial?.nome ?? "",
+    email: initial?.email ?? "",
+    telefone: initial?.telefone ?? "",
+    categoria: initial?.categoria ?? "residencial",
+    endereco: initial?.endereco ?? "",
+    cidade: initial?.cidade ?? "",
+    estado: initial?.estado ?? "",
+    cep: initial?.cep ?? "",
+    responsavel: initial?.responsavel ?? "",
+    observacoes: initial?.observacoes ?? "",
   });
+
   return (
     <>
       <DialogHeader>
-        <DialogTitle>Novo cliente</DialogTitle>
+        <DialogTitle>{initial ? "Editar cliente" : "Novo cliente"}</DialogTitle>
       </DialogHeader>
       <form
         onSubmit={(e) => {

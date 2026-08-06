@@ -14,7 +14,6 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   Select,
@@ -35,14 +34,24 @@ import { Badge } from "@/components/ui/badge";
 import { Plus } from "lucide-react";
 import { toast } from "sonner";
 import { FINANCIAL_CATEGORY_TYPE_LABEL } from "@/lib/format";
+import { RowActions } from "@/components/RowActions";
 
 export const Route = createFileRoute("/_authenticated/cadastros/categorias-financeiras")({
   component: CategoriasFinanceirasPage,
 });
 
+function slugify(tipo: string, nome: string) {
+  return `${tipo}_${nome
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "_")}`;
+}
+
 function CategoriasFinanceirasPage() {
   const qc = useQueryClient();
   const [open, setOpen] = useState(false);
+  const [editing, setEditing] = useState<any>(null);
 
   const { data: rows = [] } = useQuery({
     queryKey: ["financial_categories"],
@@ -56,18 +65,38 @@ function CategoriasFinanceirasPage() {
     },
   });
 
-  const create = useMutation({
+  const save = useMutation({
     mutationFn: async (v: any) => {
-      const slug = `${v.tipo}_${v.nome.toLowerCase().normalize("NFD").replace(/[^a-z0-9]+/g, "_")}`;
-      const { error } = await supabase
-        .from("financial_categories")
-        .insert({ tipo: v.tipo, nome: v.nome, slug });
+      if (v.id) {
+        const { error } = await supabase
+          .from("financial_categories")
+          .update({ tipo: v.tipo, nome: v.nome })
+          .eq("id", v.id);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase
+          .from("financial_categories")
+          .insert({ tipo: v.tipo, nome: v.nome, slug: slugify(v.tipo, v.nome) });
+        if (error) throw error;
+      }
+    },
+    onSuccess: () => {
+      toast.success("Categoria salva");
+      qc.invalidateQueries({ queryKey: ["financial_categories"] });
+      setOpen(false);
+      setEditing(null);
+    },
+    onError: (e: any) => toast.error(e.message),
+  });
+
+  const remove = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await (supabase.rpc as any)("delete_financial_category", { _id: id });
       if (error) throw error;
     },
     onSuccess: () => {
-      toast.success("Categoria criada");
+      toast.success("Categoria excluída");
       qc.invalidateQueries({ queryKey: ["financial_categories"] });
-      setOpen(false);
     },
     onError: (e: any) => toast.error(e.message),
   });
@@ -89,19 +118,35 @@ function CategoriasFinanceirasPage() {
         title="Categorias financeiras"
         description="Plano de contas para classificar receitas e despesas."
         actions={
-          <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-              <Button>
-                <Plus className="w-4 h-4 mr-2" />
-                Nova categoria
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <Form onSubmit={(v) => create.mutate(v)} submitting={create.isPending} />
-            </DialogContent>
-          </Dialog>
+          <Button
+            onClick={() => {
+              setEditing(null);
+              setOpen(true);
+            }}
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Nova categoria
+          </Button>
         }
       />
+
+      <Dialog
+        open={open}
+        onOpenChange={(o) => {
+          setOpen(o);
+          if (!o) setEditing(null);
+        }}
+      >
+        <DialogContent>
+          <Form
+            key={editing?.id ?? "novo"}
+            initial={editing}
+            onSubmit={(v) => save.mutate(v)}
+            submitting={save.isPending}
+          />
+        </DialogContent>
+      </Dialog>
+
       <Card>
         <Table>
           <TableHeader>
@@ -109,6 +154,7 @@ function CategoriasFinanceirasPage() {
               <TableHead>Nome</TableHead>
               <TableHead>Tipo</TableHead>
               <TableHead className="w-24">Ativo</TableHead>
+              <TableHead className="w-24 text-right">Ações</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -133,8 +179,27 @@ function CategoriasFinanceirasPage() {
                     onCheckedChange={(v) => toggle.mutate({ id: r.id, ativo: v })}
                   />
                 </TableCell>
+                <TableCell>
+                  <RowActions
+                    onEdit={() => {
+                      setEditing(r);
+                      setOpen(true);
+                    }}
+                    onDelete={() => remove.mutate(r.id)}
+                    deleting={remove.isPending}
+                    label={`Excluir "${r.nome}"?`}
+                    description="Categorias usadas em títulos financeiros não podem ser excluídas — nesse caso, inative a categoria."
+                  />
+                </TableCell>
               </TableRow>
             ))}
+            {rows.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={4} className="text-center py-10 text-muted-foreground">
+                  Nenhuma categoria cadastrada.
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </Card>
@@ -143,17 +208,23 @@ function CategoriasFinanceirasPage() {
 }
 
 function Form({
+  initial,
   onSubmit,
   submitting,
 }: {
+  initial?: any;
   onSubmit: (v: any) => void;
   submitting: boolean;
 }) {
-  const [f, setF] = useState({ nome: "", tipo: "despesa" });
+  const [f, setF] = useState({
+    id: initial?.id as string | undefined,
+    nome: initial?.nome ?? "",
+    tipo: initial?.tipo ?? "despesa",
+  });
   return (
     <>
       <DialogHeader>
-        <DialogTitle>Nova categoria</DialogTitle>
+        <DialogTitle>{initial ? "Editar categoria" : "Nova categoria"}</DialogTitle>
       </DialogHeader>
       <form
         onSubmit={(e) => {
@@ -164,11 +235,7 @@ function Form({
       >
         <div>
           <Label>Nome *</Label>
-          <Input
-            required
-            value={f.nome}
-            onChange={(e) => setF({ ...f, nome: e.target.value })}
-          />
+          <Input required value={f.nome} onChange={(e) => setF({ ...f, nome: e.target.value })} />
         </div>
         <div>
           <Label>Tipo *</Label>

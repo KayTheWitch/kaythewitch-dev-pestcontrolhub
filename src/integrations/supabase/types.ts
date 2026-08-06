@@ -1810,6 +1810,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      _assert_staff: { Args: never; Returns: undefined }
       _bi_assert_role: { Args: never; Returns: undefined }
       accept_client_invitation: { Args: { _token: string }; Returns: string }
       apply_os_stock_deduction: { Args: { _os_id: string }; Returns: undefined }
@@ -1899,6 +1900,21 @@ export type Database = {
       }
       create_receivable_from_os: { Args: { _os_id: string }; Returns: string }
       current_portal_client_id: { Args: never; Returns: string }
+      delete_client: { Args: { _id: string }; Returns: undefined }
+      delete_diagnostic: { Args: { _id: string }; Returns: undefined }
+      delete_epi: { Args: { _id: string }; Returns: undefined }
+      delete_financial_category: { Args: { _id: string }; Returns: undefined }
+      delete_lead: { Args: { _id: string }; Returns: undefined }
+      delete_product: { Args: { _id: string }; Returns: undefined }
+      delete_proposal: { Args: { _id: string }; Returns: undefined }
+      delete_service_catalog_item: { Args: { _id: string }; Returns: undefined }
+      delete_service_order: { Args: { _id: string }; Returns: undefined }
+      delete_supplier: { Args: { _id: string }; Returns: undefined }
+      delete_team: { Args: { _id: string }; Returns: undefined }
+      delete_technical_responsible: {
+        Args: { _id: string }
+        Returns: undefined
+      }
       get_certificate_by_token: { Args: { _token: string }; Returns: Json }
       get_os_report_by_token: { Args: { _token: string }; Returns: Json }
       has_any_role: { Args: { _user_id: string }; Returns: boolean }

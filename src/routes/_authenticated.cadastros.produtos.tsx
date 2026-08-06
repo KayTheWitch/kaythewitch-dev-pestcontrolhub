@@ -14,7 +14,6 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   Table,
@@ -26,6 +25,7 @@ import {
 } from "@/components/ui/table";
 import { Plus } from "lucide-react";
 import { toast } from "sonner";
+import { RowActions } from "@/components/RowActions";
 
 export const Route = createFileRoute("/_authenticated/cadastros/produtos")({
   component: ProdutosPage,
@@ -34,6 +34,8 @@ export const Route = createFileRoute("/_authenticated/cadastros/produtos")({
 function ProdutosPage() {
   const qc = useQueryClient();
   const [open, setOpen] = useState(false);
+  const [editing, setEditing] = useState<any>(null);
+
   const { data: rows = [] } = useQuery({
     queryKey: ["products"],
     queryFn: async () => {
@@ -42,15 +44,34 @@ function ProdutosPage() {
     },
   });
 
-  const create = useMutation({
+  const save = useMutation({
     mutationFn: async (v: any) => {
-      const { error } = await supabase.from("products").insert(v);
+      const { id, ...rest } = v;
+      if (id) {
+        const { error } = await supabase.from("products").update(rest).eq("id", id);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase.from("products").insert(rest);
+        if (error) throw error;
+      }
+    },
+    onSuccess: () => {
+      toast.success("Produto salvo");
+      qc.invalidateQueries({ queryKey: ["products"] });
+      setOpen(false);
+      setEditing(null);
+    },
+    onError: (e: any) => toast.error(e.message),
+  });
+
+  const remove = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await (supabase.rpc as any)("delete_product", { _id: id });
       if (error) throw error;
     },
     onSuccess: () => {
-      toast.success("Produto criado");
+      toast.success("Produto excluído");
       qc.invalidateQueries({ queryKey: ["products"] });
-      setOpen(false);
     },
     onError: (e: any) => toast.error(e.message),
   });
@@ -69,19 +90,35 @@ function ProdutosPage() {
         title="Produtos"
         description="Produtos químicos e sanitizantes utilizados nos serviços."
         actions={
-          <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-              <Button>
-                <Plus className="w-4 h-4 mr-2" />
-                Novo produto
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <Form onSubmit={(v) => create.mutate(v)} submitting={create.isPending} />
-            </DialogContent>
-          </Dialog>
+          <Button
+            onClick={() => {
+              setEditing(null);
+              setOpen(true);
+            }}
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Novo produto
+          </Button>
         }
       />
+
+      <Dialog
+        open={open}
+        onOpenChange={(o) => {
+          setOpen(o);
+          if (!o) setEditing(null);
+        }}
+      >
+        <DialogContent>
+          <Form
+            key={editing?.id ?? "novo"}
+            initial={editing}
+            onSubmit={(v) => save.mutate(v)}
+            submitting={save.isPending}
+          />
+        </DialogContent>
+      </Dialog>
+
       <Card>
         <Table>
           <TableHeader>
@@ -91,6 +128,7 @@ function ProdutosPage() {
               <TableHead>Registro MS</TableHead>
               <TableHead>Unidade</TableHead>
               <TableHead className="w-24">Ativo</TableHead>
+              <TableHead className="w-24 text-right">Ações</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -108,8 +146,27 @@ function ProdutosPage() {
                     onCheckedChange={(v) => toggle.mutate({ id: r.id, ativo: v })}
                   />
                 </TableCell>
+                <TableCell>
+                  <RowActions
+                    onEdit={() => {
+                      setEditing(r);
+                      setOpen(true);
+                    }}
+                    onDelete={() => remove.mutate(r.id)}
+                    deleting={remove.isPending}
+                    label={`Excluir "${r.nome}"?`}
+                    description="Produtos com lotes, movimentação de estoque ou uso em OS não podem ser excluídos — nesses casos, inative o produto."
+                  />
+                </TableCell>
               </TableRow>
             ))}
+            {rows.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={6} className="text-center py-10 text-muted-foreground">
+                  Nenhum produto cadastrado.
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </Card>
@@ -118,22 +175,25 @@ function ProdutosPage() {
 }
 
 function Form({
+  initial,
   onSubmit,
   submitting,
 }: {
+  initial?: any;
   onSubmit: (v: any) => void;
   submitting: boolean;
 }) {
   const [f, setF] = useState({
-    nome: "",
-    principio_ativo: "",
-    registro_ms: "",
-    unidade: "L",
+    id: initial?.id as string | undefined,
+    nome: initial?.nome ?? "",
+    principio_ativo: initial?.principio_ativo ?? "",
+    registro_ms: initial?.registro_ms ?? "",
+    unidade: initial?.unidade ?? "L",
   });
   return (
     <>
       <DialogHeader>
-        <DialogTitle>Novo produto</DialogTitle>
+        <DialogTitle>{initial ? "Editar produto" : "Novo produto"}</DialogTitle>
       </DialogHeader>
       <form
         onSubmit={(e) => {
@@ -149,7 +209,7 @@ function Form({
         <div>
           <Label>Princípio ativo</Label>
           <Input
-            value={f.principio_ativo}
+            value={f.principio_ativo ?? ""}
             onChange={(e) => setF({ ...f, principio_ativo: e.target.value })}
           />
         </div>
@@ -157,7 +217,7 @@ function Form({
           <div>
             <Label>Registro MS/ANVISA</Label>
             <Input
-              value={f.registro_ms}
+              value={f.registro_ms ?? ""}
               onChange={(e) => setF({ ...f, registro_ms: e.target.value })}
             />
           </div>
