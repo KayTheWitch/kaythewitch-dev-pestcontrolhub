@@ -22,7 +22,6 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   Table,
@@ -35,6 +34,7 @@ import {
 import { Plus } from "lucide-react";
 import { formatCurrency, SERVICE_TYPE_LABEL } from "@/lib/format";
 import { toast } from "sonner";
+import { RowActions } from "@/components/RowActions";
 
 export const Route = createFileRoute("/_authenticated/cadastros/servicos")({
   component: ServicosPage,
@@ -43,36 +43,51 @@ export const Route = createFileRoute("/_authenticated/cadastros/servicos")({
 function ServicosPage() {
   const qc = useQueryClient();
   const [open, setOpen] = useState(false);
+  const [editing, setEditing] = useState<any>(null);
+
   const { data: rows = [] } = useQuery({
     queryKey: ["service-catalog"],
     queryFn: async () => {
-      const { data } = await supabase
-        .from("service_catalog")
-        .select("*")
-        .order("nome");
+      const { data } = await supabase.from("service_catalog").select("*").order("nome");
       return data ?? [];
     },
   });
 
-  const create = useMutation({
+  const save = useMutation({
     mutationFn: async (v: any) => {
-      const { error } = await supabase.from("service_catalog").insert(v);
+      const { id, ...rest } = v;
+      if (id) {
+        const { error } = await supabase.from("service_catalog").update(rest).eq("id", id);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase.from("service_catalog").insert(rest);
+        if (error) throw error;
+      }
+    },
+    onSuccess: () => {
+      toast.success("Serviço salvo");
+      qc.invalidateQueries({ queryKey: ["service-catalog"] });
+      setOpen(false);
+      setEditing(null);
+    },
+    onError: (e: any) => toast.error(e.message),
+  });
+
+  const remove = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await (supabase.rpc as any)("delete_service_catalog_item", { _id: id });
       if (error) throw error;
     },
     onSuccess: () => {
-      toast.success("Serviço criado");
+      toast.success("Serviço excluído");
       qc.invalidateQueries({ queryKey: ["service-catalog"] });
-      setOpen(false);
     },
     onError: (e: any) => toast.error(e.message),
   });
 
   const toggle = useMutation({
     mutationFn: async ({ id, ativo }: { id: string; ativo: boolean }) => {
-      const { error } = await supabase
-        .from("service_catalog")
-        .update({ ativo })
-        .eq("id", id);
+      const { error } = await supabase.from("service_catalog").update({ ativo }).eq("id", id);
       if (error) throw error;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["service-catalog"] }),
@@ -84,19 +99,35 @@ function ServicosPage() {
         title="Serviços"
         description="Catálogo de serviços com preço base usado nas propostas."
         actions={
-          <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-              <Button>
-                <Plus className="w-4 h-4 mr-2" />
-                Novo serviço
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <ServiceForm onSubmit={(v) => create.mutate(v)} submitting={create.isPending} />
-            </DialogContent>
-          </Dialog>
+          <Button
+            onClick={() => {
+              setEditing(null);
+              setOpen(true);
+            }}
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Novo serviço
+          </Button>
         }
       />
+
+      <Dialog
+        open={open}
+        onOpenChange={(o) => {
+          setOpen(o);
+          if (!o) setEditing(null);
+        }}
+      >
+        <DialogContent>
+          <ServiceForm
+            key={editing?.id ?? "novo"}
+            initial={editing}
+            onSubmit={(v) => save.mutate(v)}
+            submitting={save.isPending}
+          />
+        </DialogContent>
+      </Dialog>
+
       <Card>
         <Table>
           <TableHeader>
@@ -106,6 +137,7 @@ function ServicosPage() {
               <TableHead>Preço base</TableHead>
               <TableHead>Unidade</TableHead>
               <TableHead className="w-24">Ativo</TableHead>
+              <TableHead className="w-24 text-right">Ações</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -124,8 +156,27 @@ function ServicosPage() {
                     onCheckedChange={(v) => toggle.mutate({ id: r.id, ativo: v })}
                   />
                 </TableCell>
+                <TableCell>
+                  <RowActions
+                    onEdit={() => {
+                      setEditing(r);
+                      setOpen(true);
+                    }}
+                    onDelete={() => remove.mutate(r.id)}
+                    deleting={remove.isPending}
+                    label={`Excluir "${r.nome}"?`}
+                    description="O serviço deixará de aparecer no catálogo de propostas. Propostas já emitidas não são afetadas."
+                  />
+                </TableCell>
               </TableRow>
             ))}
+            {rows.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={6} className="text-center py-10 text-muted-foreground">
+                  Nenhum serviço cadastrado.
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </Card>
@@ -134,23 +185,26 @@ function ServicosPage() {
 }
 
 function ServiceForm({
+  initial,
   onSubmit,
   submitting,
 }: {
+  initial?: any;
   onSubmit: (v: any) => void;
   submitting: boolean;
 }) {
   const [form, setForm] = useState({
-    tipo: "controle_pragas",
-    nome: "",
-    descricao: "",
-    preco_base: "",
-    unidade: "servico",
+    id: initial?.id as string | undefined,
+    tipo: initial?.tipo ?? "controle_pragas",
+    nome: initial?.nome ?? "",
+    descricao: initial?.descricao ?? "",
+    preco_base: initial?.preco_base != null ? String(initial.preco_base) : "",
+    unidade: initial?.unidade ?? "servico",
   });
   return (
     <>
       <DialogHeader>
-        <DialogTitle>Novo serviço</DialogTitle>
+        <DialogTitle>{initial ? "Editar serviço" : "Novo serviço"}</DialogTitle>
       </DialogHeader>
       <form
         onSubmit={(e) => {
@@ -169,10 +223,7 @@ function ServiceForm({
         </div>
         <div>
           <Label>Tipo</Label>
-          <Select
-            value={form.tipo}
-            onValueChange={(v) => setForm({ ...form, tipo: v })}
-          >
+          <Select value={form.tipo} onValueChange={(v) => setForm({ ...form, tipo: v })}>
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
@@ -188,7 +239,7 @@ function ServiceForm({
         <div>
           <Label>Descrição</Label>
           <Textarea
-            value={form.descricao}
+            value={form.descricao ?? ""}
             onChange={(e) => setForm({ ...form, descricao: e.target.value })}
           />
         </div>
