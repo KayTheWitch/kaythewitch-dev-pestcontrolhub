@@ -35,6 +35,8 @@ import { Badge } from "@/components/ui/badge";
 import { Plus, ArrowRight } from "lucide-react";
 import { formatDate, CATEGORY_LABEL } from "@/lib/format";
 import { toast } from "sonner";
+import { RowActions } from "@/components/RowActions";
+
 
 export const Route = createFileRoute("/_authenticated/clientes/")({
   component: ClientsPage,
