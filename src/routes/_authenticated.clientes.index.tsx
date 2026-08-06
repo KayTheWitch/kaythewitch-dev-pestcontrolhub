@@ -198,26 +198,30 @@ function ClientsPage() {
 }
 
 function ClientForm({
+  initial,
   onSubmit,
   submitting,
 }: {
+  initial?: any;
   onSubmit: (v: any) => void;
   submitting: boolean;
 }) {
   const [form, setForm] = useState({
-    tipo: "PF",
-    documento: "",
-    nome: "",
-    email: "",
-    telefone: "",
-    categoria: "residencial",
-    endereco: "",
-    cidade: "",
-    estado: "",
-    cep: "",
-    responsavel: "",
-    observacoes: "",
+    id: initial?.id as string | undefined,
+    tipo: initial?.tipo ?? "PF",
+    documento: initial?.documento ?? "",
+    nome: initial?.nome ?? "",
+    email: initial?.email ?? "",
+    telefone: initial?.telefone ?? "",
+    categoria: initial?.categoria ?? "residencial",
+    endereco: initial?.endereco ?? "",
+    cidade: initial?.cidade ?? "",
+    estado: initial?.estado ?? "",
+    cep: initial?.cep ?? "",
+    responsavel: initial?.responsavel ?? "",
+    observacoes: initial?.observacoes ?? "",
   });
+
   return (
     <>
       <DialogHeader>
