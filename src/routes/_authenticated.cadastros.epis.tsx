@@ -14,7 +14,6 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   Table,
@@ -26,6 +25,7 @@ import {
 } from "@/components/ui/table";
 import { Plus } from "lucide-react";
 import { toast } from "sonner";
+import { RowActions } from "@/components/RowActions";
 
 export const Route = createFileRoute("/_authenticated/cadastros/epis")({
   component: EpisPage,
@@ -34,6 +34,8 @@ export const Route = createFileRoute("/_authenticated/cadastros/epis")({
 function EpisPage() {
   const qc = useQueryClient();
   const [open, setOpen] = useState(false);
+  const [editing, setEditing] = useState<any>(null);
+
   const { data: rows = [] } = useQuery({
     queryKey: ["epis"],
     queryFn: async () => {
@@ -42,15 +44,34 @@ function EpisPage() {
     },
   });
 
-  const create = useMutation({
+  const save = useMutation({
     mutationFn: async (v: any) => {
-      const { error } = await supabase.from("epis").insert(v);
+      const { id, ...rest } = v;
+      if (id) {
+        const { error } = await supabase.from("epis").update(rest).eq("id", id);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase.from("epis").insert(rest);
+        if (error) throw error;
+      }
+    },
+    onSuccess: () => {
+      toast.success("EPI salvo");
+      qc.invalidateQueries({ queryKey: ["epis"] });
+      setOpen(false);
+      setEditing(null);
+    },
+    onError: (e: any) => toast.error(e.message),
+  });
+
+  const remove = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await (supabase.rpc as any)("delete_epi", { _id: id });
       if (error) throw error;
     },
     onSuccess: () => {
-      toast.success("EPI criado");
+      toast.success("EPI excluído");
       qc.invalidateQueries({ queryKey: ["epis"] });
-      setOpen(false);
     },
     onError: (e: any) => toast.error(e.message),
   });
@@ -69,19 +90,35 @@ function EpisPage() {
         title="EPIs"
         description="Equipamentos de proteção individual obrigatórios por serviço."
         actions={
-          <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-              <Button>
-                <Plus className="w-4 h-4 mr-2" />
-                Novo EPI
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <Form onSubmit={(v) => create.mutate(v)} submitting={create.isPending} />
-            </DialogContent>
-          </Dialog>
+          <Button
+            onClick={() => {
+              setEditing(null);
+              setOpen(true);
+            }}
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Novo EPI
+          </Button>
         }
       />
+
+      <Dialog
+        open={open}
+        onOpenChange={(o) => {
+          setOpen(o);
+          if (!o) setEditing(null);
+        }}
+      >
+        <DialogContent>
+          <Form
+            key={editing?.id ?? "novo"}
+            initial={editing}
+            onSubmit={(v) => save.mutate(v)}
+            submitting={save.isPending}
+          />
+        </DialogContent>
+      </Dialog>
+
       <Card>
         <Table>
           <TableHeader>
@@ -90,6 +127,7 @@ function EpisPage() {
               <TableHead>CA</TableHead>
               <TableHead>Descrição</TableHead>
               <TableHead className="w-24">Ativo</TableHead>
+              <TableHead className="w-24 text-right">Ações</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -97,17 +135,34 @@ function EpisPage() {
               <TableRow key={r.id}>
                 <TableCell className="font-medium">{r.nome}</TableCell>
                 <TableCell className="text-sm">{r.ca}</TableCell>
-                <TableCell className="text-sm text-muted-foreground">
-                  {r.descricao}
-                </TableCell>
+                <TableCell className="text-sm text-muted-foreground">{r.descricao}</TableCell>
                 <TableCell>
                   <Switch
                     checked={r.ativo}
                     onCheckedChange={(v) => toggle.mutate({ id: r.id, ativo: v })}
                   />
                 </TableCell>
+                <TableCell>
+                  <RowActions
+                    onEdit={() => {
+                      setEditing(r);
+                      setOpen(true);
+                    }}
+                    onDelete={() => remove.mutate(r.id)}
+                    deleting={remove.isPending}
+                    label={`Excluir "${r.nome}"?`}
+                    description="EPIs com entregas registradas não podem ser excluídos — nesse caso, inative o EPI."
+                  />
+                </TableCell>
               </TableRow>
             ))}
+            {rows.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={5} className="text-center py-10 text-muted-foreground">
+                  Nenhum EPI cadastrado.
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </Card>
@@ -116,17 +171,24 @@ function EpisPage() {
 }
 
 function Form({
+  initial,
   onSubmit,
   submitting,
 }: {
+  initial?: any;
   onSubmit: (v: any) => void;
   submitting: boolean;
 }) {
-  const [f, setF] = useState({ nome: "", ca: "", descricao: "" });
+  const [f, setF] = useState({
+    id: initial?.id as string | undefined,
+    nome: initial?.nome ?? "",
+    ca: initial?.ca ?? "",
+    descricao: initial?.descricao ?? "",
+  });
   return (
     <>
       <DialogHeader>
-        <DialogTitle>Novo EPI</DialogTitle>
+        <DialogTitle>{initial ? "Editar EPI" : "Novo EPI"}</DialogTitle>
       </DialogHeader>
       <form
         onSubmit={(e) => {
@@ -141,12 +203,12 @@ function Form({
         </div>
         <div>
           <Label>CA</Label>
-          <Input value={f.ca} onChange={(e) => setF({ ...f, ca: e.target.value })} />
+          <Input value={f.ca ?? ""} onChange={(e) => setF({ ...f, ca: e.target.value })} />
         </div>
         <div>
           <Label>Descrição</Label>
           <Input
-            value={f.descricao}
+            value={f.descricao ?? ""}
             onChange={(e) => setF({ ...f, descricao: e.target.value })}
           />
         </div>
