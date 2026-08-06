@@ -199,7 +199,7 @@ function ClientsPage() {
             ))}
             {clients.length === 0 && (
               <TableRow>
-                <TableCell colSpan={7} className="text-center py-10 text-muted-foreground">
+                <TableCell colSpan={8} className="text-center py-10 text-muted-foreground">
                   Nenhum cliente cadastrado.
                 </TableCell>
               </TableRow>
@@ -239,7 +239,7 @@ function ClientForm({
   return (
     <>
       <DialogHeader>
-        <DialogTitle>Novo cliente</DialogTitle>
+        <DialogTitle>{initial ? "Editar cliente" : "Novo cliente"}</DialogTitle>
       </DialogHeader>
       <form
         onSubmit={(e) => {
